@@ -1,0 +1,292 @@
+/*
+ * Landing sahifasi uslublari: animatsiyalar va bezak elementlari.
+ * Barcha ranglar globals.css tokenlaridan (kun/tun avtomatik).
+ */
+
+@layer components {
+  /* ---------- Hero ---------- */
+
+  .hero-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: radial-gradient(var(--grid-line) 1.2px, transparent 1.3px);
+    background-size: 26px 26px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 26%, #000 25%, transparent 78%);
+  }
+
+  /* Yumshoq "aurora": faqat gradient (filter: blur zaif GPU'da og'ir). */
+  .hero-backdrop::before,
+  .hero-backdrop::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: aurora 16s ease-in-out infinite alternate;
+  }
+
+  .hero-backdrop::before {
+    width: min(70vw, 620px);
+    aspect-ratio: 1;
+    left: 50%;
+    top: 4%;
+    translate: -50% 0;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--track-default) 40%, transparent),
+      transparent 70%
+    );
+  }
+
+  .hero-backdrop::after {
+    width: min(46vw, 420px);
+    aspect-ratio: 1;
+    left: 58%;
+    top: 22%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklab, var(--caret) 30%, transparent),
+      transparent 65%
+    );
+    animation-delay: -8s;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-backdrop {
+      mask-image: radial-gradient(ellipse 60% 70% at 70% 47%, #000 25%, transparent 75%);
+    }
+
+    .hero-backdrop::before {
+      left: 70%;
+      top: 12%;
+    }
+
+    .hero-backdrop::after {
+      left: 72%;
+      top: 40%;
+    }
+  }
+
+  .dark .hero-backdrop::before {
+    opacity: 0.55;
+  }
+
+  .light .hero-backdrop::before,
+  .light .hero-backdrop::after {
+    opacity: 0.32;
+  }
+
+  @keyframes aurora {
+    from {
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      transform: translate(-6%, 8%) scale(1.15);
+    }
+  }
+
+  .hero-in {
+    animation: hero-rise 1s var(--ease-out-expo) both;
+    animation-delay: calc(var(--d, 0) * 90ms + 80ms);
+  }
+
+  /* `filter: blur` ishlatilmaydi: telefonlarda har kadrda qayta chizishni talab qiladi. */
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      translate: 0 26px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  /* Sarlavha — sahifaning eng katta elementi (LCP): u birinchi kadrdanoq ko'rinishi kerak,
+     shuning uchun faqat yengil ko'tariladi, shaffoflikdan chiqmaydi. */
+  .hero-title.hero-in {
+    animation-name: hero-lift;
+    animation-delay: 0ms;
+  }
+
+  @keyframes hero-lift {
+    from {
+      translate: 0 14px;
+    }
+    to {
+      translate: 0 0;
+    }
+  }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--glass);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--muted-foreground);
+  }
+
+  .hero-chip__dot {
+    position: relative;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--caret);
+  }
+
+  .hero-chip__dot::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--caret);
+    animation: ping 2s var(--ease-out-expo) infinite;
+  }
+
+  @keyframes ping {
+    from {
+      opacity: 0.8;
+      scale: 0.6;
+    }
+    to {
+      opacity: 0;
+      scale: 1.9;
+    }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: clamp(2.6rem, 9vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-title {
+      font-size: clamp(3.2rem, 5.3vw, 5.5rem);
+    }
+  }
+
+  /* Ikkinchi CTA: "Qaysi kasb menga mos?" — kasb testiga olib boradi. */
+  .quiz-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    height: 3.25rem;
+    padding: 0 0.5rem 0 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--glass);
+    font-weight: 500;
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .quiz-cta:hover {
+    border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
+  }
+
+  .quiz-cta__badge {
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted-foreground);
+  }
+
+  /* 3D tugunlarga ergashadigan ko'nikma yorliqlari (hero-scene boshqaradi). */
+  .hero-skill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .hero-skill > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    translate: -50% calc(-100% - 12px);
+    padding: 0.28rem 0.65rem 0.28rem 0.5rem;
+    border: 1px solid color-mix(in oklab, var(--track) 45%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--card) 86%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--foreground);
+    transition:
+      scale 0.35s var(--ease-spring),
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .hero-skill > span::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--track);
+  }
+
+  .hero-skill[data-hot] > span {
+    scale: 1.12;
+    border-color: var(--track);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--track) 18%, transparent);
+  }
+
+  .hero-hint {
+    display: none;
+    position: absolute;
+    left: 70%;
+    top: calc(47% + min(21vw, 340px) + 1.5rem);
+    translate: -50% 0;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted-foreground);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+  }
+
+  .hero-hint::before {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--caret);
+    animation: ping-dot 1.6s ease-in-out infinite;
+  }
+
+  @keyframes ping-dot {
+    50% {
+      scale: 1.6;
+      opacity: 0.5;
+    }
+  }
+
+  .hero-hint.is-visible {
+    opacity: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .hero-hint {
+      display: flex;
+    }
+  }
+}

@@ -1,0 +1,487 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Sifat Edu dizayn tokenlari — "Nuqtalarni bog'lang".
+ * Kun (:root) va tun (.dark). Brend qizili — "uchqun": CTA, kursor, faol ulanishlar.
+ * Yo'nalish ranglari (--track-*) faqat bezak uchun: matn rangi sifatida ishlatilmaydi.
+ */
+:root {
+  --radius: 1rem;
+  --background: #f6f7fc;
+  --foreground: #121427;
+  --card: #ffffff;
+  --card-foreground: #121427;
+  --popover: #ffffff;
+  --popover-foreground: #121427;
+  --primary: #e31e24;
+  --primary-foreground: #ffffff;
+  --secondary: #eceef8;
+  --secondary-foreground: #121427;
+  --muted: #eceef8;
+  --muted-foreground: #595f82;
+  --accent: #e6e8f5;
+  --accent-foreground: #121427;
+  --destructive: #d42a30;
+  --border: rgb(18 20 39 / 10%);
+  --input: rgb(18 20 39 / 18%);
+  --ring: #e31e24;
+
+  --caret: #e31e24;
+  /* Kichik qizil matn uchun: brend qizili fonda 4.5:1 ga yetmaydi (WCAG AA). */
+  --caret-text: #c0191f;
+  --line: #3f47a8;
+  --track-frontend: #c77800;
+  --track-backend: #0a9277;
+  --track-design: #d4357d;
+  --track-basics: #1e6fd6;
+  --track-default: #6a55e8;
+
+  --glass: rgb(255 255 255 / 72%);
+  --shadow-soft: 0 1px 2px rgb(18 20 39 / 4%), 0 16px 40px -20px rgb(18 20 39 / 18%);
+  --shadow-lift: 0 2px 4px rgb(18 20 39 / 5%), 0 28px 60px -24px rgb(18 20 39 / 28%);
+  --grid-line: rgb(18 20 39 / 5%);
+}
+
+.dark {
+  --background: #0b0d1a;
+  --foreground: #eef0fa;
+  --card: #131629;
+  --card-foreground: #eef0fa;
+  --popover: #171a31;
+  --popover-foreground: #eef0fa;
+  --secondary: #1b1f38;
+  --secondary-foreground: #eef0fa;
+  --muted: #1b1f38;
+  --muted-foreground: #9ba1c4;
+  --accent: #20254a;
+  --accent-foreground: #eef0fa;
+  --destructive: #ff5a60;
+  --border: rgb(155 161 196 / 14%);
+  --input: rgb(155 161 196 / 22%);
+
+  --caret: #ff3b45;
+  --caret-text: #ff6b73;
+  --line: #8f98ff;
+  --track-frontend: #ffbe4d;
+  --track-backend: #45dfbd;
+  --track-design: #ff79b0;
+  --track-basics: #67b2ff;
+  --track-default: #a595ff;
+
+  --glass: rgb(19 22 41 / 70%);
+  --shadow-soft: 0 0 0 1px rgb(143 152 255 / 5%), 0 20px 50px -24px rgb(0 0 0 / 70%);
+  --shadow-lift: 0 0 0 1px rgb(143 152 255 / 9%), 0 30px 70px -28px rgb(0 0 0 / 80%);
+  --grid-line: rgb(143 152 255 / 6%);
+}
+
+@theme inline {
+  /* Har shrift ikki qism: lotin + kirill (src/fonts/index.ts). */
+  --font-sans: var(--font-onest), var(--font-onest-cyrillic), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-geologica), var(--font-geologica-cyrillic), ui-sans-serif, sans-serif;
+  --font-display: var(--font-geologica), var(--font-geologica-cyrillic), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-martian), var(--font-martian-cyrillic), ui-monospace, monospace;
+
+  --color-caret: var(--caret);
+  --color-line: var(--line);
+  --color-glass: var(--glass);
+  --color-track-frontend: var(--track-frontend);
+  --color-track-backend: var(--track-backend);
+  --color-track-design: var(--track-design);
+  --color-track-basics: var(--track-basics);
+  --color-track-default: var(--track-default);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.25);
+  --radius-2xl: calc(var(--radius) * 1.5);
+  --radius-3xl: calc(var(--radius) * 1.75);
+  --radius-4xl: calc(var(--radius) * 2.25);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Muharrir kursori: ~530 ms yonadi, ~530 ms o'chadi. */
+  --animate-caret: caret-blink 1.06s steps(1, end) infinite;
+
+  @keyframes caret-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    @apply font-sans;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01" on;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--caret) 28%, transparent);
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-caret;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  /* Sticky header ostida anchor'lar yashirinib qolmasin. */
+  [id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* Huquqiy sahifalar matni (backend'da tozalangan HTML). */
+  .legal-content {
+    line-height: 1.75;
+  }
+
+  .legal-content > * + * {
+    margin-top: 1em;
+  }
+
+  .legal-content h2 {
+    margin-top: 2em;
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .legal-content h3,
+  .legal-content h4 {
+    margin-top: 1.6em;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .legal-content ul {
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  .legal-content ol {
+    padding-left: 1.25rem;
+    list-style: decimal;
+  }
+
+  .legal-content a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .legal-content blockquote {
+    border-left: 2px solid var(--border);
+    padding-left: 1rem;
+    color: var(--muted-foreground);
+  }
+
+  .legal-content code,
+  .legal-content pre {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+}
+
+/*
+ * Global o'zaro ta'sirlar (components/site/interactions.tsx boshqaradi).
+ * `.js` klassi tema script'i bilan qo'yiladi: JS o'chiq bo'lsa, mazmun darhol ko'rinadi.
+ */
+@layer components {
+  .js [data-reveal] {
+    opacity: 0;
+    translate: 0 28px;
+    transition:
+      opacity 0.8s var(--ease-out-expo),
+      translate 0.9s var(--ease-out-expo);
+    transition-delay: calc(var(--reveal-delay, 0) * 1ms);
+  }
+
+  .js [data-reveal="fade"] {
+    translate: none;
+  }
+
+  .js [data-reveal][data-visible] {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Ekrandan tashqaridagi bezak animatsiyalari to'xtab turadi. */
+  .js [data-play]:not([data-playing]),
+  .js [data-play]:not([data-playing])::before,
+  .js [data-play]:not([data-playing])::after,
+  .js [data-play]:not([data-playing]) *,
+  .js [data-play]:not([data-playing]) *::before,
+  .js [data-play]:not([data-playing]) *::after {
+    animation-play-state: paused !important;
+  }
+
+  [data-magnetic] {
+    transition: translate 0.35s var(--ease-out-expo);
+  }
+
+  /* Kursor ostidagi yumshoq yorug'lik: --mx/--my global listener'dan keladi. */
+  [data-spotlight] {
+    position: relative;
+    isolation: isolate;
+  }
+
+  [data-spotlight]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      380px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklab, var(--spot, var(--caret)) 14%, transparent),
+      transparent 60%
+    );
+    transition: opacity 0.4s ease;
+  }
+
+  [data-spotlight]:hover::after {
+    opacity: 1;
+  }
+
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(12px) saturate(1.3);
+  }
+
+  /* Menyudagi oddiy havola (bo'lim emas, alohida sahifa). */
+  .nav-link {
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .nav-link:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* Kun/tun tugmasi: quyosh nurlari yig'iladi, markaz o'roq oyga aylanadi. */
+  .theme-toggle svg :is(circle, g) {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.6s var(--ease-spring),
+      opacity 0.35s ease;
+  }
+
+  .dark .theme-toggle__core {
+    transform: scale(1.5);
+  }
+
+  .dark .theme-toggle__cut {
+    transform: translate(-9px, 6px);
+  }
+
+  .dark .theme-toggle__rays {
+    opacity: 0;
+    transform: rotate(-70deg) scale(0.4);
+  }
+
+  /* Footer: katta kontur logo, kursor miltillab turadi. */
+  .footer-wordmark {
+    overflow: visible;
+  }
+
+  .footer-wordmark path {
+    fill: none;
+    stroke: color-mix(in oklab, var(--foreground) 14%, transparent);
+    stroke-width: 0.6;
+    transition: stroke 0.6s ease;
+  }
+
+  footer:hover .footer-wordmark path {
+    stroke: color-mix(in oklab, var(--foreground) 26%, transparent);
+  }
+
+  .footer-wordmark__caret {
+    fill: var(--caret);
+    animation: footer-blink 1.06s steps(1, end) infinite;
+  }
+}
+
+@keyframes footer-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Tema almashtirish: yangi tema tugmadan doira bo'lib ochiladi (theme-toggle.tsx). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+/* ---------- Sahifa loader'i ---------- */
+@layer components {
+  .page-loader {
+    display: grid;
+    place-items: center;
+  }
+
+  .page-loader__mark {
+    width: 4.5rem;
+    overflow: visible;
+  }
+
+  .page-loader__line {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: loader-connect 1.8s ease-in-out infinite;
+  }
+
+  .page-loader__line:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  .page-loader__line:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+
+  .page-loader__dot {
+    fill: var(--foreground);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: loader-pulse 1.8s ease-in-out infinite;
+  }
+
+  .page-loader__dot--hot {
+    fill: var(--caret);
+  }
+
+  /* Ommaviy sayt va kirish sahifalarida o'tish chizig'i (navigation-progress.tsx). */
+  .nav-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: 3px;
+    background: var(--caret);
+    box-shadow: 0 0 10px color-mix(in oklab, var(--caret) 60%, transparent);
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+  }
+
+  @keyframes loader-connect {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 1;
+    }
+    55% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes loader-pulse {
+    50% {
+      transform: scale(1.25);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-loader__line {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+
+    .page-loader__dot {
+      animation: none;
+    }
+  }
+}

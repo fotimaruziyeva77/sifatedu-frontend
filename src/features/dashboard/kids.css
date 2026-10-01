@@ -1,0 +1,413 @@
+/* SIFAT Kids kabineti (7–11 yosh): yirik shakllar, yorqin ranglar, kam matn.
+   Ranglar yorqin fonda doim to'q matn bilan ishlatiladi — tun rejimida ham o'qiladi. */
+
+@layer components {
+  .kids {
+    --kids-ink: oklch(0.24 0.04 265);
+    --kids-sun: oklch(0.86 0.15 86);
+    --kids-berry: oklch(0.7 0.19 350);
+    --kids-mint: oklch(0.82 0.13 166);
+    --kids-sky: oklch(0.78 0.12 238);
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  /* ---------- Salomlashish ---------- */
+
+  .kids-hero {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1rem, 3vw, 2rem);
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 2rem;
+    color: var(--kids-ink);
+    background:
+      radial-gradient(
+        120% 90% at 0% 0%,
+        color-mix(in oklab, var(--kids-sky) 70%, white) 0%,
+        transparent 60%
+      ),
+      linear-gradient(
+        135deg,
+        color-mix(in oklab, var(--kids-sun) 70%, white),
+        color-mix(in oklab, var(--kids-berry) 45%, white)
+      );
+  }
+
+  .kids-hero__bot {
+    width: clamp(6rem, 18vw, 9.5rem);
+    color: var(--kids-ink);
+  }
+
+  .kids-hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .kids-hero__lead {
+    margin-top: 0.5rem;
+    font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+    font-weight: 500;
+  }
+
+  .kids-counters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+
+  .kids-counters li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.75);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  /* ---------- Maskot ---------- */
+
+  .kids-bot__head {
+    fill: var(--kids-sky);
+    stroke: currentColor;
+    stroke-width: 4;
+  }
+
+  .kids-bot__face {
+    fill: var(--kids-ink);
+  }
+
+  .kids-bot__eyes circle {
+    fill: var(--kids-mint);
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: kids-blink 4.5s infinite;
+  }
+
+  .kids-bot__lamp {
+    fill: var(--kids-berry);
+    animation: kids-glow 2.2s ease-in-out infinite;
+  }
+
+  .kids-bot__ear {
+    fill: var(--kids-mint);
+    stroke: currentColor;
+    stroke-width: 3;
+  }
+
+  .kids-bot__body {
+    fill: var(--kids-sun);
+    stroke: currentColor;
+    stroke-width: 4;
+  }
+
+  .kids-bot__heart {
+    fill: var(--kids-berry);
+  }
+
+  .kids-bot {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: kids-bob 3.2s ease-in-out infinite;
+  }
+
+  .kids-bot__wave {
+    transform-box: fill-box;
+    transform-origin: 0% 100%;
+    animation: kids-wave 2.4s ease-in-out infinite;
+  }
+
+  @keyframes kids-bob {
+    50% {
+      transform: translateY(-5px) rotate(-1.5deg);
+    }
+  }
+
+  @keyframes kids-blink {
+    0%,
+    92%,
+    100% {
+      transform: scaleY(1);
+    }
+    95% {
+      transform: scaleY(0.1);
+    }
+  }
+
+  @keyframes kids-glow {
+    50% {
+      opacity: 0.55;
+    }
+  }
+
+  @keyframes kids-wave {
+    0%,
+    60%,
+    100% {
+      transform: rotate(0deg);
+    }
+    70% {
+      transform: rotate(-14deg);
+    }
+    85% {
+      transform: rotate(10deg);
+    }
+  }
+
+  /* ---------- Bugungi sarguzasht ---------- */
+
+  .kids-mission {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: 2rem;
+    color: var(--kids-ink);
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--kids-mint) 75%, white),
+      color-mix(in oklab, var(--kids-sky) 55%, white)
+    );
+  }
+
+  .kids-mission__label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .kids-mission__lesson {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3.6vw, 2.1rem);
+    font-weight: 750;
+    line-height: 1.15;
+  }
+
+  .kids-mission__go.kids-mission__go {
+    height: 4rem;
+    margin-top: 0.75rem;
+    padding-inline: 1.75rem;
+    gap: 0.75rem;
+    border-radius: 999px;
+    background: var(--kids-ink);
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 800;
+    box-shadow: 0 10px 0 -2px color-mix(in oklab, var(--kids-ink) 55%, transparent);
+    transition:
+      transform 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .kids-mission__go.kids-mission__go:hover {
+    transform: translateY(-2px);
+  }
+
+  .kids-mission__go.kids-mission__go:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 -2px color-mix(in oklab, var(--kids-ink) 55%, transparent);
+  }
+
+  /* ---------- Xarita ---------- */
+
+  .kids-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    font-weight: 800;
+  }
+
+  .kids-map {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .kids-island {
+    --tone: var(--kids-sun);
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-radius: 1.75rem;
+    color: var(--kids-ink);
+    background: color-mix(in oklab, var(--tone) 38%, white);
+  }
+
+  .kids-island[data-tone="1"] {
+    --tone: var(--kids-mint);
+  }
+
+  .kids-island[data-tone="2"] {
+    --tone: var(--kids-sky);
+  }
+
+  .kids-island[data-tone="3"] {
+    --tone: var(--kids-berry);
+  }
+
+  .kids-island__title {
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+
+  /* Toshlar ilon izi bo'ylab: har bir dars — bitta tosh. */
+  .kids-path {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 1rem;
+  }
+
+  .kids-stone {
+    position: relative;
+    margin-inline-start: 0;
+  }
+
+  .kids-stone:nth-child(4n + 2),
+  .kids-stone:nth-child(4n + 4) {
+    margin-inline-start: clamp(1.5rem, 8vw, 3.5rem);
+  }
+
+  .kids-stone:nth-child(4n + 3) {
+    margin-inline-start: clamp(3rem, 16vw, 7rem);
+  }
+
+  .kids-stone__body {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    max-width: 100%;
+    padding: 0.25rem 1rem 0.25rem 0.25rem;
+    border-radius: 999px;
+    color: inherit;
+    transition:
+      background-color 0.15s,
+      transform 0.15s;
+  }
+
+  a.kids-stone__body:hover {
+    background: rgb(255 255 255 / 0.55);
+    transform: translateX(3px);
+  }
+
+  a.kids-stone__body:focus-visible {
+    outline: 3px solid var(--kids-ink);
+    outline-offset: 2px;
+  }
+
+  .kids-stone__mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 3px solid var(--kids-ink);
+    border-radius: 999px;
+    background: white;
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+
+  .kids-stone__name {
+    font-size: 1.02rem;
+    font-weight: 650;
+    line-height: 1.25;
+  }
+
+  .kids-stone[data-state="done"] .kids-stone__mark {
+    background: var(--kids-sun);
+  }
+
+  .kids-stone[data-state="current"] .kids-stone__mark {
+    background: var(--kids-berry);
+    color: white;
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--kids-berry) 60%, transparent);
+    animation: kids-ping 1.8s ease-out infinite;
+  }
+
+  .kids-stone[data-state="current"] .kids-stone__name {
+    font-weight: 800;
+  }
+
+  .kids-stone[data-state="locked"] .kids-stone__mark {
+    border-style: dashed;
+    background: color-mix(in oklab, white 60%, transparent);
+  }
+
+  @keyframes kids-ping {
+    70% {
+      box-shadow: 0 0 0 14px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* ---------- Medallar ---------- */
+
+  .kids-medals__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: 0.75rem;
+  }
+
+  .kids-medal {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: 1.1rem 0.75rem;
+    border: 2px dashed var(--border);
+    border-radius: 1.5rem;
+    text-align: center;
+  }
+
+  .kids-medal__icon {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+  }
+
+  .kids-medal__name {
+    font-weight: 700;
+  }
+
+  .kids-medal.is-earned {
+    border: 2px solid var(--kids-ink);
+    color: var(--kids-ink);
+    background: color-mix(in oklab, var(--kids-sun) 45%, white);
+  }
+
+  .kids-medal.is-earned .kids-medal__icon {
+    background: var(--kids-sun);
+    color: var(--kids-ink);
+    box-shadow: inset 0 -4px 0 color-mix(in oklab, var(--kids-ink) 25%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kids-bot,
+    .kids-bot__wave,
+    .kids-bot__eyes circle,
+    .kids-bot__lamp,
+    .kids-stone[data-state="current"] .kids-stone__mark {
+      animation: none;
+    }
+  }
+
+  @media (width < 36rem) {
+    .kids-hero {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+  }
+}

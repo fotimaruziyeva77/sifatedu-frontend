@@ -1,0 +1,404 @@
+/*
+ * Sertifikat: tekshirish sahifasi va A4 varaq (albom). Varaq — hujjat: tungi temada ham oq,
+ * ranglari o'zgarmaydi (chop etishda ham shunday). O'lchamlar `cqw` da — varaq telefonda ham,
+ * A4 da ham bir xil nisbatda kichrayadi/kattalashadi.
+ * Belgi — bog'langan nuqtalar yo'li: sertifikat raqamidan chiziladi va brend kursorida tugaydi.
+ */
+
+@layer components {
+  .cert-page {
+    display: grid;
+    gap: 1.5rem;
+    width: min(100% - 2rem, 70rem);
+    margin-inline: auto;
+    padding-block: 8rem 6rem;
+  }
+
+  .cert-page__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .cert-missing {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    max-width: 36rem;
+    color: var(--muted-foreground);
+  }
+
+  .cert-missing > .cert-page__title {
+    color: var(--foreground);
+  }
+
+  /* Tekshiruvchi uchun birinchi javob: haqiqiymi yoki yo'q. */
+  .cert-status {
+    --status: oklch(0.55 0.13 160);
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid color-mix(in oklab, var(--status) 45%, var(--border));
+    border-radius: 1.25rem;
+    background: color-mix(in oklab, var(--status) 9%, var(--card));
+  }
+
+  .cert-status:not([data-valid]) {
+    --status: var(--caret);
+  }
+
+  .cert-status > svg {
+    color: var(--status);
+  }
+
+  .cert-status__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .cert-status__text {
+    margin-top: 0.2rem;
+    color: var(--muted-foreground);
+  }
+
+  .cert-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+    gap: 0.75rem 1.5rem;
+  }
+
+  .cert-facts dt {
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cert-facts dd {
+    margin-top: 0.15rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .cert-stage {
+    padding: clamp(0.5rem, 2vw, 1.5rem);
+    border-radius: 1.5rem;
+    background: color-mix(in oklab, var(--foreground) 4%, var(--background));
+  }
+
+  /* ---------- Varaq ---------- */
+
+  .cert-paper {
+    --paper: #ffffff;
+    --ink: #121427;
+    --ink-soft: #595f82;
+    --path: #3f47a8;
+    --spark: #e31e24;
+    --spark-text: #c0191f;
+    width: 100%;
+    aspect-ratio: 297 / 210;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: var(--paper);
+    box-shadow: var(--shadow-lift);
+    color: var(--ink);
+    /* Ichidagi hamma o'lcham varaq kengligiga nisbatan (cqw). */
+    container-type: inline-size;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .cert-paper__sheet {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    height: 100%;
+    padding: 5cqw 6cqw 4.5cqw;
+    /* Nuqtali to'r — daftar varag'i. */
+    background-image: radial-gradient(circle, rgb(18 20 39 / 9%) 0.12cqw, transparent 0.13cqw);
+    background-size: 2.4cqw 2.4cqw;
+    background-position: 1.2cqw 1.2cqw;
+  }
+
+  /* Ichki ramka: nozik chiziq. */
+  .cert-paper__sheet::before {
+    content: "";
+    position: absolute;
+    inset: 2.2cqw;
+    border: 0.12cqw solid rgb(63 71 168 / 28%);
+    border-radius: 0.6cqw;
+    pointer-events: none;
+  }
+
+  .cert-paper__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2cqw;
+  }
+
+  .cert-paper__logo {
+    width: auto;
+    height: 3.1cqw;
+    color: var(--ink);
+  }
+
+  .cert-paper__logo rect {
+    fill: var(--spark);
+  }
+
+  .cert-paper__number {
+    display: flex;
+    gap: 0.8cqw;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 1.35cqw;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  .cert-paper__number > span {
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
+  .cert-paper__body {
+    align-self: center;
+    max-width: 78%;
+  }
+
+  .cert-paper__eyebrow {
+    color: var(--spark-text);
+    font-family: var(--font-mono);
+    font-size: 1.35cqw;
+    font-weight: 600;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+  }
+
+  .cert-paper__lead {
+    margin-top: 2.2cqw;
+    color: var(--ink-soft);
+    font-size: 1.75cqw;
+  }
+
+  .cert-paper__name {
+    margin-top: 0.6cqw;
+    font-family: var(--font-display);
+    font-size: 6cqw;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+
+  .cert-paper__statement {
+    margin-top: 1.6cqw;
+    font-size: 2cqw;
+    line-height: 1.35;
+    text-wrap: pretty;
+  }
+
+  .cert-paper__statement strong {
+    font-weight: 700;
+  }
+
+  .cert-paper__path {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-block: 1cqw 1.5cqw;
+    overflow: visible;
+  }
+
+  .cert-paper__path path {
+    fill: none;
+    stroke: var(--path);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cert-paper__path circle {
+    fill: var(--paper);
+    stroke: var(--path);
+    stroke-width: 2.6;
+  }
+
+  .cert-paper__path circle:first-of-type {
+    fill: var(--path);
+  }
+
+  .cert-paper__path .cert-paper__halo {
+    fill: rgb(227 30 36 / 12%);
+    stroke: none;
+  }
+
+  .cert-paper__path rect {
+    fill: var(--spark);
+  }
+
+  .cert-paper__foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3cqw;
+  }
+
+  .cert-paper__facts {
+    display: flex;
+    gap: 4cqw;
+  }
+
+  .cert-paper__facts dt {
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 1cqw;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .cert-paper__facts dd {
+    margin-top: 0.5cqw;
+    font-size: 1.6cqw;
+    font-weight: 600;
+  }
+
+  .cert-paper__verify {
+    display: flex;
+    gap: 1.4cqw;
+    align-items: flex-end;
+  }
+
+  .cert-paper__verify p {
+    display: grid;
+    gap: 0.3cqw;
+    color: var(--ink-soft);
+    font-size: 1cqw;
+    text-align: right;
+  }
+
+  .cert-paper__verify span {
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.95cqw;
+    white-space: nowrap;
+  }
+
+  .cert-paper__qr {
+    flex: none;
+    width: 10.5cqw;
+    height: 10.5cqw;
+  }
+
+  .cert-paper__qr-dots {
+    fill: var(--ink);
+  }
+
+  .cert-paper__qr-ring {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  .cert-paper__qr-pupil {
+    fill: var(--spark);
+  }
+
+  /* Bekor qilingan: varaq ustida muhr. */
+  .cert-paper[data-revoked] .cert-paper__sheet > :not(.cert-paper__stamp) {
+    opacity: 0.45;
+  }
+
+  .cert-paper__stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 0.8cqw 3cqw;
+    border: 0.5cqw solid var(--spark);
+    border-radius: 1cqw;
+    color: var(--spark);
+    font-family: var(--font-display);
+    font-size: 5.5cqw;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: translate(-50%, -50%) rotate(-12deg);
+  }
+
+  .cert-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    align-items: center;
+  }
+
+  .cert-actions__hint {
+    flex-basis: 100%;
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+  }
+
+  /* Telefonda varaq kichik: pastki matnlar o'qilmasa ham, ma'lumot yuqorida (cert-facts). */
+  @media (max-width: 639px) {
+    .cert-stage {
+      padding: 0.35rem;
+      border-radius: 1rem;
+    }
+
+    .cert-paper {
+      border-radius: 0.5rem;
+    }
+  }
+}
+
+/*
+ * PDF: brauzerning chop etish oynasida faqat varaq — A4 albom, chetsiz, bitta sahifa. Varaqni
+ * o'z ichiga olmagan hamma narsa (sarlavha, tugmalar, footer) joy ham egallamasligi uchun
+ * `display: none`; varaqning ota elementlari esa bo'shliqsiz.
+ */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 297mm;
+    height: 210mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+  }
+
+  body *:not(:has(.cert-paper)):not(.cert-paper):not(.cert-paper *) {
+    display: none !important;
+  }
+
+  body *:has(.cert-paper) {
+    width: 297mm !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .cert-paper {
+    width: 297mm;
+    height: 210mm;
+    aspect-ratio: auto;
+    border-radius: 0;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

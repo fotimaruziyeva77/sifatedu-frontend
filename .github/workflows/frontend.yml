@@ -1,0 +1,43 @@
+name: frontend
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: lint, tip, unit testlar va build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Bog'liqliklar
+        run: npm ci --no-audit --no-fund
+
+      - name: ESLint
+        run: npm run lint -- --max-warnings 0
+
+      - name: TypeScript
+        run: npm run typecheck
+
+      - name: Unit testlar (Vitest)
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_APP_URL: https://sifatedu.uz
+          NEXT_PUBLIC_S3_PUBLIC_URL: https://storage.sifatedu.uz/sifat-public

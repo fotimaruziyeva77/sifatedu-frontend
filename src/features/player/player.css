@@ -1,0 +1,168 @@
+/* Video pleyer. Boshqaruv elementlari video ustida, sichqoncha olib borilganda chiqadi. */
+
+@layer components {
+  .player {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: oklch(0.14 0.01 260);
+    aspect-ratio: 16 / 9;
+  }
+
+  .player:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .player__video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: inherit;
+  }
+
+  /* Kim ko'rayotgani: sekin harakatlanadi, shuning uchun kadrni kesib olib bo'lmaydi. */
+  .player__mark {
+    position: absolute;
+    top: 8%;
+    left: 6%;
+    z-index: 2;
+    padding: 0.2rem 0.45rem;
+    border-radius: 0.375rem;
+    background: rgb(0 0 0 / 0.28);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: rgb(255 255 255 / 0.62);
+    pointer-events: none;
+    animation: player-mark 47s linear infinite alternate;
+  }
+
+  @keyframes player-mark {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(620%, 180%);
+    }
+    50% {
+      transform: translate(80%, 830%);
+    }
+    75% {
+      transform: translate(700%, 560%);
+    }
+    100% {
+      transform: translate(120%, 60%);
+    }
+  }
+
+  .player__bar {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.625rem 0.75rem;
+    background: linear-gradient(transparent, rgb(0 0 0 / 0.72));
+    color: rgb(255 255 255 / 0.92);
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+
+  /* O'ynayotganda panel yo'qoladi va sichqoncha/fokus bilan qaytadi. */
+  .player[data-playing] .player__bar {
+    opacity: 0;
+  }
+
+  .player:hover .player__bar,
+  .player:focus-within .player__bar {
+    opacity: 1;
+  }
+
+  .player__bar button {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 0.5rem;
+    color: inherit;
+  }
+
+  .player__bar button:hover {
+    background: rgb(255 255 255 / 0.16);
+  }
+
+  .player__bar svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .player__time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    color: rgb(255 255 255 / 0.78);
+  }
+
+  .player__seek {
+    flex: 1;
+    min-width: 3rem;
+    height: 1.25rem;
+    accent-color: var(--caret);
+    cursor: pointer;
+  }
+
+  .player__picker {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .player__menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    min-width: 5.5rem;
+    padding: 0.25rem;
+    border-radius: 0.75rem;
+    background: oklch(0.2 0.01 260);
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.7);
+  }
+
+  .player__menu button {
+    width: 100%;
+    height: auto;
+    padding: 0.375rem 0.5rem;
+    justify-content: flex-start;
+    font-size: 0.8125rem;
+  }
+
+  .player__menu button[aria-current="true"] {
+    background: rgb(255 255 255 / 0.14);
+    font-weight: 600;
+  }
+
+  .player-fallback {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    border: 1px dashed var(--border);
+    border-radius: 1.25rem;
+    aspect-ratio: 16 / 9;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .player__mark {
+      animation: none;
+    }
+  }
+
+  /* Bolalar kabinetida pleyer ham yumshoqroq ko'rinadi. */
+  [data-audience="KIDS"] .player {
+    border-radius: 1.75rem;
+  }
+}

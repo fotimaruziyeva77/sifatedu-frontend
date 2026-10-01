@@ -1,0 +1,4536 @@
+/* Kabinet: sokin interfeys — landing'dagi effektlar bu yerda ishlatilmaydi.
+   Ikki ko'rinish bor: kattalar uchun (ADULT) va SIFAT Kids uchun (KIDS). */
+
+@layer components {
+  /* ---------- Ramka: chapda menyu, o'ngda kontent ---------- */
+
+  .app-shell {
+    --side: 16rem;
+    min-height: 100svh;
+  }
+
+  .app-side {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    width: var(--side);
+    padding: 1rem 0.75rem;
+    border-right: 1px solid var(--border);
+    background: var(--card);
+    /* Telefonda yopiq turadi va tugma bilan chiqadi. */
+    transform: translateX(-100%);
+    transition: transform 0.24s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .app-side[data-open] {
+    transform: none;
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.35);
+  }
+
+  .app-side__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.5rem 1.25rem;
+  }
+
+  .app-side__close {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.75rem;
+    color: var(--muted-foreground);
+  }
+
+  .app-side__close:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .app-side__list {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .app-side__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.875rem;
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+    transition:
+      background-color 0.18s,
+      color 0.18s;
+  }
+
+  .app-side__link:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .app-side__link[aria-current="page"] {
+    background: var(--secondary);
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  .app-side__icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.625rem;
+    background: color-mix(in oklab, var(--secondary) 70%, transparent);
+    color: var(--caret);
+  }
+
+  .app-side__link[aria-current="page"] .app-side__icon {
+    background: var(--caret);
+    color: var(--background);
+  }
+
+  .app-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: rgb(0 0 0 / 0.45);
+    backdrop-filter: blur(2px);
+  }
+
+  .app-body {
+    display: flex;
+    min-height: 100svh;
+    flex-direction: column;
+  }
+
+  .app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 3.5rem;
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--glass);
+    backdrop-filter: blur(12px) saturate(1.3);
+  }
+
+  .app-burger {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-left: -0.375rem;
+    border-radius: 0.75rem;
+    color: var(--muted-foreground);
+  }
+
+  .app-burger:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .app-main {
+    width: 100%;
+    max-width: 68rem;
+    flex: 1;
+    padding: 2rem 1rem 4rem;
+    margin-inline: auto;
+  }
+
+  @media (width >= 64rem) {
+    .app-side {
+      transform: none;
+    }
+
+    .app-side__close,
+    .app-burger,
+    .app-bar__logo {
+      display: none;
+    }
+
+    .app-body {
+      margin-inline-start: var(--side);
+    }
+
+    .app-bar {
+      padding-inline: 2rem;
+    }
+
+    .app-main {
+      padding: 2.5rem 2rem 5rem;
+    }
+  }
+
+  /* ---------- Umumiy bloklar ---------- */
+
+  .app-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .app-card {
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .app-section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* Bo'sh holat: hali kurs yo'q. */
+  .app-empty {
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px dashed var(--border);
+    border-radius: 1.5rem;
+    background: color-mix(in oklab, var(--card) 60%, transparent);
+  }
+
+  .app-avatar-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Kurs kartochkasi ---------- */
+
+  .course-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (width >= 48rem) {
+    .course-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .course-tile {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.875rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .course-tile:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .course-tile__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    background: var(--secondary);
+    color: var(--caret);
+  }
+
+  .course-tile__name {
+    font-family: var(--font-display);
+    font-weight: 650;
+    font-size: 1.0625rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* Progress chizig'i: matn bilan birga o'qiladi (faqat rang emas). */
+  .progress-track {
+    height: 0.4375rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--secondary) 80%, transparent);
+    overflow: hidden;
+  }
+
+  .progress-track > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--caret);
+  }
+
+  /* ---------- Dars sahifasi ---------- */
+
+  .lesson-layout {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (width >= 64rem) {
+    .lesson-layout {
+      grid-template-columns: minmax(0, 1fr) 19rem;
+      align-items: start;
+    }
+  }
+
+  .lesson-list {
+    display: grid;
+    /* Qator ichidagi bir qatorli sarlavha ustunni kengaytirmasin: nom qisqaradi, oxiri ko'rinadi. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.125rem;
+    max-height: 32rem;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
+  .lesson-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.625rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  a.lesson-row:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .lesson-row[aria-current="true"] {
+    background: var(--secondary);
+    color: var(--foreground);
+    font-weight: 600;
+  }
+
+  /* Yopiq dars: shaffoflik emas (matn kontrasti WCAG'dan tushardi) — qulf va uzuq chegara. */
+  .lesson-row[data-locked] {
+    cursor: not-allowed;
+  }
+
+  .lesson-row[data-locked] .lesson-row__mark {
+    border-style: dashed;
+  }
+
+  .lesson-row__mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.375rem;
+    height: 1.375rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.6875rem;
+  }
+
+  .lesson-row__mark[data-done] {
+    border-color: transparent;
+    background: var(--caret);
+    color: var(--background);
+  }
+
+  .lesson-module {
+    margin: 0.875rem 0 0.375rem;
+    padding-inline: 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  /* ---------- SIFAT Kids: kreativ ko'rinish ---------- */
+
+  [data-audience="KIDS"] {
+    --kids-sun: oklch(0.84 0.16 84);
+    --kids-berry: oklch(0.68 0.19 348);
+    --kids-mint: oklch(0.79 0.14 168);
+    --kids-sky: oklch(0.72 0.15 244);
+  }
+
+  [data-audience="KIDS"] .app-side__link {
+    padding: 0.75rem;
+    border-radius: 1.125rem;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  [data-audience="KIDS"] .app-side__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.875rem;
+    color: oklch(0.2 0.02 260);
+  }
+
+  [data-audience="KIDS"] .app-side__list > li:nth-child(1) .app-side__icon {
+    background: var(--kids-sun);
+  }
+
+  [data-audience="KIDS"] .app-side__list > li:nth-child(2) .app-side__icon {
+    background: var(--kids-mint);
+  }
+
+  [data-audience="KIDS"] .app-side__list > li:nth-child(3) .app-side__icon {
+    background: var(--kids-berry);
+  }
+
+  [data-audience="KIDS"] .app-side__list > li:nth-child(4) .app-side__icon {
+    background: var(--kids-sky);
+  }
+
+  [data-audience="KIDS"] .app-side__list > li:nth-child(5) .app-side__icon {
+    background: color-mix(in oklab, var(--kids-sun) 55%, var(--kids-mint));
+  }
+
+  /* Sozlamalar: kabinet ko'rinishi (kattalar / SIFAT Kids). */
+  .audience-option {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 0.95rem;
+    cursor: pointer;
+  }
+
+  .audience-option:has(input:checked) {
+    border-color: var(--caret);
+    background: color-mix(in oklab, var(--caret) 7%, transparent);
+  }
+
+  .audience-option:has(input:focus-visible) {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .audience-option input {
+    margin-top: 0.2rem;
+    accent-color: var(--caret);
+  }
+
+  .audience-option span {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .audience-option em {
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--muted-foreground);
+  }
+
+  [data-audience="KIDS"] .app-side__link[aria-current="page"] {
+    background: color-mix(in oklab, var(--kids-sun) 22%, transparent);
+  }
+
+  [data-audience="KIDS"] .app-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
+  [data-audience="KIDS"] .app-main {
+    font-size: 1.0625rem;
+  }
+
+  [data-audience="KIDS"] .course-tile {
+    gap: 1rem;
+    padding: 1.5rem;
+    border-width: 2px;
+    border-radius: 1.75rem;
+  }
+
+  [data-audience="KIDS"] .course-tile__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1.125rem;
+    background: var(--kids-mint);
+    color: oklch(0.2 0.02 260);
+  }
+
+  [data-audience="KIDS"] .course-tile__name {
+    font-size: 1.25rem;
+  }
+
+  [data-audience="KIDS"] .progress-track {
+    height: 0.75rem;
+  }
+
+  [data-audience="KIDS"] .progress-track > span {
+    background: linear-gradient(90deg, var(--kids-sun), var(--kids-berry));
+  }
+
+  /* Bolalar uchun progress yulduzlar bilan ko'rsatiladi: foiz emas. */
+  .kids-stars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .kids-stars > svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: color-mix(in oklab, var(--foreground) 22%, transparent);
+  }
+
+  .kids-stars > svg[data-on] {
+    color: var(--kids-sun);
+    fill: var(--kids-sun);
+  }
+
+  /* --- Buyurtmalar ro'yxati --- */
+
+  .order-list {
+    display: grid;
+    gap: 0.625rem;
+  }
+
+  .order-row {
+    display: grid;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 1rem 1.125rem;
+    border: 1px solid var(--border);
+    border-radius: 1.125rem;
+    background: var(--card);
+  }
+
+  @media (width >= 48rem) {
+    .order-row {
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+    }
+  }
+
+  .order-row__amount {
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .order-row__status {
+    justify-self: start;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .order-row__status[data-status="PAID"] {
+    background: color-mix(in oklab, oklch(0.72 0.17 152) 18%, transparent);
+  }
+
+  .order-row__status[data-status="NEW"] {
+    background: color-mix(in oklab, oklch(0.8 0.15 84) 20%, transparent);
+  }
+
+  .order-row__status[data-status="REFUNDED"],
+  .order-row__status[data-status="CANCELLED"] {
+    background: color-mix(in oklab, var(--caret) 14%, transparent);
+  }
+
+  .order-row__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .order-row__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: var(--muted-foreground);
+    text-underline-offset: 3px;
+  }
+
+  .order-row__links a:hover {
+    color: var(--foreground);
+    text-decoration: underline;
+  }
+
+  /* --- Sotib olish paneli --- */
+
+  .buy-formats {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .buy-format {
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    cursor: pointer;
+    transition:
+      border-color 0.18s,
+      background-color 0.18s;
+  }
+
+  .buy-format:hover {
+    background: var(--accent);
+  }
+
+  .buy-format:has(input:checked) {
+    border-color: var(--caret);
+    background: color-mix(in oklab, var(--caret) 8%, transparent);
+  }
+
+  .buy-format:has(input:focus-visible) {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .buy-format input {
+    margin-top: 0.2rem;
+    accent-color: var(--caret);
+  }
+
+  .buy-format span {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .buy-format strong {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .buy-format em {
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--muted-foreground);
+  }
+
+  .buy-months {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .buy-months__control {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  .buy-months__control button {
+    display: grid;
+    place-items: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+  }
+
+  .buy-months__control button:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .buy-months__control button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .buy-months__control output {
+    min-width: 2rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .buy-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+  }
+
+  .buy-total strong {
+    font-family: var(--font-mono);
+    font-size: 1.375rem;
+    color: var(--foreground);
+  }
+
+  /* Chegirmada: eski narx yangisining ustida, kichik va chizilgan. */
+  .buy-total strong:has(.buy-total__old) {
+    display: grid;
+    justify-items: end;
+    text-align: right;
+  }
+
+  .buy-total__old {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  /* Do'st taklifi yoki kupon bo'yicha chegirma. */
+  .buy-discount {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--track-backend) 14%, var(--card));
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  /* --- To'lov natijasi --- */
+
+  .payment-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 4rem 1rem;
+    color: var(--muted-foreground);
+  }
+
+  .payment-card {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    max-width: 34rem;
+    margin: 2rem auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .payment-card__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 1rem;
+  }
+
+  .payment-card[data-tone="ok"] .payment-card__icon {
+    background: color-mix(in oklab, oklch(0.72 0.17 152) 18%, transparent);
+    color: oklch(0.72 0.17 152);
+  }
+
+  .payment-card[data-tone="wait"] .payment-card__icon {
+    background: color-mix(in oklab, oklch(0.8 0.15 84) 18%, transparent);
+    color: oklch(0.8 0.15 84);
+  }
+
+  .payment-card[data-tone="bad"] .payment-card__icon {
+    background: color-mix(in oklab, var(--caret) 14%, transparent);
+    color: var(--caret);
+  }
+
+  /* ---------- Dars materiallari ---------- */
+
+  .material-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .material-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.95rem;
+    background: var(--card);
+    transition:
+      border-color 0.15s,
+      transform 0.15s;
+  }
+
+  .material-row:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    transform: translateY(-1px);
+  }
+
+  .material-row__icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    border-radius: 0.7rem;
+    background: var(--secondary);
+    color: var(--caret);
+  }
+
+  .code-block {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: oklch(0.2 0.02 265);
+    color: oklch(0.94 0.01 265);
+  }
+
+  .code-block__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem 0.5rem 1rem;
+    border-bottom: 1px solid rgb(255 255 255 / 0.1);
+    font-size: 0.85rem;
+  }
+
+  .code-block__title {
+    font-weight: 600;
+  }
+
+  .code-block__lang {
+    padding: 0.1rem 0.45rem;
+    border-radius: 0.4rem;
+    background: rgb(255 255 255 / 0.1);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .code-block__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 0.55rem;
+    color: inherit;
+    font-size: 0.8rem;
+  }
+
+  .code-block__action:hover {
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .code-block__pre {
+    max-height: 26rem;
+    overflow: auto;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  .code-block__pre:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: -2px;
+  }
+
+  /* ---------- Kurs sarlavhasi (kabinet) ---------- */
+
+  .course-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: 1.75rem;
+    background: var(--card);
+  }
+
+  .course-head__main {
+    min-width: 0;
+    flex: 1 1 26rem;
+  }
+
+  /* Premium: sotib olingan kurs boy ko'rinadi. */
+  .course-head.is-premium {
+    border-color: color-mix(in oklab, oklch(0.8 0.14 80) 55%, var(--border));
+    background:
+      radial-gradient(
+        90% 120% at 100% 0%,
+        color-mix(in oklab, oklch(0.8 0.14 80) 22%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        80% 120% at 0% 100%,
+        color-mix(in oklab, var(--caret) 14%, transparent),
+        transparent 55%
+      ),
+      var(--card);
+    box-shadow: 0 24px 60px -32px color-mix(in oklab, oklch(0.8 0.14 80) 70%, transparent);
+  }
+
+  .course-head__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, oklch(0.86 0.13 85), oklch(0.74 0.15 65));
+    color: oklch(0.25 0.05 60);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .course-head__chip {
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .course-head__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    flex-shrink: 0;
+    border-radius: 1rem;
+    background: var(--secondary);
+    color: var(--caret);
+  }
+
+  .course-head__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-top: 1rem;
+    color: var(--muted-foreground);
+    font-size: 0.925rem;
+  }
+
+  .course-head__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .course-ring {
+    position: relative;
+    width: 8.5rem;
+    height: 8.5rem;
+    flex-shrink: 0;
+  }
+
+  .course-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .course-ring__track {
+    fill: none;
+    stroke: var(--secondary);
+    stroke-width: 9;
+  }
+
+  .course-ring__value {
+    fill: none;
+    stroke: var(--caret);
+    stroke-width: 9;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s var(--ease-out-expo);
+  }
+
+  .is-premium .course-ring__value {
+    stroke: oklch(0.76 0.15 70);
+  }
+
+  .course-ring__label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 750;
+  }
+
+  /* Premium kurs kartochkasi: sarlavhadagi oltin urg'u bilan bir xil. */
+  .course-tile {
+    position: relative;
+  }
+
+  .course-tile.is-premium {
+    border-color: color-mix(in oklab, oklch(0.8 0.14 80) 50%, var(--border));
+    background:
+      radial-gradient(
+        120% 90% at 100% 0%,
+        color-mix(in oklab, oklch(0.8 0.14 80) 16%, transparent),
+        transparent 60%
+      ),
+      var(--card);
+  }
+
+  .course-tile__badge {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, oklch(0.86 0.13 85), oklch(0.74 0.15 65));
+    color: oklch(0.25 0.05 60);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  /* ---------- O'qituvchi: guruhlar ---------- */
+
+  /* Boshqaruv paneli havolasi menyuning pastida. */
+  .app-side__admin {
+    margin-top: auto;
+  }
+
+  .teach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: 1rem;
+  }
+
+  .teach-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    height: 100%;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .teach-card:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .teach-card:has(.teach-card__link:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .teach-card__name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* Butun kartochka bosiladi, lekin havola nomi — guruh nomi. */
+  .teach-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .teach-card__link:focus-visible {
+    outline: none;
+  }
+
+  .teach-card__meta {
+    display: grid;
+    gap: 0.3rem;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+  }
+
+  .teach-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .teach-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .teach-chip[data-status="ACTIVE"] {
+    background: color-mix(in oklab, var(--track-backend) 18%, var(--card));
+  }
+
+  .teach-chip[data-status="FORMING"] {
+    background: color-mix(in oklab, var(--track-basics) 16%, var(--card));
+  }
+
+  .teach-chip[data-status="FINISHED"] {
+    color: var(--muted-foreground);
+  }
+
+  .teach-table-wrap {
+    overflow-x: auto;
+  }
+
+  .teach-table {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+  }
+
+  .teach-table th,
+  .teach-table td {
+    padding: 0.85rem 0.75rem;
+    border-top: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .teach-table thead th {
+    border-top: 0;
+    color: var(--muted-foreground);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .teach-table tbody th {
+    font-weight: 400;
+  }
+
+  .teach-table td:nth-child(2) {
+    width: 38%;
+  }
+
+  .teach-avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    color: var(--caret-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  /* Telefonda: har bir o'quvchi — alohida kartochka, ustun nomi yashirin sarlavhada. */
+  @media (max-width: 639px) {
+    .teach-table {
+      min-width: 0;
+    }
+
+    .teach-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .teach-table tr {
+      display: grid;
+      gap: 0.65rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .teach-table th,
+    .teach-table td {
+      display: block;
+      padding: 0;
+      border: 0;
+    }
+
+    .teach-table td:nth-child(2) {
+      width: auto;
+    }
+
+    .teach-table td[data-label]::before {
+      content: attr(data-label) ": ";
+      color: var(--muted-foreground);
+    }
+  }
+
+  .teach-flag {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--destructive) 12%, var(--card));
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  /* ---------- Xabarlar ---------- */
+
+  /* Menyudagi o'qilmaganlar soni. */
+  .app-side__count {
+    margin-left: auto;
+    min-width: 1.35rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 999px;
+    background: var(--caret);
+    /* Sof oq: sahifa foni (#f6f7fc) qizilda 4.35 kontrast beradi — 4.5 dan kam. */
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.3rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Tungi temada qizil yorqinroq: to'q matn bilan kontrast 5.5. */
+  .dark .app-side__count {
+    color: var(--background);
+  }
+
+  /* Yuqori paneldagi qo'ng'iroqcha: yangi xabar bo'lsa nuqta. */
+  .app-bell {
+    position: relative;
+  }
+
+  .app-bell__dot {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--caret);
+    box-shadow: 0 0 0 2px var(--background);
+  }
+
+  .note-list {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 48rem;
+  }
+
+  .note {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+  }
+
+  /* Bu safar yangi kelgani: chapda urg'u chizig'i. */
+  .note[data-new] {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    background: color-mix(in oklab, var(--caret) 5%, var(--card));
+  }
+
+  .note[data-new]::before {
+    content: "";
+    position: absolute;
+    top: 1.1rem;
+    bottom: 1.1rem;
+    left: -1px;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--caret);
+  }
+
+  .note__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .note__title {
+    font-weight: 600;
+    text-wrap: pretty;
+  }
+
+  .note__time {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+
+  /* Admin yozgan matndagi qator bo'linishlari saqlanadi. */
+  .note__body {
+    color: var(--muted-foreground);
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  /* Matn — `--caret-text` (kontrast yetarli), strelka — brend rangida. */
+  .note__link {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    width: fit-content;
+    color: var(--caret-text);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .note__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Telegram'ni ulash taklifi (kabinet va Xabarlar sahifasida). */
+  .notify-prompt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+    max-width: 48rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid color-mix(in oklab, var(--caret) 30%, var(--border));
+    border-radius: 1.1rem;
+    background: color-mix(in oklab, var(--caret) 6%, var(--card));
+  }
+
+  .notify-prompt > div {
+    flex: 1 1 16rem;
+  }
+
+  .notify-prompt__icon,
+  .notify-telegram__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.8rem;
+    background: var(--caret);
+    color: var(--background);
+  }
+
+  .notify-prompt__action {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .notify-prompt__action:hover {
+    opacity: 0.9;
+  }
+
+  .notify-telegram {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  /* Yashil va qizil matn — ikkala temada ham kontrast 4.5:1 dan yuqori. */
+  .notify-status {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: oklch(0.47 0.12 150);
+  }
+
+  .dark .notify-status {
+    color: oklch(0.8 0.15 150);
+  }
+
+  .notify-status--warn,
+  .dark .notify-status--warn {
+    color: var(--caret-text);
+  }
+
+  .notify-waiting {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .notify-waiting svg {
+      animation: notify-ring 1.6s ease-in-out infinite;
+    }
+  }
+
+  @keyframes notify-ring {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    15% {
+      transform: rotate(14deg);
+    }
+    30% {
+      transform: rotate(-12deg);
+    }
+    45% {
+      transform: rotate(0);
+    }
+  }
+
+  .notify-check {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+
+  .notify-check input {
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    margin-top: 0.2rem;
+    accent-color: var(--caret);
+  }
+
+  .notify-check span {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .notify-check em {
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--muted-foreground);
+  }
+
+  /* ---------- Uy vazifalari ---------- */
+
+  .hw-panel {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+    scroll-margin-top: 5rem;
+  }
+
+  .hw-panel__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+  }
+
+  .hw-panel__head > .min-w-0 {
+    flex: 1 1 12rem;
+  }
+
+  .hw-panel__icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--caret) 12%, transparent);
+    color: var(--caret);
+  }
+
+  /* Topshiriq va izohlar: o'qituvchi yozgan qatorlar saqlanadi. */
+  .hw-panel__task,
+  .hw-review__text,
+  .hw-answer__text {
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  .hw-panel__deadline {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+
+  .hw-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .hw-status[data-status="SUBMITTED"] {
+    background: color-mix(in oklab, oklch(0.8 0.15 80) 22%, var(--card));
+  }
+
+  .hw-status[data-status="CHANGES_REQUESTED"] {
+    background: color-mix(in oklab, var(--caret) 14%, var(--card));
+    color: var(--caret-text);
+  }
+
+  .hw-status[data-status="ACCEPTED"] {
+    background: color-mix(in oklab, oklch(0.7 0.15 150) 18%, var(--card));
+    color: oklch(0.42 0.11 150);
+  }
+
+  .dark .hw-status[data-status="ACCEPTED"] {
+    color: oklch(0.82 0.13 150);
+  }
+
+  .hw-review,
+  .hw-pending {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+  }
+
+  .hw-review[data-status="ACCEPTED"] {
+    border-color: color-mix(in oklab, oklch(0.7 0.15 150) 45%, var(--border));
+    background: color-mix(in oklab, oklch(0.7 0.15 150) 7%, var(--card));
+  }
+
+  .hw-review[data-status="CHANGES_REQUESTED"] {
+    border-color: color-mix(in oklab, var(--caret) 40%, var(--border));
+    background: color-mix(in oklab, var(--caret) 5%, var(--card));
+  }
+
+  .hw-review__title,
+  .hw-pending__title {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  .hw-review__meta {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .hw-form {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+  }
+
+  .hw-form__title {
+    font-weight: 600;
+  }
+
+  .hw-field {
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.9375rem;
+  }
+
+  .hw-field > span:first-child,
+  .hw-field label {
+    font-weight: 500;
+  }
+
+  .hw-field textarea,
+  .hw-field input[type="url"],
+  .hw-select,
+  .rv-score {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--input);
+    border-radius: 0.8rem;
+    background: transparent;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .hw-select {
+    width: auto;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.875rem;
+  }
+
+  .rv-score {
+    max-width: 8rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hw-field textarea:focus-visible,
+  .hw-field input:focus-visible,
+  .hw-select:focus-visible,
+  .rv-score:focus-visible {
+    border-color: var(--caret);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--caret) 22%, transparent);
+  }
+
+  .hw-code {
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    font-size: 0.875rem !important;
+    line-height: 1.55;
+    tab-size: 2;
+  }
+
+  .hw-add {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    width: fit-content;
+    color: var(--caret-text);
+    font-weight: 600;
+    font-size: 0.9375rem;
+  }
+
+  .hw-add:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .hw-drop {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 1rem 1.1rem;
+    border: 1.5px dashed var(--input);
+    border-radius: 1rem;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .hw-drop:hover,
+  .hw-drop:has(input:focus-visible) {
+    border-color: var(--caret);
+    color: var(--foreground);
+  }
+
+  .hw-drop span {
+    display: grid;
+    gap: 0.1rem;
+    color: var(--foreground);
+    font-weight: 500;
+  }
+
+  .hw-drop em {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  .hw-picked {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .hw-picked li,
+  .hw-file {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    min-width: 0;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    font-size: 0.875rem;
+  }
+
+  .hw-picked__thumb {
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    border-radius: 0.4rem;
+    object-fit: cover;
+  }
+
+  .hw-picked__remove {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-left: auto;
+    flex: none;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+  }
+
+  .hw-picked__remove:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .hw-file:hover {
+    border-color: var(--caret);
+  }
+
+  .hw-file__size {
+    flex: none;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hw-progress {
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    overflow: hidden;
+  }
+
+  .hw-progress > span {
+    display: block;
+    height: 100%;
+    background: var(--caret);
+    transition: width 0.2s;
+  }
+
+  .hw-error {
+    color: var(--caret-text);
+    font-size: 0.9375rem;
+  }
+
+  .hw-flag {
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--caret) 12%, var(--card));
+    color: var(--caret-text);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .hw-history > summary {
+    cursor: pointer;
+    color: var(--muted-foreground);
+    font-weight: 500;
+  }
+
+  .hw-history > ol {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 0.9rem;
+  }
+
+  .hw-attempt {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .hw-attempt__meta {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .hw-attempt__feedback {
+    padding-left: 0.8rem;
+    border-left: 3px solid var(--border);
+    white-space: pre-line;
+  }
+
+  .hw-answer {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .hw-answer__link {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    max-width: 100%;
+    color: var(--caret-text);
+    font-weight: 500;
+  }
+
+  .hw-answer__link:hover {
+    text-decoration: underline;
+  }
+
+  .hw-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+    gap: 0.6rem;
+  }
+
+  .hw-images a {
+    display: block;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 0.8rem;
+    aspect-ratio: 4 / 3;
+    background: var(--secondary);
+  }
+
+  .hw-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hw-files {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  /* "Vazifalar" ro'yxati. */
+  .hw-list {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 52rem;
+  }
+
+  .hw-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+    transition: border-color 0.15s;
+  }
+
+  .hw-row:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+  }
+
+  .hw-row > .min-w-0 {
+    display: grid;
+    flex: 1;
+    gap: 0.15rem;
+  }
+
+  .hw-row__course {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hw-row__title {
+    font-weight: 600;
+  }
+
+  .hw-row__side {
+    display: grid;
+    gap: 0.25rem;
+    justify-items: end;
+  }
+
+  /* ---------- Tekshirish (o'qituvchi) ---------- */
+
+  .rv-tabs,
+  .rv-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .rv-tab {
+    display: inline-flex;
+    gap: 0.45rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-weight: 600;
+    color: var(--muted-foreground);
+  }
+
+  .rv-tab[aria-current="page"] {
+    border-color: var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .rv-tab__count {
+    min-width: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: var(--caret);
+    color: var(--background);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .rv-groups .teach-chip[aria-current="page"] {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .rv-list {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 56rem;
+  }
+
+  .rv-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+    transition: border-color 0.15s;
+  }
+
+  .rv-card:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+  }
+
+  .rv-card__main {
+    display: grid;
+    flex: 1;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .rv-card__who {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  .rv-card__what,
+  .rv-card__preview {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rv-card__side {
+    display: grid;
+    gap: 0.3rem;
+    justify-items: end;
+    text-align: right;
+  }
+
+  .rv-card__meta {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .rv-age {
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .rv-age--late {
+    color: var(--caret-text);
+    font-weight: 700;
+  }
+
+  .rv-page {
+    max-width: 56rem;
+  }
+
+  .rv-form,
+  .rv-done {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .hw-row,
+    .rv-card {
+      flex-wrap: wrap;
+    }
+
+    .hw-row__side,
+    .rv-card__side {
+      justify-items: start;
+      text-align: left;
+    }
+  }
+
+  /* ---------- Dars testi: o'yinli mashqlar ----------
+     Belgi — test yuritgichi qatori: har savol bitta katak (✓ / ✗ / kursor). */
+
+  .quiz {
+    --quiz-right: oklch(0.7 0.15 150);
+    --quiz-right-text: oklch(0.42 0.11 150);
+    --quiz-star: oklch(0.8 0.16 80);
+    --quiz-ink: oklch(0.24 0.04 265);
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+    scroll-margin-top: 5rem;
+  }
+
+  .dark .quiz {
+    --quiz-right-text: oklch(0.82 0.13 150);
+  }
+
+  /* Dastur fokus qo'yadigan sarlavhalar: ramka kerak emas (ular bosiladigan element emas). */
+  .quiz [tabindex="-1"]:focus {
+    outline: none;
+  }
+
+  .quiz-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+  }
+
+  .quiz-head > .min-w-0 {
+    flex: 1 1 12rem;
+  }
+
+  .quiz-head__icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--quiz-star) 24%, transparent);
+    color: oklch(0.48 0.11 70);
+  }
+
+  .dark .quiz-head__icon {
+    color: var(--quiz-star);
+  }
+
+  .quiz-card,
+  .quiz-play,
+  .quiz-step,
+  .quiz-done {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .quiz-meta,
+  .quiz-progress__label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+
+  .quiz-best {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+    font-size: 0.9375rem;
+  }
+
+  .quiz-chip {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .quiz-chip[data-passed] {
+    background: color-mix(in oklab, var(--quiz-right) 18%, var(--card));
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-note {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+
+  .quiz-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    align-items: center;
+  }
+
+  .quiz-error {
+    color: var(--caret-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .quiz-stars {
+    display: inline-flex;
+    gap: 0.2rem;
+    color: color-mix(in oklab, var(--foreground) 18%, transparent);
+  }
+
+  .quiz-stars svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .quiz-stars svg[data-on] {
+    color: var(--quiz-star);
+    fill: currentColor;
+  }
+
+  .quiz-stars[data-large] svg {
+    width: clamp(2.25rem, 7vw, 3rem);
+    height: clamp(2.25rem, 7vw, 3rem);
+  }
+
+  .quiz-stars[data-large] svg[data-on] {
+    animation: quiz-star-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* ---------- Jarayon ---------- */
+
+  .quiz-progress {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .quiz-streak {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, oklch(0.75 0.17 55) 18%, var(--card));
+    color: oklch(0.48 0.15 45);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    animation: quiz-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .dark .quiz-streak {
+    color: oklch(0.83 0.14 60);
+  }
+
+  .quiz-track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .quiz-track > li {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+  }
+
+  .quiz-track > li[data-state="todo"]::before {
+    content: "";
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .quiz-track > li[data-state="current"] {
+    background: var(--foreground);
+  }
+
+  .quiz-track > li[data-state="right"] {
+    background: color-mix(in oklab, var(--quiz-right) 22%, var(--card));
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-track > li[data-state="wrong"] {
+    background: color-mix(in oklab, var(--caret) 16%, var(--card));
+    color: var(--caret-text);
+  }
+
+  .quiz-track__caret {
+    width: 2px;
+    height: 0.95rem;
+    background: var(--caret);
+    animation: quiz-caret 1.06s steps(1, end) infinite;
+  }
+
+  /* ---------- Savol ---------- */
+
+  .quiz-question {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 2.4vw, 1.35rem);
+    font-weight: 650;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  .quiz-code {
+    overflow-x: auto;
+    padding: 0.875rem 1rem;
+    border-radius: 0.9rem;
+    background: oklch(0.21 0.02 265);
+    color: oklch(0.93 0.01 265);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+
+  .quiz-code[data-language]::before {
+    content: attr(data-language);
+    display: block;
+    margin-bottom: 0.4rem;
+    color: oklch(0.72 0.02 265);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .quiz-hint {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+
+  .quiz-options {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .quiz-option,
+  .quiz-order__item,
+  .quiz-tile {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--card);
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .quiz-option {
+    position: relative;
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+  }
+
+  /* Haqiqiy radio/katakcha ko'rinmaydi, lekin klaviatura va ekran o'quvchi uchun ishlaydi. */
+  .quiz-option input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  .quiz-option:hover,
+  .quiz-tile:hover:not(:disabled) {
+    border-color: color-mix(in oklab, var(--foreground) 32%, var(--border));
+  }
+
+  .quiz-option:has(input:focus-visible),
+  .quiz-tile:focus-visible,
+  .quiz-move:focus-visible,
+  .quiz-input:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .quiz-option:not([data-state]):has(input:checked) {
+    border-color: var(--foreground);
+    background: color-mix(in oklab, var(--foreground) 5%, var(--card));
+  }
+
+  .quiz-options:disabled .quiz-option {
+    cursor: default;
+  }
+
+  .quiz-option__key,
+  .quiz-order__number,
+  .quiz-tile__key {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.6rem;
+    background: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .quiz-option:not([data-state]):has(input:checked) .quiz-option__key {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .dark .quiz-option[data-state="wrong"] .quiz-option__key,
+  .dark .quiz-order__item[data-state="wrong"] .quiz-order__number {
+    color: var(--quiz-ink);
+  }
+
+  .quiz-option__text,
+  .quiz-order__text,
+  .quiz-tile__text {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .quiz-option__mark {
+    display: inline-flex;
+  }
+
+  .quiz-option[data-state="correct"],
+  .quiz-order__item[data-state="correct"],
+  .quiz-tile[data-state="correct"],
+  .quiz-input[data-state="correct"] {
+    border-color: var(--quiz-right);
+    background: color-mix(in oklab, var(--quiz-right) 10%, var(--card));
+    animation: quiz-pop 0.35s ease-out;
+  }
+
+  .quiz-option[data-state="wrong"],
+  .quiz-order__item[data-state="wrong"],
+  .quiz-tile[data-state="wrong"],
+  .quiz-input[data-state="wrong"] {
+    border-color: var(--caret);
+    background: color-mix(in oklab, var(--caret) 6%, var(--card));
+    animation: quiz-shake 0.4s ease-out;
+  }
+
+  .quiz-option[data-state="correct"] .quiz-option__key,
+  .quiz-order__item[data-state="correct"] .quiz-order__number {
+    background: var(--quiz-right);
+    color: var(--quiz-ink);
+  }
+
+  .quiz-option[data-state="wrong"] .quiz-option__key,
+  .quiz-order__item[data-state="wrong"] .quiz-order__number {
+    background: var(--caret);
+    color: #fff;
+  }
+
+  .quiz-option[data-state="correct"]:not([data-picked]) {
+    border-style: dashed;
+    background: var(--card);
+    animation: none;
+  }
+
+  .quiz-option[data-state="correct"]:not([data-picked]) .quiz-option__key {
+    background: transparent;
+    box-shadow: inset 0 0 0 1.5px var(--quiz-right);
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-option[data-state="correct"] .quiz-option__mark {
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-option[data-state="wrong"] .quiz-option__mark {
+    color: var(--caret-text);
+  }
+
+  .quiz-input {
+    width: 100%;
+    max-width: 28rem;
+    height: 3rem;
+    padding: 0 1rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background: var(--background);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+
+  .quiz-order {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .quiz-order__item {
+    padding: 0.35rem 0.35rem 0.35rem 0.75rem;
+  }
+
+  .quiz-order__moves {
+    display: flex;
+    gap: 0.125rem;
+  }
+
+  .quiz-move {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    color: var(--muted-foreground);
+  }
+
+  .quiz-move:hover:not(:disabled) {
+    background: var(--secondary);
+    color: var(--foreground);
+  }
+
+  .quiz-move:disabled {
+    opacity: 0.35;
+  }
+
+  .quiz-match {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 0.75rem;
+  }
+
+  .quiz-match__column {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+  }
+
+  .quiz-tile {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+  }
+
+  .quiz-tile[aria-pressed="true"] {
+    border-color: var(--foreground);
+    box-shadow: 0 0 0 1px var(--foreground);
+  }
+
+  .quiz-tile:disabled {
+    cursor: default;
+  }
+
+  .quiz-tile__key {
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px dashed var(--border);
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* Juft ranglari: chapdagi harf va o'ngdagi jufti bir xil rangda. */
+  .quiz-tile__key[data-pair] {
+    border: 0;
+    background: var(--pair);
+    color: var(--quiz-ink);
+  }
+
+  .quiz-tile__key[data-pair="0"] {
+    --pair: oklch(0.86 0.13 86);
+  }
+
+  .quiz-tile__key[data-pair="1"] {
+    --pair: oklch(0.83 0.12 166);
+  }
+
+  .quiz-tile__key[data-pair="2"] {
+    --pair: oklch(0.81 0.1 238);
+  }
+
+  .quiz-tile__key[data-pair="3"] {
+    --pair: oklch(0.8 0.13 350);
+  }
+
+  .quiz-tile__key[data-pair="4"] {
+    --pair: oklch(0.82 0.1 300);
+  }
+
+  .quiz-tile__key[data-pair="5"] {
+    --pair: oklch(0.84 0.1 40);
+  }
+
+  .quiz-feedback {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid color-mix(in oklab, var(--caret) 40%, var(--border));
+    border-radius: 1.1rem;
+    background: color-mix(in oklab, var(--caret) 5%, var(--card));
+    animation: quiz-rise 0.25s ease-out;
+  }
+
+  .quiz-feedback[data-correct] {
+    border-color: color-mix(in oklab, var(--quiz-right) 50%, var(--border));
+    background: color-mix(in oklab, var(--quiz-right) 8%, var(--card));
+  }
+
+  .quiz-feedback__title {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--caret-text);
+    font-weight: 700;
+  }
+
+  .quiz-feedback[data-correct] .quiz-feedback__title {
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-feedback__answer {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .quiz-feedback__answer > p,
+  .quiz-mistakes__label {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .quiz-feedback__answer ul,
+  .quiz-mistakes ul {
+    display: grid;
+    gap: 0.1rem;
+    font-weight: 600;
+  }
+
+  .quiz-feedback__text,
+  .quiz-mistakes__text {
+    font-size: 0.9375rem;
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  /* ---------- Yakun ---------- */
+
+  .quiz-result {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: clamp(1.25rem, 4vw, 2rem) 1rem;
+    border-radius: 1.25rem;
+    background:
+      radial-gradient(
+        120% 100% at 50% 0%,
+        color-mix(in oklab, var(--quiz-star) 18%, transparent),
+        transparent 70%
+      ),
+      var(--card);
+    text-align: center;
+  }
+
+  .quiz-result__score {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 10vw, 4.5rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .quiz-result__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .quiz-result__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+
+  .quiz-tally {
+    display: inline-flex;
+    gap: 0.25rem;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+
+  .quiz-tally[data-kind="right"] {
+    color: var(--quiz-right-text);
+  }
+
+  .quiz-tally[data-kind="wrong"] {
+    color: var(--caret-text);
+  }
+
+  .quiz-mistakes {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quiz-mistakes > ol {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .quiz-mistakes > ol > li {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .quiz-mistakes__question {
+    font-weight: 600;
+    white-space: pre-line;
+  }
+
+  .quiz-mistakes ul {
+    color: var(--quiz-right-text);
+  }
+
+  /* Kurs dasturida testli darsning yulduzlari. */
+  .lesson-row__stars {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: 1px;
+    color: color-mix(in oklab, var(--foreground) 22%, transparent);
+  }
+
+  .lesson-row__stars svg {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  .lesson-row__stars svg[data-on] {
+    color: oklch(0.78 0.16 78);
+    fill: currentColor;
+  }
+
+  /* ---------- SIFAT Kids: yirikroq, rangliroq ---------- */
+
+  [data-audience="KIDS"] .quiz {
+    border-width: 2px;
+    border-radius: 2rem;
+  }
+
+  [data-audience="KIDS"] .quiz-question {
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
+  }
+
+  [data-audience="KIDS"] .quiz-option,
+  [data-audience="KIDS"] .quiz-order__item,
+  [data-audience="KIDS"] .quiz-tile {
+    border-width: 2px;
+    border-radius: 1.25rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+
+  [data-audience="KIDS"] .quiz-option {
+    padding-block: 0.85rem;
+  }
+
+  [data-audience="KIDS"] .quiz-option__key {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.9rem;
+    color: var(--quiz-ink);
+  }
+
+  [data-audience="KIDS"] .quiz-option:not([data-state]):nth-of-type(4n + 1) .quiz-option__key {
+    background: var(--kids-sun);
+  }
+
+  [data-audience="KIDS"] .quiz-option:not([data-state]):nth-of-type(4n + 2) .quiz-option__key {
+    background: var(--kids-mint);
+  }
+
+  [data-audience="KIDS"] .quiz-option:not([data-state]):nth-of-type(4n + 3) .quiz-option__key {
+    background: var(--kids-berry);
+  }
+
+  [data-audience="KIDS"] .quiz-option:not([data-state]):nth-of-type(4n + 4) .quiz-option__key {
+    background: var(--kids-sky);
+  }
+
+  [data-audience="KIDS"] .quiz-option:not([data-state]):has(input:checked) .quiz-option__key {
+    background: var(--quiz-ink);
+    color: #fff;
+  }
+
+  [data-audience="KIDS"] .quiz-track > li {
+    border-radius: 999px;
+  }
+
+  [data-audience="KIDS"] .quiz-stars[data-large] svg {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  [data-audience="KIDS"] .quiz-result {
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--kids-sun) 25%, var(--card)),
+      color-mix(in oklab, var(--kids-mint) 22%, var(--card))
+    );
+  }
+
+  @keyframes quiz-caret {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes quiz-pop {
+    0% {
+      transform: scale(0.97);
+    }
+    60% {
+      transform: scale(1.02);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  @keyframes quiz-shake {
+    0%,
+    100% {
+      transform: none;
+    }
+    25% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes quiz-rise {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes quiz-star-in {
+    from {
+      opacity: 0;
+      transform: scale(0.4) rotate(-20deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quiz,
+    .quiz * {
+      animation: none !important;
+    }
+  }
+
+  /* ---------- Jadval, jonli darslar va davomat ---------- */
+
+  .app-main {
+    --live-ok: oklch(0.7 0.15 150);
+    --live-ok-text: oklch(0.42 0.11 150);
+    --live-warn: oklch(0.8 0.15 80);
+    --live-warn-text: oklch(0.45 0.1 65);
+    --live-info: oklch(0.72 0.1 240);
+    --live-info-text: oklch(0.42 0.1 250);
+  }
+
+  .dark .app-main {
+    --live-ok-text: oklch(0.82 0.13 150);
+    --live-warn-text: oklch(0.86 0.12 80);
+    --live-info-text: oklch(0.82 0.08 240);
+  }
+
+  .live-notice {
+    padding: 0.8rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--live-info) 40%, var(--border));
+    border-radius: 1rem;
+    background: color-mix(in oklab, var(--live-info) 8%, var(--card));
+    font-size: 0.9375rem;
+    text-wrap: pretty;
+  }
+
+  .live-day {
+    margin-top: 1.25rem;
+  }
+
+  .live-day__title {
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .live-day__title::first-letter {
+    text-transform: uppercase;
+  }
+
+  .live-list {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+
+  .live-row {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+    gap: 0.5rem 1rem;
+    align-items: start;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+  }
+
+  .live-row[data-canceled] {
+    background: color-mix(in oklab, var(--secondary) 60%, var(--card));
+  }
+
+  .live-row[data-canceled] .live-row__time,
+  .live-row[data-canceled] .live-row__title {
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in oklab, var(--foreground) 45%, transparent);
+  }
+
+  .live-row__time {
+    padding-top: 0.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .live-row__body {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .live-row__title {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .live-row__meta,
+  .live-row__place {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .live-row__place {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .live-row__canceled {
+    color: var(--caret-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .live-row__notes {
+    margin-top: 0.35rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.7rem;
+    background: var(--secondary);
+    font-size: 0.875rem;
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  .live-row__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .live-join {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    height: 2.5rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .live-join[data-open] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .live-join[data-open]:hover {
+    background: color-mix(in oklab, var(--primary) 85%, var(--foreground));
+  }
+
+  .live-join:focus-visible,
+  .live-link:focus-visible,
+  .live-mini__row:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .live-join[data-size="large"] {
+    height: 2.75rem;
+    padding: 0 1.25rem;
+    font-size: 1rem;
+  }
+
+  .live-link {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    border-radius: 0.4rem;
+    color: var(--caret-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .live-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .live-status {
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .live-status[data-status="PRESENT"] {
+    background: color-mix(in oklab, var(--live-ok) 18%, var(--card));
+    color: var(--live-ok-text);
+  }
+
+  .live-status[data-status="LATE"] {
+    background: color-mix(in oklab, var(--live-warn) 24%, var(--card));
+    color: var(--live-warn-text);
+  }
+
+  .live-status[data-status="ABSENT"] {
+    background: color-mix(in oklab, var(--caret) 14%, var(--card));
+    color: var(--caret-text);
+  }
+
+  .live-status[data-status="EXCUSED"] {
+    background: color-mix(in oklab, var(--live-info) 16%, var(--card));
+    color: var(--live-info-text);
+  }
+
+  .live-next {
+    border-color: color-mix(in oklab, var(--caret) 22%, var(--border));
+  }
+
+  .live-next__when {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .live-next__when::first-letter {
+    text-transform: uppercase;
+  }
+
+  .live-ok {
+    color: var(--live-ok-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .live-error {
+    color: var(--caret-text);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .live-mini {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .live-mini__row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.8rem;
+    font-size: 0.9375rem;
+  }
+
+  .live-mini__row:hover {
+    background: var(--accent);
+  }
+
+  .live-mini__when {
+    flex-shrink: 0;
+    width: 9.5rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .live-mini__state {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+  }
+
+  .teach-chip[data-status="CANCELED"] {
+    background: color-mix(in oklab, var(--caret) 12%, var(--card));
+    color: var(--caret-text);
+  }
+
+  /* Davomat: telefonda o'qituvchi sinfda belgilaydi — katta tugmalar. */
+  .attn {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .attn-list {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .attn-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 24rem);
+    gap: 0.6rem 0.75rem;
+    align-items: center;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .attn-row__who {
+    min-width: 0;
+  }
+
+  .attn-choices {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.3rem;
+  }
+
+  .attn-choice {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 2.75rem;
+    padding: 0 0.4rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .attn-choice input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  .attn-choice:has(input:focus-visible) {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .attn-choice:has(input:disabled) {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  .attn-choice[data-status="PRESENT"]:has(input:checked) {
+    border-color: var(--live-ok);
+    background: color-mix(in oklab, var(--live-ok) 18%, var(--card));
+    color: var(--live-ok-text);
+  }
+
+  .attn-choice[data-status="LATE"]:has(input:checked) {
+    border-color: var(--live-warn);
+    background: color-mix(in oklab, var(--live-warn) 24%, var(--card));
+    color: var(--live-warn-text);
+  }
+
+  .attn-choice[data-status="ABSENT"]:has(input:checked) {
+    border-color: var(--caret);
+    background: color-mix(in oklab, var(--caret) 12%, var(--card));
+    color: var(--caret-text);
+  }
+
+  .attn-choice[data-status="EXCUSED"]:has(input:checked) {
+    border-color: var(--live-info);
+    background: color-mix(in oklab, var(--live-info) 16%, var(--card));
+    color: var(--live-info-text);
+  }
+
+  /* Xavfli amal (darsni bekor qilish): tayyor "destructive" uslubida kontrast yetmaydi. */
+  .live-danger {
+    color: var(--caret-text);
+  }
+
+  .cover {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .cover__done {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--live-ok-text);
+    font-weight: 600;
+  }
+
+  .cover__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+  }
+
+  .cover__select {
+    min-width: min(100%, 18rem);
+    height: 2.75rem;
+  }
+
+  @media (max-width: 640px) {
+    .live-row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .live-row__actions {
+      justify-content: flex-start;
+    }
+
+    .attn-row {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .attn-choices {
+      grid-column: 1 / -1;
+    }
+
+    .live-mini__when {
+      width: auto;
+    }
+  }
+
+  /* ---------- Test: javoblar o'tilgach; test sababli yopiq dars ---------- */
+
+  .quiz {
+    scroll-margin-top: 5rem;
+  }
+
+  .quiz-result__hint {
+    max-width: 32rem;
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+    text-wrap: pretty;
+  }
+
+  .quiz-mistakes ul[data-kind="yours"] {
+    color: var(--caret-text);
+    font-weight: 500;
+  }
+
+  a.lesson-row[data-locked] {
+    cursor: pointer;
+  }
+
+  .lesson-locked {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+
+  .lesson-locked__icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+    background: var(--secondary);
+    color: var(--foreground);
+  }
+
+  /* ---------- Oylik imtihon (o'quvchi) ----------
+     Test — dars testi uslubida (`.quiz`), lekin natijasiz: javob "saqlandi" deb belgilanadi. */
+
+  .exam-page {
+    max-width: 52rem;
+  }
+
+  .exam-page--wide {
+    max-width: none;
+  }
+
+  .exam-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .exam-chip[data-state="OPEN"],
+  .exam-chip[data-state="READY"],
+  .exam-chip[data-state="passed"],
+  .exam-chip[data-state="graded"] {
+    background: color-mix(in oklab, var(--track-backend) 18%, var(--card));
+  }
+
+  .exam-chip[data-state="DRAFT"],
+  .exam-chip[data-state="todo"],
+  .exam-chip[data-state="submitted"] {
+    background: color-mix(in oklab, var(--track-frontend) 20%, var(--card));
+  }
+
+  .exam-chip[data-state="failed"] {
+    background: color-mix(in oklab, var(--caret) 14%, var(--card));
+  }
+
+  .exam-chip[data-state="CLOSED"],
+  .exam-chip[data-state="empty"] {
+    color: var(--muted-foreground);
+  }
+
+  .exam-deadline {
+    margin-top: 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+  }
+
+  .exam-part {
+    align-content: start;
+  }
+
+  .exam-part__head {
+    display: flex;
+    gap: 0.75rem 1rem;
+    align-items: center;
+  }
+
+  .exam-note {
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    text-wrap: pretty;
+  }
+
+  .exam-rules {
+    display: grid;
+    gap: 0.45rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+    font-size: 0.95rem;
+    text-wrap: pretty;
+  }
+
+  .exam-rules > li:first-child {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    list-style: none;
+    margin-left: -1.1rem;
+    color: var(--muted-foreground);
+  }
+
+  .exam-test {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .exam-score {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .exam-score__value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Test ketayotganda: jarayon, taymer va "Yakunlash" bir qatorda. */
+  .exam-play {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .exam-bar {
+    position: sticky;
+    top: 0.5rem;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+  }
+
+  .exam-bar > .quiz-progress__label {
+    flex: 1 1 12rem;
+  }
+
+  .exam-timer {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .exam-timer[data-low] {
+    background: color-mix(in oklab, var(--caret) 16%, var(--card));
+    color: var(--caret-text);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .exam-timer[data-low] svg {
+      animation: quiz-caret 1.06s steps(1, end) infinite;
+    }
+  }
+
+  .exam-track {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .exam-track button {
+    display: grid;
+    place-items: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 0.4rem;
+    border-radius: 0.55rem;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: background-color 0.15s;
+  }
+
+  .exam-track button[data-state="saved"] {
+    background: color-mix(in oklab, var(--line) 18%, var(--card));
+    color: var(--line);
+  }
+
+  .exam-track button[aria-current="step"] {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .exam-track button:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Imtihonda javob natijasiz: neytral "saqlandi" bloki. */
+  .quiz-feedback[data-saved] {
+    border-color: color-mix(in oklab, var(--line) 40%, var(--border));
+    background: color-mix(in oklab, var(--line) 6%, var(--card));
+  }
+
+  .quiz-feedback[data-saved] .quiz-feedback__title {
+    color: var(--line);
+  }
+
+  .exam-review {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .exam-review > summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .exam-review > ol {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .exam-review > ol > li {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border-radius: 1rem;
+    background: color-mix(in oklab, var(--caret) 5%, var(--card));
+  }
+
+  .exam-review > ol > li[data-correct] {
+    background: var(--secondary);
+  }
+
+  .exam-review__question {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    font-weight: 600;
+  }
+
+  .exam-review li:not([data-correct]) .exam-review__question > svg {
+    color: var(--caret-text);
+  }
+
+  .exam-review ul {
+    display: grid;
+    gap: 0.1rem;
+    font-weight: 600;
+  }
+
+  .exam-review ul[data-kind="yours"] {
+    font-weight: 500;
+  }
+
+  .exam-review li:not([data-correct]) ul[data-kind="yours"] {
+    color: var(--caret-text);
+  }
+
+  /* Amaliy topshiriqlar */
+  .exam-tasks {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .exam-task {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+  }
+
+  .exam-task__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+  }
+
+  .exam-task__number {
+    display: grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.6rem;
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .exam-task__title {
+    flex: 1 1 12rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .exam-task__text {
+    white-space: pre-line;
+    text-wrap: pretty;
+  }
+
+  .exam-task__answer {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .exam-task__meta {
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+  }
+
+  .exam-task__wait {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+  }
+
+  .exam-task__update > summary {
+    width: fit-content;
+    cursor: pointer;
+    color: var(--caret-text);
+    font-weight: 600;
+  }
+
+  .exam-task__update[open] > summary {
+    margin-bottom: 0.75rem;
+  }
+
+  /* Natija: umumiy foiz katta, qismlar yonida. */
+  .exam-result {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.75rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .exam-result[data-verdict="passed"] {
+    border-color: color-mix(in oklab, var(--track-backend) 45%, var(--border));
+  }
+
+  .exam-result[data-verdict="failed"] {
+    border-color: color-mix(in oklab, var(--caret) 35%, var(--border));
+  }
+
+  .exam-result__value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .exam-result__verdict {
+    margin-top: 0.35rem;
+    font-weight: 600;
+  }
+
+  .exam-result__parts {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .exam-result__parts dt {
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+  }
+
+  .exam-result__parts dd {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  /* Ro'yxat va kabinetdagi eslatma */
+  .exam-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .exam-card {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .exam-card:hover {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .exam-card:has(.teach-card__link:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .exam-card__title {
+    margin-top: 0.15rem;
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .exam-card__arrow {
+    flex: none;
+    color: var(--muted-foreground);
+  }
+
+  .exam-callout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.25rem;
+    align-items: center;
+    border-color: color-mix(in oklab, var(--track-frontend) 45%, var(--border));
+  }
+
+  .exam-callout > .min-w-0 {
+    flex: 1 1 16rem;
+  }
+
+  .exam-callout__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.9rem;
+    background: color-mix(in oklab, var(--track-frontend) 22%, transparent);
+    color: oklch(0.5 0.12 70);
+  }
+
+  .dark .exam-callout__icon {
+    color: var(--track-frontend);
+  }
+
+  /* ---------- Oylik imtihon (o'qituvchi) ---------- */
+
+  .exam-draft {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid color-mix(in oklab, var(--track-frontend) 50%, var(--border));
+    border-radius: 1.1rem;
+    background: color-mix(in oklab, var(--track-frontend) 10%, var(--card));
+  }
+
+  .exam-draft__link {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    margin-top: 0.6rem;
+    color: var(--caret-text);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .exam-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .exam-stats > div {
+    min-width: 9rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    background: var(--card);
+  }
+
+  .exam-stats dt {
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+  }
+
+  .exam-stats dd {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .exam-stats dd[data-attention] {
+    color: var(--caret-text);
+  }
+
+  .exam-task-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    padding-left: 1.25rem;
+    list-style: decimal;
+  }
+
+  /* Jadval: o'quvchilar × topshiriqlar. Telefonda ham jadval (gorizontal aylantiriladi). */
+  .exam-grid-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+  }
+
+  .exam-grid {
+    width: 100%;
+    min-width: 36rem;
+    border-collapse: collapse;
+  }
+
+  .exam-grid th,
+  .exam-grid td {
+    padding: 0.7rem 0.75rem;
+    border-top: 1px solid var(--border);
+    text-align: left;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .exam-grid thead th {
+    border-top: 0;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .exam-grid tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    min-width: 11rem;
+    background: var(--card);
+    font-weight: 400;
+    white-space: normal;
+  }
+
+  .exam-cell {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2.75rem;
+    height: 2rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+  }
+
+  .exam-cell[data-state="todo"] {
+    border-color: color-mix(in oklab, var(--caret) 45%, var(--border));
+    background: color-mix(in oklab, var(--caret) 8%, var(--card));
+    color: var(--caret-text);
+    font-family: var(--font-sans);
+  }
+
+  .exam-cell[data-state="done"] {
+    background: var(--secondary);
+  }
+
+  .exam-cell[aria-pressed="true"] {
+    border-color: var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .exam-cell:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .exam-total {
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+
+  .exam-total[data-passed] {
+    color: oklch(0.45 0.11 160);
+  }
+
+  .dark .exam-total[data-passed] {
+    color: var(--track-backend);
+  }
+
+  .exam-panel {
+    margin-top: 1.5rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+    scroll-margin-top: 5rem;
+  }
+
+  .exam-panel:focus {
+    outline: none;
+  }
+
+  .exam-grade {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .exam-until {
+    width: auto;
+    min-width: 14rem;
+  }
+
+  /* ---------- Sertifikatlar (kabinet) ---------- */
+
+  .cert-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .cert-card {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+
+  .cert-card:hover {
+    border-color: color-mix(in oklab, var(--line) 45%, var(--border));
+    transform: translateY(-2px);
+  }
+
+  .cert-card:has(.teach-card__link:focus-visible) {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  .cert-card > .min-w-0 {
+    flex: 1;
+  }
+
+  .cert-card[data-revoked] {
+    opacity: 0.8;
+  }
+
+  .cert-card__seal {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--line) 14%, var(--card));
+    color: var(--line);
+  }
+
+  .cert-card__title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .cert-card__meta {
+    margin-top: 0.2rem;
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+  }
+
+  .cert-card__revoked {
+    margin-top: 0.3rem;
+    color: var(--caret-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .cert-progress {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: 1rem;
+  }
+
+  .cert-checks {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1rem;
+  }
+
+  .cert-checks > li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.925rem;
+  }
+
+  .cert-checks > li[data-ok] {
+    color: var(--foreground);
+  }
+
+  .cert-checks > li[data-ok] > svg {
+    color: oklch(0.55 0.13 160);
+  }
+
+  /* ---------- Yutuqlar: XP, coin, seriya, topshiriqlar, tarix ----------
+     Seriya — sertifikatdagi kabi bog'langan nuqtalar, oxirida brend kursori. */
+
+  .rw-balance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .rw-stat {
+    display: grid;
+    align-content: start;
+    gap: 0.2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .rw-stat__icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.4rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--line) 16%, transparent);
+    color: var(--line);
+  }
+
+  .rw-stat__icon[data-kind="coins"] {
+    background: color-mix(in oklab, var(--track-frontend) 22%, transparent);
+    color: oklch(0.5 0.12 70);
+  }
+
+  .dark .rw-stat__icon[data-kind="coins"] {
+    color: var(--track-frontend);
+  }
+
+  .rw-stat__value {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rw-stat__label {
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .rw-stat__hint {
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+  }
+
+  .rw-stat__link {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    width: fit-content;
+    margin-top: 0.5rem;
+    color: var(--caret-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .rw-trail {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-block: 0.4rem 0.2rem;
+  }
+
+  .rw-trail svg {
+    height: 2.75rem;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .rw-trail path {
+    fill: none;
+    stroke: var(--line);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+  }
+
+  .rw-trail circle {
+    fill: var(--line);
+  }
+
+  .rw-trail rect {
+    fill: var(--caret);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .rw-trail rect {
+      animation: quiz-caret 1.06s steps(1, end) infinite;
+    }
+  }
+
+  .rw-trail .rw-trail__empty {
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-width: 2;
+    stroke-dasharray: 3 3;
+  }
+
+  .rw-trail__extra {
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .rw-tasks {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .rw-task {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .rw-task[data-done] {
+    border-color: color-mix(in oklab, var(--track-backend) 40%, var(--border));
+    background: color-mix(in oklab, var(--track-backend) 7%, var(--card));
+  }
+
+  .rw-task__mark {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid var(--input);
+    border-radius: 0.45rem;
+  }
+
+  .rw-task[data-done] .rw-task__mark {
+    border-color: oklch(0.55 0.13 160);
+    background: oklch(0.55 0.13 160);
+    color: #fff;
+  }
+
+  .rw-task__title {
+    flex: 1 1 14rem;
+    font-weight: 500;
+  }
+
+  .rw-task__go {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    color: var(--caret-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .rw-invite {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .rw-invite__link code {
+    display: block;
+    padding: 0.55rem 0.8rem;
+    border-radius: 0.7rem;
+    background: var(--secondary);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .rw-coupons {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .rw-coupons > li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.6rem 0.8rem;
+    border: 1px dashed color-mix(in oklab, var(--track-backend) 60%, var(--border));
+    border-radius: 0.8rem;
+    font-weight: 600;
+  }
+
+  .rw-history {
+    display: grid;
+  }
+
+  .rw-history > li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .rw-history > li:first-child {
+    border-top: 0;
+  }
+
+  .rw-history__reason {
+    font-weight: 600;
+  }
+
+  .rw-history__meta,
+  .rw-history__canceled {
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+  }
+
+  .rw-history__amount {
+    color: oklch(0.45 0.11 160);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .dark .rw-history__amount {
+    color: var(--track-backend);
+  }
+
+  .rw-history > li[data-penalty] .rw-history__amount {
+    color: var(--caret-text);
+  }
+
+  .rw-history > li[data-canceled] .rw-history__amount {
+    color: var(--muted-foreground);
+    text-decoration: line-through;
+  }
+
+  .rw-rules {
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+  }
+
+  .rw-rules > summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .rw-rules__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1rem 2rem;
+    margin-top: 1rem;
+  }
+
+  .rw-rules__grid h3 {
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+  }
+
+  .rw-rules__grid ul {
+    display: grid;
+    gap: 0.25rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+    font-size: 0.925rem;
+  }
+
+  .rw-rules__link {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    margin-top: 1rem;
+    color: var(--caret-text);
+    font-weight: 600;
+  }
+
+  .rw-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .rw-card__link {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+    color: var(--caret-text);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .rw-card__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    margin-top: 1rem;
+  }
+
+  .rw-card__stats dt {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .rw-card__stats dd {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Reyting ---------- */
+
+  .rt-board {
+    display: grid;
+  }
+
+  .rt-board > li {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.7rem 0.6rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .rt-board > li:first-child {
+    border-top: 0;
+  }
+
+  .rt-board > li[data-me] {
+    border-radius: 0.9rem;
+    background: color-mix(in oklab, var(--line) 10%, var(--card));
+  }
+
+  .rt-board__place {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rt-board__name {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  .rt-board__you {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--line);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .rt-board__xp {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .rt-me {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+  }
+
+  /* ---------- Do'kon ---------- */
+
+  .shop-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .shop-balance {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 0.6rem;
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shop-balance > svg {
+    color: oklch(0.5 0.12 70);
+  }
+
+  .dark .shop-balance > svg {
+    color: var(--track-frontend);
+  }
+
+  .shop-balance strong {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .shop-balance__link {
+    display: inline-flex;
+    grid-column: 1 / -1;
+    gap: 0.3rem;
+    align-items: center;
+    color: var(--caret-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+
+  .shop-card {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+  }
+
+  .shop-card__image {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    background:
+      radial-gradient(circle, var(--grid-line) 1px, transparent 1.5px) 0 0 / 14px 14px,
+      color-mix(in oklab, var(--track-frontend) 12%, var(--secondary));
+    color: oklch(0.5 0.12 70);
+  }
+
+  .dark .shop-card__image {
+    color: var(--track-frontend);
+  }
+
+  .shop-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shop-card__body {
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    padding: 1rem 1.1rem 0.5rem;
+  }
+
+  .shop-card__name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .shop-card__text {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .shop-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+  }
+
+  .shop-card__price {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+    color: var(--foreground);
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .shop-card__action {
+    padding: 0.75rem 1.1rem 1.1rem;
+  }
+
+  .shop-orders {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .shop-order {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 1.1rem;
+    background: var(--card);
+  }
+
+  .shop-order__name {
+    font-weight: 700;
+  }
+
+  .shop-order__meta {
+    margin-top: 0.15rem;
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+  }
+
+  .shop-order__note {
+    margin-top: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .shop-status {
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .shop-status[data-status="NEW"] {
+    background: color-mix(in oklab, var(--track-frontend) 20%, var(--card));
+  }
+
+  .shop-status[data-status="READY"] {
+    background: color-mix(in oklab, var(--line) 16%, var(--card));
+  }
+
+  .shop-status[data-status="DELIVERED"] {
+    background: color-mix(in oklab, var(--track-backend) 18%, var(--card));
+  }
+
+  .shop-status[data-status="CANCELED"] {
+    color: var(--muted-foreground);
+  }
+}

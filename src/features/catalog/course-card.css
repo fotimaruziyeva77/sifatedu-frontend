@@ -1,0 +1,394 @@
+/*
+ * Kurs kartochkasi va uning jonli preview'i. Landing, katalog va kabinet katalogida bir xil —
+ * shuning uchun komponentning o'zi import qiladi (sahifa CSS'iga bog'liq emas).
+ */
+
+@layer components {
+  /* ---------- Kurslar ---------- */
+
+  .course-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 1.75rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition:
+      transform 0.45s var(--ease-out-expo),
+      box-shadow 0.4s,
+      border-color 0.4s;
+  }
+
+  .group:hover .course-card {
+    border-color: color-mix(in oklab, var(--track) 40%, var(--border));
+    box-shadow: var(--shadow-lift);
+  }
+
+  .course-card__preview {
+    position: relative;
+    height: 11rem;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: radial-gradient(
+      120% 130% at 15% 0%,
+      color-mix(in oklab, var(--track) 28%, var(--card)),
+      color-mix(in oklab, var(--track) 6%, var(--card)) 70%
+    );
+  }
+
+  .course-card__track {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    background: var(--card);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .course-card__track::before {
+    content: "";
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--track);
+  }
+
+  .course-card__lang {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.32rem 0.55rem;
+    border-radius: 0.5rem;
+    background: color-mix(in oklab, var(--card) 75%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+  }
+
+  .course-card__chip {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.8rem;
+  }
+
+  /* Butun kartochka bosiladi: havolaning ::after qatlami uni to'liq qoplaydi. */
+  .course-card__link {
+    color: inherit;
+    outline: none;
+  }
+
+  .course-card__link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+
+  .course-card:has(.course-card__link:focus-visible) {
+    outline: 2px solid var(--caret);
+    outline-offset: 3px;
+  }
+
+  .course-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 1.05rem;
+    border-radius: 999px;
+    background: var(--foreground);
+    color: var(--background);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition:
+      gap 0.3s var(--ease-out-expo),
+      background-color 0.3s,
+      color 0.3s;
+  }
+
+  .course-card__cta:hover {
+    gap: 0.7rem;
+    background: var(--primary);
+    color: #fff;
+  }
+
+  /* Kurs mini-animatsiyalari */
+  .pv {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1.25rem 1rem;
+  }
+
+  .pv-code__editor {
+    display: flex;
+    flex: 1.1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.45rem;
+    height: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: color-mix(in oklab, var(--background) 70%, transparent);
+  }
+
+  .pv-code__line {
+    display: block;
+    width: var(--w);
+    height: 0.45rem;
+    border-radius: 99px;
+    background: linear-gradient(
+      90deg,
+      var(--track),
+      color-mix(in oklab, var(--track) 35%, var(--muted-foreground))
+    );
+    transform-origin: left;
+    animation: pv-type 6s calc(var(--i) * 0.35s) infinite both;
+  }
+
+  .pv-code__line:nth-child(2),
+  .pv-code__line:nth-child(3) {
+    margin-left: 0.8rem;
+  }
+
+  .pv-code__browser {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.4rem;
+    height: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .pv-code__bar {
+    width: 40%;
+    height: 0.45rem;
+    border-radius: 99px;
+    background: var(--secondary);
+  }
+
+  .pv-code__block {
+    flex: 1;
+    border-radius: 0.4rem;
+    background: color-mix(in oklab, var(--track) 22%, var(--secondary));
+    animation: pv-pop 6s calc(1.2s + var(--i) * 0.4s) infinite both;
+  }
+
+  .pv-code__block--hero {
+    flex: 1.6;
+    background: linear-gradient(
+      120deg,
+      color-mix(in oklab, var(--track) 55%, transparent),
+      color-mix(in oklab, var(--caret) 30%, transparent)
+    );
+  }
+
+  .pv-server {
+    gap: 0;
+  }
+
+  .pv-server__node {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+    background: var(--card);
+    color: var(--muted-foreground);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .pv-server__node--main {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-color: color-mix(in oklab, var(--track) 45%, var(--border));
+    color: var(--track);
+  }
+
+  .pv-server__wire {
+    position: relative;
+    flex: 1;
+    max-width: 6rem;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--border) 0 6px, transparent 6px 10px);
+  }
+
+  .pv-server__wire--short {
+    max-width: 3.5rem;
+  }
+
+  .pv-server__packet {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0.55rem;
+    height: 0.55rem;
+    margin-top: -0.275rem;
+    border-radius: 50%;
+    background: var(--track);
+    box-shadow: 0 0 10px var(--track);
+    animation: pv-packet 2.4s ease-in-out infinite;
+  }
+
+  .pv-server__packet--back {
+    background: var(--caret);
+    box-shadow: 0 0 10px var(--caret);
+    animation-name: pv-packet-back;
+  }
+
+  .pv-server__packet--db {
+    animation-duration: 1.2s;
+    animation-delay: 0.6s;
+  }
+
+  .pv-server__status {
+    position: absolute;
+    right: 1rem;
+    bottom: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.4rem;
+    background: color-mix(in oklab, var(--track-backend) 14%, transparent);
+    color: var(--track-backend);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    animation: pv-status 2.4s infinite;
+  }
+
+  .pv-design__board {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background-color: var(--card);
+    background-image: radial-gradient(var(--grid-line) 1px, transparent 1.3px);
+    background-size: 12px 12px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .pv-design__shape {
+    position: absolute;
+    border-radius: 0.6rem;
+    animation: pv-snap 6s var(--ease-spring) infinite both;
+  }
+
+  .pv-design__shape--circle {
+    --dx: -24px;
+    --dy: -16px;
+    top: 22%;
+    left: 12%;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 50%;
+    background: var(--track);
+  }
+
+  .pv-design__shape--card {
+    --dx: 26px;
+    --dy: -12px;
+    top: 18%;
+    right: 10%;
+    width: 42%;
+    height: 38%;
+    background: color-mix(in oklab, var(--track) 35%, var(--secondary));
+    animation-delay: 0.3s;
+  }
+
+  .pv-design__shape--pill {
+    --dx: -18px;
+    --dy: 16px;
+    bottom: 18%;
+    left: 14%;
+    width: 36%;
+    height: 0.9rem;
+    border-radius: 99px;
+    background: var(--caret);
+    animation-delay: 0.6s;
+  }
+
+  .pv-design__cursor {
+    position: absolute;
+    top: 58%;
+    left: 56%;
+    color: var(--foreground);
+    animation: pv-cursor 6s ease-in-out infinite;
+  }
+
+  .pv-design__swatches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .pv-design__swatches > span {
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 2px solid var(--card);
+    border-radius: 50%;
+    box-shadow: var(--shadow-soft);
+    animation: pv-swatch 3s calc(var(--i) * 0.25s) ease-in-out infinite;
+  }
+
+  .pv-design__swatches > span:nth-child(1) {
+    background: var(--track);
+  }
+
+  .pv-design__swatches > span:nth-child(2) {
+    background: var(--caret);
+  }
+
+  .pv-design__swatches > span:nth-child(3) {
+    background: var(--track-basics);
+  }
+
+  .pv-design__swatches > span:nth-child(4) {
+    background: var(--foreground);
+  }
+
+  .pv-network svg {
+    width: min(100%, 17rem);
+    height: auto;
+    overflow: visible;
+  }
+
+  .pv-network line {
+    stroke: var(--track);
+    stroke-width: 2;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: pv-draw 6s calc(var(--i) * 0.35s) infinite both;
+  }
+
+  .pv-network circle {
+    fill: var(--card);
+    stroke: var(--track);
+    stroke-width: 2.5;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pv-node 6s calc(var(--i) * 0.35s) infinite both;
+  }
+}

@@ -1,0 +1,700 @@
+/* Katalog va kurs sahifasi. */
+
+@layer components {
+  /* ---------- Katalog ---------- */
+
+  .catalog-filters {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 1024px) {
+    .catalog-filters {
+      grid-template-columns: minmax(18rem, 24rem) auto;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .catalog-groups {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .catalog-search {
+    position: relative;
+  }
+
+  .catalog-search__icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    translate: 0 -50%;
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+
+  /* Qidiruv natijasi yangilanayotganini bildiruvchi nuqta. */
+  .catalog-search__pending {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    translate: 0 -50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--caret);
+    animation: pulse-dot 1s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    50% {
+      opacity: 0.25;
+      scale: 0.7;
+    }
+  }
+
+  .catalog-sort {
+    display: inline-flex;
+  }
+
+  .catalog-sort__select {
+    height: 2.75rem;
+    padding: 0 2.25rem 0 1rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background-color: var(--card);
+    background-image:
+      linear-gradient(45deg, transparent 50%, currentColor 50%),
+      linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+      right 1.15rem center,
+      right 0.85rem center;
+    background-size:
+      0.3rem 0.3rem,
+      0.3rem 0.3rem;
+    background-repeat: no-repeat;
+    font-size: 0.9rem;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .catalog-reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    transition:
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .catalog-reset:hover {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .catalog-groups {
+    display: none;
+    gap: 1.25rem;
+    padding-top: 0.5rem;
+  }
+
+  .catalog-groups.is-open {
+    display: grid;
+  }
+
+  @media (min-width: 1024px) {
+    .catalog-groups {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 2rem;
+    }
+  }
+
+  .catalog-group {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .catalog-group__label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .catalog-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    font-size: 0.875rem;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .catalog-chip:hover {
+    border-color: color-mix(in oklab, var(--foreground) 25%, transparent);
+  }
+
+  .catalog-chip.is-active {
+    border-color: transparent;
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .catalog-chip__count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    opacity: 0.6;
+  }
+
+  .catalog-empty {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    padding: 4rem 1.5rem;
+    border: 1px dashed var(--border);
+    border-radius: 1.5rem;
+    text-align: center;
+    color: var(--muted-foreground);
+  }
+
+  .catalog-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .catalog-page {
+    display: grid;
+    place-items: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s,
+      color 0.2s;
+  }
+
+  .catalog-page:hover {
+    border-color: color-mix(in oklab, var(--foreground) 25%, transparent);
+  }
+
+  .catalog-page.is-active {
+    border-color: transparent;
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  .catalog-page.is-disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  /* ---------- Kurs sahifasi ---------- */
+
+  .course-hero {
+    position: relative;
+    padding: 7.5rem 0 3rem;
+    background: radial-gradient(
+      80% 60% at 20% 0%,
+      color-mix(in oklab, var(--track) 14%, transparent),
+      transparent 70%
+    );
+  }
+
+  /* Kabinet ichida: sayt header'i yo'q, shuning uchun yuqori bo'shliq kichik. */
+  .course-hero--app {
+    margin: -1rem -1rem 0;
+    padding: 1.5rem 1rem 2.5rem;
+    border-radius: 0 0 1.5rem 1.5rem;
+  }
+
+  @media (width >= 64rem) {
+    .course-hero--app {
+      margin: -1.5rem -2rem 0;
+      padding: 2rem 2rem 3rem;
+    }
+  }
+
+  .course-buy__owned {
+    margin-top: 1.25rem;
+    font-weight: 600;
+  }
+
+  .course-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+
+  .course-breadcrumb a:hover {
+    color: var(--foreground);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .course-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .course-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.75rem;
+  }
+
+  .course-facts > li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    font-size: 0.85rem;
+  }
+
+  .course-buy__card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 1.75rem;
+    background: var(--card);
+    box-shadow: var(--shadow-lift);
+  }
+
+  @media (min-width: 1024px) {
+    .course-buy {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+  }
+
+  .course-buy__cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 1.25rem;
+    border-radius: 1rem;
+    object-fit: cover;
+  }
+
+  .course-buy__icon {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 1.25rem;
+    border-radius: 1rem;
+    background: radial-gradient(
+      120% 130% at 20% 0%,
+      color-mix(in oklab, var(--track) 30%, var(--secondary)),
+      var(--secondary) 70%
+    );
+    color: var(--track);
+  }
+
+  /* Onlayn va offlayn narxlar birga ko'rsatiladi, har biri birligi bilan. */
+  .course-buy__price {
+    display: grid;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  .course-buy__price > p:nth-child(2) {
+    font-size: 1.25rem;
+    color: var(--muted-foreground);
+  }
+
+  .course-buy__unit {
+    margin-left: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: var(--muted-foreground);
+  }
+
+  .course-buy__note {
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+  }
+
+  .course-buy__perks {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+
+  .course-buy__perks > li {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .course-buy__perks > li::before {
+    content: "";
+    flex: none;
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--track);
+  }
+
+  .course-block + .course-block {
+    margin-top: 3.5rem;
+  }
+
+  .course-section-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+    letter-spacing: -0.02em;
+  }
+
+  .course-mentor {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+  }
+
+  .course-mentor__initials {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--secondary);
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  .course-side__card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+  }
+
+  @media (min-width: 1024px) {
+    .course-side {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+  }
+
+  /* ---------- Dastur ---------- */
+
+  .program {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .program__item {
+    padding: 0 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    background: var(--card);
+    transition: border-color 0.3s;
+  }
+
+  .program__item[data-state="open"] {
+    border-color: color-mix(in oklab, var(--track) 40%, var(--border));
+  }
+
+  .program__trigger {
+    gap: 1rem;
+    padding: 1.15rem 0;
+    text-decoration: none;
+  }
+
+  .program__index {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--track);
+  }
+
+  .program__meta {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--muted-foreground);
+  }
+
+  .program__content {
+    padding-bottom: 1rem;
+  }
+
+  .program__lesson {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+
+  .program__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--secondary);
+    color: var(--muted-foreground);
+  }
+
+  .program__lesson:has(.program__free) .program__icon {
+    background: color-mix(in oklab, var(--caret) 14%, transparent);
+    color: var(--caret);
+  }
+
+  .program__free {
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--caret) 14%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--caret-text);
+  }
+
+  .program__duration {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+  }
+
+  /* --- Sotib olish paneli --- */
+
+  .buy-formats {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .buy-format {
+    display: flex;
+    gap: 0.625rem;
+    align-items: flex-start;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    cursor: pointer;
+    transition:
+      border-color 0.18s,
+      background-color 0.18s;
+  }
+
+  .buy-format:hover {
+    background: var(--accent);
+  }
+
+  .buy-format:has(input:checked) {
+    border-color: var(--caret);
+    background: color-mix(in oklab, var(--caret) 8%, transparent);
+  }
+
+  .buy-format:has(input:focus-visible) {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+  }
+
+  .buy-format input {
+    margin-top: 0.2rem;
+    accent-color: var(--caret);
+  }
+
+  .buy-format span {
+    display: grid;
+    gap: 0.125rem;
+  }
+
+  .buy-format strong {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .buy-format em {
+    font-size: 0.8125rem;
+    font-style: normal;
+    color: var(--muted-foreground);
+  }
+
+  .buy-months {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .buy-months__control {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  .buy-months__control button {
+    display: grid;
+    place-items: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border-radius: 999px;
+    color: var(--muted-foreground);
+  }
+
+  .buy-months__control button:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--foreground);
+  }
+
+  .buy-months__control button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .buy-months__control output {
+    min-width: 2rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .buy-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9375rem;
+    color: var(--muted-foreground);
+  }
+
+  .buy-total strong {
+    font-family: var(--font-mono);
+    font-size: 1.375rem;
+    color: var(--foreground);
+  }
+
+  /* Chegirmada: eski narx yangisining ustida, kichik va chizilgan. */
+  .buy-total strong:has(.buy-total__old) {
+    display: grid;
+    justify-items: end;
+    text-align: right;
+  }
+
+  .buy-total__old {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 400;
+  }
+
+  /* Do'st taklifi yoki kupon bo'yicha chegirma. */
+  .buy-discount {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--track-backend) 14%, var(--card));
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  /* --- To'lov natijasi --- */
+
+  .payment-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 4rem 1rem;
+    color: var(--muted-foreground);
+  }
+
+  .payment-card {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    max-width: 34rem;
+    margin: 2rem auto;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid var(--border);
+    border-radius: 1.5rem;
+    background: var(--card);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .payment-card__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 1rem;
+  }
+
+  .payment-card[data-tone="ok"] .payment-card__icon {
+    background: color-mix(in oklab, oklch(0.72 0.17 152) 18%, transparent);
+    color: oklch(0.72 0.17 152);
+  }
+
+  .payment-card[data-tone="wait"] .payment-card__icon {
+    background: color-mix(in oklab, oklch(0.8 0.15 84) 18%, transparent);
+    color: oklch(0.8 0.15 84);
+  }
+
+  .payment-card[data-tone="bad"] .payment-card__icon {
+    background: color-mix(in oklab, var(--caret) 14%, transparent);
+    color: var(--caret);
+  }
+}
