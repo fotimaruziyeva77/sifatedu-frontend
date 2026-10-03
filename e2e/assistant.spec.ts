@@ -1,14 +1,14 @@
 import { expect, expectAccessible, test } from "./fixtures";
 
 /**
- * AI maslahatchi test rejimida (`ASSISTANT_DRY_RUN=true`) yoki Claude'siz zaxira rejimida: butun yo'l
+ * AI maslahatchi test rejimida (`ASSISTANT_DRY_RUN=true`) yoki Gemini'siz zaxira rejimida: butun yo'l
  * ishlaydi — xabar navbatga tushadi, worker-ai javob beradi, kurs kartochkalari va ariza.
- * Backend haqiqiy Claude bilan ishlayotgan bo'lsa (`E2E_AI_LIVE=1`), suhbat testi o'tkazib
+ * Backend haqiqiy Gemini bilan ishlayotgan bo'lsa (`E2E_AI_LIVE=1`), suhbat testi o'tkazib
  * yuboriladi: javob har safar boshqacha va har yurish pul sarflaydi.
  */
 test.describe("AI maslahatchi", () => {
   test("kasb testi yonidagi chat: kurslar va ariza", async ({ page }) => {
-    test.skip(process.env.E2E_AI_LIVE === "1", "backend haqiqiy Claude bilan ishlayapti");
+    test.skip(process.env.E2E_AI_LIVE === "1", "backend haqiqiy Gemini bilan ishlayapti");
     await page.goto("/uz");
     const chat = page.getByRole("region", { name: "AI maslahatchi" });
     await chat.scrollIntoViewIfNeeded();

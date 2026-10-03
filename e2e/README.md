@@ -27,7 +27,7 @@ Har bir sahifada **axe-core** (WCAG 2.1 A/AA — jiddiy va kritik xatolar bo'lma
 ```bash
 # 1. Test ma'lumotlari (faqat DEBUG rejimida ishlaydi)
 docker compose exec backend python manage.py seed_e2e
-# AI chat testlari: worker-ai ishlab turishi kerak. Backend haqiqiy Claude bilan ishlasa
+# AI chat testlari: worker-ai ishlab turishi kerak. Backend haqiqiy Gemini bilan ishlasa
 # (ASSISTANT_DRY_RUN=false va kalit bor), E2E_AI_LIVE=1 bering — suhbat testi o'tkazib yuboriladi.
 
 # 2. Testlar (frontend papkasida)

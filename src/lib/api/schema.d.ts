@@ -3011,7 +3011,7 @@ export interface components {
         SiteSettings: {
             /** @description Click kalitlari yo'q bo'lsa, saytda sotib olish tugmasi ko'rinmaydi. */
             readonly payments_enabled: boolean;
-            /** @description AI chat saytda ko'rinadimi: admin'da yoqilgan va Claude kaliti (yoki test rejimi) bor. */
+            /** @description AI chat saytda ko'rinadimi: admin'da yoqilgan va Gemini kaliti (yoki test rejimi) bor. */
             readonly assistant_enabled: boolean;
             /**
              * Hero sarlavhasi
