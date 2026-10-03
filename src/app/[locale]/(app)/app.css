@@ -4138,20 +4138,86 @@
     overflow-wrap: anywhere;
   }
 
-  .rw-coupons {
+  /* Kupon — yirtib olinadigan chipta: chap qism (foiz) va o'ng qism teshikli chiziq bilan
+     ajratilgan, chiziq uchlarida yarim doira kesiklar. */
+  .rw-tickets {
     display: grid;
-    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: 1rem;
     margin-top: 1rem;
   }
 
-  .rw-coupons > li {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    padding: 0.6rem 0.8rem;
-    border: 1px dashed color-mix(in oklab, var(--track-backend) 60%, var(--border));
-    border-radius: 0.8rem;
+  .rw-ticket {
+    --notch: 0.7rem;
+    --stub: 7.5rem;
+    display: grid;
+    grid-template-columns: var(--stub) 1fr;
+    border: 1px solid color-mix(in oklab, var(--track-backend) 45%, var(--border));
+    border-radius: 1.25rem;
+    background: color-mix(in oklab, var(--track-backend) 7%, var(--card));
+    box-shadow: var(--shadow-soft);
+    mask:
+      radial-gradient(
+          circle at var(--stub) 0,
+          transparent var(--notch),
+          #000 calc(var(--notch) + 0.5px)
+        )
+        top / 100% 51% no-repeat,
+      radial-gradient(
+          circle at var(--stub) 100%,
+          transparent var(--notch),
+          #000 calc(var(--notch) + 0.5px)
+        )
+        bottom / 100% 51% no-repeat;
+  }
+
+  .rw-ticket__stub {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 0.1rem;
+    padding: 1rem 0.5rem;
+    border-right: 2px dashed color-mix(in oklab, var(--track-backend) 40%, var(--border));
+    color: var(--track-backend);
+    text-align: center;
+  }
+
+  .rw-ticket__percent {
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rw-ticket__off {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .rw-ticket__body {
+    display: grid;
+    align-content: center;
+    gap: 0.2rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .rw-ticket__kind {
+    font-weight: 700;
+  }
+
+  .rw-ticket__until {
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rw-ticket__hint {
+    color: var(--muted-foreground);
+    font-size: 0.85rem;
+    text-wrap: pretty;
   }
 
   .rw-history {

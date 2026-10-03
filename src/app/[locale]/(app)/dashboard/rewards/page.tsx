@@ -1,7 +1,7 @@
 import { ArrowRight, Coins, Medal, ShoppingBag, TicketPercent, Zap } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 
 import { HistoryList } from "@/features/rewards/history-list";
 import { InviteCard } from "@/features/rewards/invite-card";
@@ -26,10 +26,21 @@ export async function generateMetadata({
 export default async function RewardsPage({ params }: PageProps<"/[locale]/dashboard/rewards">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, rewards] = await Promise.all([getTranslations("Rewards"), getRewards(locale)]);
+  const [t, format, rewards] = await Promise.all([
+    getTranslations("Rewards"),
+    getFormatter(),
+    getRewards(locale),
+  ]);
   if (!rewards) notFound();
   const rules = rewards.rules;
   const done = rewards.tasks.filter((task) => task.done).length;
+  const until = (value: string) =>
+    format.dateTime(new Date(value), {
+      day: "numeric",
+      month: "long",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   return (
     <>
@@ -37,6 +48,44 @@ export default async function RewardsPage({ params }: PageProps<"/[locale]/dashb
         <h1 className="app-title">{t("title")}</h1>
         <p className="mt-3 max-w-2xl text-pretty text-muted-foreground">{t("intro")}</p>
       </header>
+
+      {/* Kupon — sahifaning eng muhimi: botdagi daraja testidan keyin odam shu yerga keladi. */}
+      {rewards.coupons.length > 0 && (
+        <section aria-labelledby="rw-coupons" className="mt-8">
+          <h2 id="rw-coupons" className="app-section-title">
+            {t("couponsTitle")}
+          </h2>
+          <ul className="rw-tickets">
+            {rewards.coupons.map((coupon) => (
+              <li key={coupon.id} className="rw-ticket">
+                <div className="rw-ticket__stub">
+                  <TicketPercent aria-hidden className="size-5" />
+                  <p className="rw-ticket__percent">{coupon.percent}%</p>
+                  <p className="rw-ticket__off">{t("couponOff")}</p>
+                </div>
+                <div className="rw-ticket__body">
+                  <p className="rw-ticket__kind">{t(`couponKind.${coupon.kind}`)}</p>
+                  <p className="rw-ticket__until">
+                    {coupon.expires_at
+                      ? t("couponUntil", { date: until(coupon.expires_at) })
+                      : t("couponNoLimit")}
+                  </p>
+                  <p className="rw-ticket__hint">
+                    {t(coupon.reserved ? "couponReserved" : "couponHint")}
+                  </p>
+                  {!coupon.reserved && (
+                    <Link href="/courses" className="rw-stat__link">
+                      {t("couponCta")}
+                      <ArrowRight aria-hidden className="size-4" />
+                    </Link>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-sm text-pretty text-muted-foreground">{t("couponRule")}</p>
+        </section>
+      )}
 
       <section aria-label={t("balance")} className="rw-balance">
         <div className="rw-stat">
@@ -110,18 +159,6 @@ export default async function RewardsPage({ params }: PageProps<"/[locale]/dashb
             invited={rewards.invited}
           />
         </div>
-        {rewards.coupons.length > 0 && (
-          <ul className="rw-coupons">
-            {rewards.coupons.map((coupon) => (
-              <li key={coupon.id}>
-                <TicketPercent aria-hidden className="size-5 shrink-0" />
-                <span>
-                  {t(coupon.reserved ? "couponReserved" : "coupon", { percent: coupon.percent })}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
       </section>
 
       <section aria-labelledby="rw-history" className="mt-10">

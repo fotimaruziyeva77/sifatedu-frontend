@@ -1618,11 +1618,24 @@ export interface components {
         Coupon: {
             id: number;
             percent: number;
+            kind: components["schemas"]["CouponKindEnum"];
             /** Format: date-time */
             created_at: string;
+            /**
+             * Format: date-time
+             * @description Bo'sh — muddatsiz.
+             */
+            expires_at: string | null;
             /** @description To'lov kutilayotgan buyurtmaga biriktirilgan. */
             reserved: boolean;
         };
+        /**
+         * @description * `REFERRAL` - Do'st taklifi
+         *     * `PLACEMENT` - Daraja testi
+         *     * `MANUAL` - Qo'lda
+         * @enum {string}
+         */
+        CouponKindEnum: "REFERRAL" | "PLACEMENT" | "MANUAL";
         /**
          * @description * `ADULT` - 15 yoshdan kattalar
          *     * `KIDS` - Bolalar (7–11 yosh)
@@ -2432,10 +2445,11 @@ export interface components {
          *     * `CERTIFICATE` - Sertifikat
          *     * `REWARD` - Mukofot
          *     * `SHOP` - Do'kon
+         *     * `COUPON` - Chegirma kuponi
          *     * `TEST` - Sinov
          * @enum {string}
          */
-        NotificationKindEnum: "BROADCAST" | "PAYMENT" | "COURSE_OPENED" | "ACCESS_EXPIRING" | "ACCESS_EXPIRED" | "HOMEWORK_SUBMITTED" | "HOMEWORK_REVIEWED" | "INACTIVE" | "LIVE_REMINDER" | "LIVE_CANCELED" | "LIVE_ABSENT" | "LIVE_RECORDING" | "LESSON_OPENED" | "EXAM_DRAFT" | "EXAM_OPENED" | "EXAM_RESULT" | "CERTIFICATE" | "REWARD" | "SHOP" | "TEST";
+        NotificationKindEnum: "BROADCAST" | "PAYMENT" | "COURSE_OPENED" | "ACCESS_EXPIRING" | "ACCESS_EXPIRED" | "HOMEWORK_SUBMITTED" | "HOMEWORK_REVIEWED" | "INACTIVE" | "LIVE_REMINDER" | "LIVE_CANCELED" | "LIVE_ABSENT" | "LIVE_RECORDING" | "LESSON_OPENED" | "EXAM_DRAFT" | "EXAM_OPENED" | "EXAM_RESULT" | "CERTIFICATE" | "REWARD" | "SHOP" | "COUPON" | "TEST";
         /** @description `ids` berilmasa — hammasi o'qilgan deb belgilanadi. */
         NotificationReadRequest: {
             ids?: number[];
