@@ -856,7 +856,7 @@
     "saved": "Saved",
     "noStudents": "There are no students in the group yet.",
     "coverTitle": "Lesson covered",
-    "coverHint": "Pick today's topic. In an in-class group, quizzes and homework up to this lesson open for students and they get a notification.",
+    "coverHint": "Pick today's topic. In an in-class group, and in an online (Zoom) group with “lessons are opened by the teacher” on, quizzes and homework up to this lesson open for students; other online groups just get a notification.",
     "topic": "Topic",
     "markCovered": "Lesson covered",
     "coveredTopic": "Covered: {title}",

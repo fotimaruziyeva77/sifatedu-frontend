@@ -856,7 +856,7 @@
     "saved": "Saqlandi",
     "noStudents": "Guruhda hali o'quvchi yo'q.",
     "coverTitle": "Dars o'tildi",
-    "coverHint": "Bugun o'tilgan mavzuni tanlang. Offlayn guruhda shu darsgacha test va uy vazifalari o'quvchilarga ochiladi va ularga xabar boradi.",
+    "coverHint": "Bugun o'tilgan mavzuni tanlang. Offlayn guruhda va «darslarni o'qituvchi ochadi» yoqilgan onlayn (Zoom) guruhda shu darsgacha test va uy vazifalari o'quvchilarga ochiladi; boshqa onlayn guruhda o'quvchilarga xabar boradi.",
     "topic": "Mavzu",
     "markCovered": "Dars o'tildi",
     "coveredTopic": "O'tildi: {title}",
