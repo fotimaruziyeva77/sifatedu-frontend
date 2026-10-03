@@ -34,7 +34,8 @@
     "certificates": "Sertifikatlar",
     "rewards": "Yutuqlar",
     "rating": "Reyting",
-    "shop": "Do'kon"
+    "shop": "Do'kon",
+    "dailyTest": "Kunlik test"
   },
   "Theme": {
     "toLight": "Kun rejimiga o'tish",
@@ -1130,7 +1131,8 @@
       "REFERRAL_PAID": "Do'stingiz to'lov qildi",
       "PURCHASE": "Do'kondan sovg'a",
       "REFUND": "Sovg'a bekor qilindi — coin qaytdi",
-      "MANUAL": "Administrator"
+      "MANUAL": "Administrator",
+      "DAILY_TEST": "Kunlik test"
     },
     "rulesTitle": "XP qanday topiladi va yo'qotiladi",
     "rulesEarn": "Topiladi (XP va shuncha coin)",
@@ -1218,6 +1220,46 @@
     "errors": {
       "network": "Aloqa yo'q. Internetni tekshirib, qayta urinib ko'ring.",
       "server": "Serverda xatolik. Birozdan so'ng qayta urinib ko'ring."
+    }
+  },
+  "DailyTest": {
+    "title": "Kunlik test",
+    "intro": "Har kuni 07:00 da guruhingizda o'tilgan darslardan test (kamida 20 savol). Telegram botda 23:00 gacha ishlaysiz: natija darhol, to'g'ri javoblar va izohlar — 23:00 dan keyin. Jarima yo'q, har to'g'ri javobga XP va coin.",
+    "disabled": "Kunlik test hozir o'chirilgan.",
+    "noGroup": "Kunlik test guruhda o'qiydiganlar uchun. Guruhga qo'shilganingizdan keyin shu yerda chiqadi.",
+    "today": "Bugun",
+    "todayNone": "Bugun test yo'q. U har kuni 07:00 da ochiladi — guruhda o'tilgan darslarda savollar yetarli bo'lsa.",
+    "todayOpen": "Bugungi test ochiq: {count} savol, {time} gacha.",
+    "todayStarted": "Testni boshlagansiz — {time} gacha tugating.",
+    "todayClosed": "Bugungi test yopildi. Ertaga 07:00 da yangisi.",
+    "todayDone": "Bugungi natija",
+    "openInBot": "Telegram'da ishlash",
+    "continueInBot": "Telegram'da davom ettirish",
+    "botMissing": "Bot hali ulanmagan — test Telegram botda ishlanadi.",
+    "rightWrong": "To'g'ri: {right} · Noto'g'ri: {wrong}",
+    "stripLabel": "{total} tadan {right} ta to'g'ri",
+    "answersAt": "To'g'ri javoblar va izohlar {time} dan keyin.",
+    "seeAnswers": "Javoblar va izohlar",
+    "dayTitle": "Bugungi reyting",
+    "weekTitle": "Shu hafta",
+    "ratingEmpty": "Hali hech kim ishlamadi.",
+    "place": "{place}-o'rin",
+    "you": "siz",
+    "historyTitle": "Oxirgi natijalar",
+    "historyEmpty": "Hali natija yo'q — birinchi testni ishlang.",
+    "answers": "Javoblar",
+    "answersLater": "javoblar 23:00 dan keyin",
+    "back": "Kunlik testga qaytish",
+    "reviewTitle": "Kunlik test — {day}",
+    "teacherTitle": "Kunlik test",
+    "teacherDone": "{done}/{total} ishladi",
+    "teacherDays": "Kunlar",
+    "teacherNoTest": "Bu kuni test bo'lmagan.",
+    "teacherShort": "Test berilmadi: o'tilgan darslar testlarida {have} ta savol bor, kamida {need} ta kerak. Darslarga test qo'shing va «Dars o'tildi» deb belgilang.",
+    "teacherStatus": {
+      "DONE": "ishladi",
+      "STARTED": "boshladi, tugatmadi",
+      "NONE": "ishlamadi"
     }
   }
 }

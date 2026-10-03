@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 
+import { TeacherDailySection } from "@/features/daily-test/teacher-daily";
 import { PenaltyList } from "@/features/rewards/penalty-list";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
+import { getTeacherDaily } from "@/lib/api/daily-test";
 import { getPenalties } from "@/lib/api/rewards";
 import { getTeacherGroup, type TeacherGroup } from "@/lib/api/teacher";
 import { initials } from "@/lib/format";
@@ -34,17 +36,22 @@ const formatKey = (value: string) => `format.${value === "ONLINE" ? "ONLINE" : "
  */
 export default async function TeachingGroupPage({
   params,
+  searchParams,
 }: PageProps<"/[locale]/dashboard/teaching/[id]">) {
   const { locale, id } = await params;
   setRequestLocale(locale);
   const pk = groupId(id);
   if (!pk) notFound();
-  const [t, tRewards, format, group, penalties] = await Promise.all([
+  const query = await searchParams;
+  const raw = Array.isArray(query.daily) ? query.daily[0] : query.daily;
+  const dailyDay = raw && /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : undefined;
+  const [t, tRewards, format, group, penalties, daily] = await Promise.all([
     getTranslations("Teaching"),
     getTranslations("Rewards"),
     getFormatter(),
     getTeacherGroup(locale, pk),
     getPenalties(locale, pk),
+    getTeacherDaily(locale, pk, dailyDay),
   ]);
   if (!group) notFound();
 
@@ -209,6 +216,8 @@ export default async function TeachingGroupPage({
           </div>
         )}
       </section>
+
+      {daily && <TeacherDailySection groupId={pk} data={daily} />}
 
       <section aria-labelledby="live" className="app-card mt-6">
         <h2 id="live" className="app-section-title">

@@ -404,6 +404,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/daily-test/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description O'quvchining guruhlari: bugungi test, kunlik va haftalik reyting, oxirgi natijalar. */
+        get: operations["daily_test_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/daily-test/attempts/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Javoblar va izohlar — faqat o'z urinishi va test yopilgach (23:00 dan keyin). */
+        get: operations["daily_test_attempts_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/exam-attempts/{id}/answers/": {
         parameters: {
             query?: never;
@@ -1257,6 +1291,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teacher/groups/{id}/daily-test/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Guruhning kunlik testi: kim ishladi (natijasi bilan) va kim ishlamadi. */
+        get: operations["teacher_groups_daily_test_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teacher/live/{id}/": {
         parameters: {
             query?: never;
@@ -1814,6 +1865,68 @@ export interface components {
             /** @description O'tilgan kurs darsi. */
             lesson: number;
         };
+        DailyAttemptBrief: {
+            id: number;
+            correct: number;
+            total: number;
+            finished: boolean;
+            /** @description To'g'ri javoblar ochiqmi (test yopilgach). */
+            reviewable: boolean;
+        };
+        /**
+         * @description * `OPEN` - Ochiq
+         *     * `CLOSED` - Yopilgan
+         *     * `SKIPPED` - Savollar yetarli emas
+         *     * `NONE` - Test yo'q
+         * @enum {string}
+         */
+        DailyDayStatusEnum: "OPEN" | "CLOSED" | "SKIPPED" | "NONE";
+        DailyGroup: {
+            id: number;
+            name: string;
+            course: string;
+            today: components["schemas"]["DailyToday"] | null;
+            day_rating: components["schemas"]["DailyRow"][];
+            week_rating: components["schemas"]["DailyRow"][];
+            history: components["schemas"]["DailyHistory"][];
+        };
+        DailyHistory: {
+            attempt_id: number;
+            /** Format: date */
+            day: string;
+            correct: number;
+            total: number;
+            reviewable: boolean;
+        };
+        DailyOverview: {
+            enabled: boolean;
+            /** @description Testni botda ochadigan havola. */
+            bot_url: string;
+            groups: components["schemas"]["DailyGroup"][];
+        };
+        DailyReview: {
+            id: number;
+            /** Format: date */
+            day: string;
+            group: string;
+            correct: number;
+            total: number;
+            review: components["schemas"]["QuizResult"][];
+            review_questions: components["schemas"]["QuizQuestion"][];
+        };
+        DailyRow: {
+            name: string;
+            correct: number;
+            total: number;
+            me: boolean;
+        };
+        /**
+         * @description * `DONE` - Tugatdi
+         *     * `STARTED` - Boshladi
+         *     * `NONE` - Ishlamadi
+         * @enum {string}
+         */
+        DailyStudentStatusEnum: "DONE" | "STARTED" | "NONE";
         DailyTask: {
             id: number;
             kind: components["schemas"]["DailyTaskKindEnum"];
@@ -1831,6 +1944,27 @@ export interface components {
          * @enum {string}
          */
         DailyTaskKindEnum: "LESSON" | "QUIZ" | "REVIEW" | "HOMEWORK" | "LIVE";
+        /**
+         * @description * `OPEN` - Ochiq
+         *     * `CLOSED` - Yopilgan
+         *     * `SKIPPED` - Savollar yetarli emas
+         * @enum {string}
+         */
+        DailyTestStatusEnum: "OPEN" | "CLOSED" | "SKIPPED";
+        DailyToday: {
+            id: number;
+            /** Format: date */
+            day: string;
+            status: components["schemas"]["DailyTestStatusEnum"];
+            questions_count: number;
+            /** Format: date-time */
+            opens_at: string;
+            /** Format: date-time */
+            closes_at: string;
+            /** @description Hozir ishlash mumkinmi. */
+            open: boolean;
+            attempt: components["schemas"]["DailyAttemptBrief"] | null;
+        };
         /**
          * @description * `accept` - accept
          *     * `return` - return
@@ -2305,6 +2439,8 @@ export interface components {
             readonly pending_reviews: number;
             /** @description Jonli darslar jadvali bor: guruhda o'qiydi yoki guruhga dars beradi. */
             readonly has_schedule: boolean;
+            /** @description O'quvchi sifatida guruhda o'qiydi (menyuda «Kunlik test»). */
+            readonly in_group: boolean;
         };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
@@ -2446,10 +2582,12 @@ export interface components {
          *     * `REWARD` - Mukofot
          *     * `SHOP` - Do'kon
          *     * `COUPON` - Chegirma kuponi
+         *     * `DAILY_TEST` - Kunlik test
+         *     * `DAILY_TEST_TEACHER` - Kunlik test: o'qituvchiga
          *     * `TEST` - Sinov
          * @enum {string}
          */
-        NotificationKindEnum: "BROADCAST" | "PAYMENT" | "COURSE_OPENED" | "ACCESS_EXPIRING" | "ACCESS_EXPIRED" | "HOMEWORK_SUBMITTED" | "HOMEWORK_REVIEWED" | "INACTIVE" | "LIVE_REMINDER" | "LIVE_CANCELED" | "LIVE_ABSENT" | "LIVE_RECORDING" | "LESSON_OPENED" | "EXAM_DRAFT" | "EXAM_OPENED" | "EXAM_RESULT" | "CERTIFICATE" | "REWARD" | "SHOP" | "COUPON" | "TEST";
+        NotificationKindEnum: "BROADCAST" | "PAYMENT" | "COURSE_OPENED" | "ACCESS_EXPIRING" | "ACCESS_EXPIRED" | "HOMEWORK_SUBMITTED" | "HOMEWORK_REVIEWED" | "INACTIVE" | "LIVE_REMINDER" | "LIVE_CANCELED" | "LIVE_ABSENT" | "LIVE_RECORDING" | "LESSON_OPENED" | "EXAM_DRAFT" | "EXAM_OPENED" | "EXAM_RESULT" | "CERTIFICATE" | "REWARD" | "SHOP" | "COUPON" | "DAILY_TEST" | "DAILY_TEST_TEACHER" | "TEST";
         /** @description `ids` berilmasa — hammasi o'qilgan deb belgilanadi. */
         NotificationReadRequest: {
             ids?: number[];
@@ -2911,6 +3049,7 @@ export interface components {
          *     * `EXAM` - Oylik imtihondan o'tildi
          *     * `DAILY` - Kunlik topshiriqlar bajarildi
          *     * `DAILY_MISSED` - Kunlik topshiriqlar bajarilmadi
+         *     * `DAILY_TEST` - Kunlik test
          *     * `ABSENT` - Darsga sababsiz kelmadi
          *     * `LATE` - Darsga kechikdi
          *     * `HOMEWORK_LATE` - Uy vazifasi muddatidan kechikdi
@@ -2921,7 +3060,7 @@ export interface components {
          *     * `MANUAL` - Qo'lda
          * @enum {string}
          */
-        RewardReasonEnum: "LESSON" | "QUIZ" | "HOMEWORK" | "ATTENDANCE" | "EXAM" | "DAILY" | "DAILY_MISSED" | "ABSENT" | "LATE" | "HOMEWORK_LATE" | "REFERRAL" | "REFERRAL_PAID" | "PURCHASE" | "REFUND" | "MANUAL";
+        RewardReasonEnum: "LESSON" | "QUIZ" | "HOMEWORK" | "ATTENDANCE" | "EXAM" | "DAILY" | "DAILY_MISSED" | "DAILY_TEST" | "ABSENT" | "LATE" | "HOMEWORK_LATE" | "REFERRAL" | "REFERRAL_PAID" | "PURCHASE" | "REFUND" | "MANUAL";
         RewardSettings: {
             hidden: boolean;
         };
@@ -3178,6 +3317,33 @@ export interface components {
             language: components["schemas"]["CodeLanguageEnum"] | components["schemas"]["BlankEnum"];
             link?: string;
             files?: string[];
+        };
+        TeacherDaily: {
+            /** Format: date */
+            day: string;
+            status: components["schemas"]["DailyDayStatusEnum"];
+            questions_count: number;
+            /** @description O'tilgan darslar testlaridagi savollar. */
+            pool_size: number;
+            done: number;
+            students: components["schemas"]["TeacherDailyRow"][];
+            /** @description Oxirgi 7 ta test kuni. */
+            recent: components["schemas"]["TeacherDailyDay"][];
+        };
+        TeacherDailyDay: {
+            /** Format: date */
+            day: string;
+            status: components["schemas"]["DailyTestStatusEnum"];
+            done: number;
+        };
+        TeacherDailyRow: {
+            id: number;
+            name: string;
+            status: components["schemas"]["DailyStudentStatusEnum"];
+            correct: number | null;
+            total: number | null;
+            /** Format: date-time */
+            finished_at: string | null;
         };
         TeacherExam: {
             id: number;
@@ -4091,6 +4257,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CourseDetail"];
+                };
+            };
+        };
+    };
+    daily_test_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyOverview"];
+                };
+            };
+        };
+    };
+    daily_test_attempts_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyReview"];
                 };
             };
         };
@@ -5265,6 +5471,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TeacherGroupDetail"];
+                };
+            };
+        };
+    };
+    teacher_groups_daily_test_retrieve: {
+        parameters: {
+            query?: {
+                day?: string;
+            };
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeacherDaily"];
                 };
             };
         };

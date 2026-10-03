@@ -33,6 +33,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
         audience={audienceOf(me.audience)}
         roles={me.roles}
         schedule={me.has_schedule}
+        daily={me.in_group}
         counts={{ notifications: me.unread_notifications, reviews: me.pending_reviews }}
         tools={
           <>

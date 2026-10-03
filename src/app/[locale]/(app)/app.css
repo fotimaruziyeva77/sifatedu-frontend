@@ -4350,6 +4350,139 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ---------- Kunlik test ---------- */
+
+  .daily-today__label {
+    margin-bottom: 0.75rem;
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .daily-open {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .daily-result {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    align-items: center;
+  }
+
+  .daily-result__score {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .daily-result__total {
+    color: var(--muted-foreground);
+    font-size: 0.5em;
+  }
+
+  /* Har savolga bitta katak: nechtasi to'g'ri — yashil (qaysi savol ekani emas). */
+  .daily-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(0.6rem, 1fr));
+    gap: 0.2rem;
+    max-width: 20rem;
+    margin-top: 0.6rem;
+  }
+
+  .daily-strip > span {
+    height: 0.75rem;
+    border-radius: 0.2rem;
+    background: color-mix(in oklab, var(--destructive) 22%, var(--secondary));
+  }
+
+  .daily-strip > span[data-right] {
+    background: var(--track-backend);
+  }
+
+  .daily-boards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1rem;
+  }
+
+  .daily-history,
+  .daily-roll {
+    display: grid;
+  }
+
+  .daily-history > li,
+  .daily-roll > li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .daily-history > li:first-child,
+  .daily-roll > li:first-child {
+    border-top: 0;
+  }
+
+  .daily-history__day {
+    min-width: 7rem;
+    font-weight: 600;
+  }
+
+  .daily-history__score {
+    margin-right: auto;
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+
+  .daily-history .rw-stat__link {
+    margin-top: 0;
+  }
+
+  .daily-roll__name {
+    font-weight: 600;
+  }
+
+  .daily-roll__score {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .daily-roll__score .daily-strip {
+    width: 9rem;
+    margin-top: 0;
+  }
+
+  .daily-roll__state {
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  /* Ishlamaganlar — o'qituvchi birinchi ko'radi. */
+  .daily-roll > li[data-status="NONE"] .daily-roll__state {
+    background: color-mix(in oklab, var(--destructive) 14%, var(--card));
+  }
+
+  .daily-roll > li[data-status="STARTED"] .daily-roll__state {
+    background: color-mix(in oklab, var(--track-frontend) 18%, var(--card));
+  }
+
   /* ---------- Reyting ---------- */
 
   .rt-board {

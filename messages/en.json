@@ -34,7 +34,8 @@
     "certificates": "Certificates",
     "rewards": "Rewards",
     "rating": "Leaderboard",
-    "shop": "Shop"
+    "shop": "Shop",
+    "dailyTest": "Daily test"
   },
   "Theme": {
     "toLight": "Switch to day mode",
@@ -1130,7 +1131,8 @@
       "REFERRAL_PAID": "Your friend paid for a course",
       "PURCHASE": "Gift from the shop",
       "REFUND": "Order canceled — coins returned",
-      "MANUAL": "Administrator"
+      "MANUAL": "Administrator",
+      "DAILY_TEST": "Daily test"
     },
     "rulesTitle": "How XP is earned and lost",
     "rulesEarn": "Earned (XP and as many coins)",
@@ -1218,6 +1220,46 @@
     "errors": {
       "network": "No connection. Check the internet and try again.",
       "server": "Server error. Try again a bit later."
+    }
+  },
+  "DailyTest": {
+    "title": "Daily test",
+    "intro": "Every day at 07:00 — a test on the lessons covered in your group (at least 20 questions). Take it in the Telegram bot until 23:00: the result comes right away, correct answers and explanations after 23:00. No penalties — XP and coins for every correct answer.",
+    "disabled": "The daily test is switched off right now.",
+    "noGroup": "The daily test is for students in a group. It will appear here once you're added to one.",
+    "today": "Today",
+    "todayNone": "No test today. It opens every day at 07:00 when the covered lessons have enough questions.",
+    "todayOpen": "Today's test is open: {count} questions, until {time}.",
+    "todayStarted": "You've started the test — finish it by {time}.",
+    "todayClosed": "Today's test is closed. A new one opens tomorrow at 07:00.",
+    "todayDone": "Today's result",
+    "openInBot": "Take it in Telegram",
+    "continueInBot": "Continue in Telegram",
+    "botMissing": "The bot isn't connected yet — the test is taken in the Telegram bot.",
+    "rightWrong": "Correct: {right} · Wrong: {wrong}",
+    "stripLabel": "{right} of {total} correct",
+    "answersAt": "Correct answers and explanations after {time}.",
+    "seeAnswers": "Answers and explanations",
+    "dayTitle": "Today's rating",
+    "weekTitle": "This week",
+    "ratingEmpty": "Nobody has done it yet.",
+    "place": "Place {place}",
+    "you": "you",
+    "historyTitle": "Recent results",
+    "historyEmpty": "No results yet — take your first test.",
+    "answers": "Answers",
+    "answersLater": "answers after 23:00",
+    "back": "Back to the daily test",
+    "reviewTitle": "Daily test — {day}",
+    "teacherTitle": "Daily test",
+    "teacherDone": "{done} of {total} done",
+    "teacherDays": "Days",
+    "teacherNoTest": "There was no test that day.",
+    "teacherShort": "No test issued: covered lessons have {have} quiz questions, at least {need} are needed. Add quizzes to lessons and mark them “Lesson covered”.",
+    "teacherStatus": {
+      "DONE": "done",
+      "STARTED": "started, not finished",
+      "NONE": "not done"
     }
   }
 }

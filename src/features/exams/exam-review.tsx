@@ -4,11 +4,12 @@ import { getTranslations } from "next-intl/server";
 import { asDraft, describe } from "@/features/quiz/logic";
 import type { components } from "@/lib/api/schema";
 
-type Test = components["schemas"]["ExamTest"];
+/** Imtihon yoki kunlik test: javoblar va savollar (bir xil shakl). */
+type Test = Pick<components["schemas"]["ExamTest"], "review" | "review_questions">;
 
 /**
- * Imtihon yopilgach: har savol bo'yicha javobingiz, to'g'ri javob va izoh (server komponenti —
- * interaktivlik yo'q). Xatolar birinchi, keyin to'g'rilari.
+ * Test yopilgach (oylik imtihon yoki kunlik test): har savol bo'yicha javobingiz, to'g'ri javob
+ * va izoh (server komponenti — interaktivlik yo'q). Xatolar birinchi, keyin to'g'rilari.
  */
 export async function ExamReview({ test }: { test: Test }) {
   const [t, q] = await Promise.all([getTranslations("Exams"), getTranslations("LessonQuiz")]);

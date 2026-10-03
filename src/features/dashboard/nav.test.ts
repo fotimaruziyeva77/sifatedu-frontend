@@ -24,6 +24,20 @@ describe("navFor", () => {
     expect(navFor(["STUDENT"]).map((item) => item.href)).not.toContain("/dashboard/schedule");
   });
 
+  it("guruh o'quvchisiga Jadvaldan keyin Kunlik test", () => {
+    const hrefs = navFor(["STUDENT"], { schedule: true, daily: true }).map((item) => item.href);
+
+    expect(hrefs.slice(0, 4)).toEqual([
+      "/dashboard",
+      "/dashboard/courses",
+      "/dashboard/schedule",
+      "/dashboard/daily-test",
+    ]);
+    expect(navFor(["TEACHER"], { schedule: true }).map((item) => item.href)).not.toContain(
+      "/dashboard/daily-test",
+    );
+  });
+
   it("adminga faqat Tekshirish", () => {
     const hrefs = navFor(["ADMIN"]).map((item) => item.href);
 

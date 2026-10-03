@@ -21,6 +21,7 @@ export function AppShell({
   audience,
   roles,
   schedule,
+  daily,
   counts,
   tools,
   children,
@@ -29,6 +30,8 @@ export function AppShell({
   roles: readonly string[];
   /** Guruh darslari bor — menyuda "Jadval". */
   schedule: boolean;
+  /** Guruhda o'qiydi — menyuda "Kunlik test". */
+  daily: boolean;
   counts: { notifications: number; reviews: number };
   tools: ReactNode;
   children: ReactNode;
@@ -81,7 +84,7 @@ export function AppShell({
         </div>
 
         <ul className="app-side__list">
-          {navFor(roles, { schedule }).map(({ href, icon: Icon, labelKey }) => {
+          {navFor(roles, { schedule, daily }).map(({ href, icon: Icon, labelKey }) => {
             const active = href === "/dashboard" ? pathname === href : pathname.startsWith(href);
             return (
               <li key={href}>
