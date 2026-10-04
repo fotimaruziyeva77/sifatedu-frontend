@@ -817,7 +817,8 @@
     "save": "Save answer",
     "saved": "Answer saved",
     "savedHint": "Whether it is right is shown after the exam closes.",
-    "skip": "Later"
+    "skip": "Later",
+    "savedHintDaily": "You'll see how many are correct at the end; correct answers and explanations after 23:00."
   },
   "Schedule": {
     "title": "Schedule",
@@ -1224,7 +1225,7 @@
   },
   "DailyTest": {
     "title": "Daily test",
-    "intro": "Every day at 07:00 — a test on the lessons covered in your group (at least 20 questions). Take it in the Telegram bot until 23:00: the result comes right away, correct answers and explanations after 23:00. No penalties — XP and coins for every correct answer.",
+    "intro": "Every day at 07:00 — a test on the lessons covered in your group (at least 20 questions). Take it here or in the Telegram bot until 23:00: the result comes right away, correct answers and explanations after 23:00. No penalties — XP and coins for every correct answer.",
     "disabled": "The daily test is switched off right now.",
     "noGroup": "The daily test is for students in a group. It will appear here once you're added to one.",
     "today": "Today",
@@ -1235,7 +1236,6 @@
     "todayDone": "Today's result",
     "openInBot": "Take it in Telegram",
     "continueInBot": "Continue in Telegram",
-    "botMissing": "The bot isn't connected yet — the test is taken in the Telegram bot.",
     "rightWrong": "Correct: {right} · Wrong: {wrong}",
     "stripLabel": "{right} of {total} correct",
     "answersAt": "Correct answers and explanations after {time}.",
@@ -1260,6 +1260,23 @@
       "DONE": "done",
       "STARTED": "started, not finished",
       "NONE": "not done"
+    },
+    "playSite": "Take it here",
+    "playResume": "Continue here",
+    "progress": "Question {current} of {total} · answered: {answered}",
+    "questions": "Questions",
+    "questionSaved": "Question {number} — answer saved",
+    "questionOpen": "Question {number} — not answered",
+    "finish": "Finish",
+    "finishConfirm": "Finish the test?",
+    "finishConfirmOpen": "{count} questions have no answer — they will count as wrong. Finish anyway?",
+    "finishing": "Calculating your result…",
+    "resultTitle": "Daily test finished",
+    "resultReward": "+{xp} XP, +{coins} coins",
+    "resultPlace": "Place in your group so far: {place} of {people}.",
+    "errors": {
+      "server": "Something went wrong. Refresh the page and try again.",
+      "network": "No internet connection. Reconnect and try again."
     }
   }
 }

@@ -47,6 +47,7 @@ export const CLIENT_NAMESPACES = {
     "Schedule",
     "Exams",
     "TeacherExams",
+    "DailyTest",
     "Rewards",
     "Shop",
   ],

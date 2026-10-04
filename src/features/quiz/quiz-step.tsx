@@ -32,8 +32,9 @@ const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
  * va izoh backend'dan faqat test o'tilgach keladi (yakundagi "xatolar ustida ishlash"da).
  * Har savol alohida komponent (`key` — savol ID si): yangi savolda holat o'zi tozalanadi.
  *
- * `blind` — oylik imtihon: javob "Saqlash" bilan yuboriladi va natijasi aytilmaydi (imtihon
- * yopilgach ko'rsatiladi). `onSkip` — savolni keyinga qoldirish (imtihonda).
+ * `blind` — oylik imtihon (`true`) yoki kunlik test (`"daily"`): javob "Saqlash" bilan
+ * yuboriladi va natijasi aytilmaydi (test yopilgach ko'rsatiladi). `onSkip` — savolni keyinga
+ * qoldirish.
  */
 export function QuizStep({
   attemptId,
@@ -49,7 +50,7 @@ export function QuizStep({
   question: Question;
   result: Result | undefined;
   last: boolean;
-  blind?: boolean;
+  blind?: boolean | "daily";
   onAnswered: (result: Result) => void;
   onNext: () => void;
   onSkip?: () => void;
@@ -92,6 +93,13 @@ export function QuizStep({
       params: { path: { id: attemptId } },
       body: { question: question.id, response: draft },
     };
+    if (blind === "daily") {
+      const { data, error: failure } = await api.POST(
+        "/api/v1/daily-test/attempts/{id}/answers/",
+        request,
+      );
+      return { data: data ? blindResult(data) : null, failure };
+    }
     if (blind) {
       const { data, error: failure } = await api.POST(
         "/api/v1/exam-attempts/{id}/answers/",
@@ -180,7 +188,9 @@ export function QuizStep({
               <CheckCheck aria-hidden className="size-5" />
               {t("saved")}
             </p>
-            <p className="quiz-feedback__text">{t("savedHint")}</p>
+            <p className="quiz-feedback__text">
+              {t(blind === "daily" ? "savedHintDaily" : "savedHint")}
+            </p>
           </div>
         )}
         {result && !blind && (

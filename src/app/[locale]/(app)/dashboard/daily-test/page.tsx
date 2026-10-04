@@ -1,9 +1,9 @@
-import { ArrowRight, CalendarCheck, Send } from "lucide-react";
+import { ArrowRight, CalendarCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 
-import { Button } from "@/components/ui/button";
+import { DailyPlay } from "@/features/daily-test/daily-play";
 import { DailyStrip } from "@/features/daily-test/daily-strip";
 import { Link } from "@/i18n/navigation";
 import { getDailyTest, type DailyGroup, type DailyRow } from "@/lib/api/daily-test";
@@ -115,16 +115,7 @@ export default async function DailyTestPage({
             ? t("todayStarted", { time: time(test.closes_at) })
             : t("todayOpen", { count: test.questions_count, time: time(test.closes_at) })}
         </p>
-        {data.bot_url ? (
-          <Button asChild className="h-11 gap-2 rounded-full px-5">
-            <a href={data.bot_url} target="_blank" rel="noopener">
-              <Send aria-hidden className="size-4" />
-              {attempt ? t("continueInBot") : t("openInBot")}
-            </a>
-          </Button>
-        ) : (
-          <p className="text-sm text-muted-foreground">{t("botMissing")}</p>
-        )}
+        <DailyPlay testId={test.id} started={Boolean(attempt)} botUrl={data.bot_url} />
       </div>
     );
   };

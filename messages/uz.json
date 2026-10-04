@@ -817,7 +817,8 @@
     "save": "Javobni saqlash",
     "saved": "Javob saqlandi",
     "savedHint": "To'g'ri yoki noto'g'riligi imtihon yopilgach ko'rsatiladi.",
-    "skip": "Keyinroq"
+    "skip": "Keyinroq",
+    "savedHintDaily": "Nechta to'g'ri ekani test oxirida, to'g'ri javoblar va izohlar — 23:00 dan keyin."
   },
   "Schedule": {
     "title": "Jadval",
@@ -1224,7 +1225,7 @@
   },
   "DailyTest": {
     "title": "Kunlik test",
-    "intro": "Har kuni 07:00 da guruhingizda o'tilgan darslardan test (kamida 20 savol). Telegram botda 23:00 gacha ishlaysiz: natija darhol, to'g'ri javoblar va izohlar — 23:00 dan keyin. Jarima yo'q, har to'g'ri javobga XP va coin.",
+    "intro": "Har kuni 07:00 da guruhingizda o'tilgan darslardan test (kamida 20 savol). Saytda yoki Telegram botda 23:00 gacha ishlaysiz: natija darhol, to'g'ri javoblar va izohlar — 23:00 dan keyin. Jarima yo'q, har to'g'ri javobga XP va coin.",
     "disabled": "Kunlik test hozir o'chirilgan.",
     "noGroup": "Kunlik test guruhda o'qiydiganlar uchun. Guruhga qo'shilganingizdan keyin shu yerda chiqadi.",
     "today": "Bugun",
@@ -1235,7 +1236,6 @@
     "todayDone": "Bugungi natija",
     "openInBot": "Telegram'da ishlash",
     "continueInBot": "Telegram'da davom ettirish",
-    "botMissing": "Bot hali ulanmagan — test Telegram botda ishlanadi.",
     "rightWrong": "To'g'ri: {right} · Noto'g'ri: {wrong}",
     "stripLabel": "{total} tadan {right} ta to'g'ri",
     "answersAt": "To'g'ri javoblar va izohlar {time} dan keyin.",
@@ -1260,6 +1260,23 @@
       "DONE": "ishladi",
       "STARTED": "boshladi, tugatmadi",
       "NONE": "ishlamadi"
+    },
+    "playSite": "Saytda ishlash",
+    "playResume": "Saytda davom ettirish",
+    "progress": "{total} tadan {current}-savol · javob berilgan: {answered}",
+    "questions": "Savollar",
+    "questionSaved": "{number}-savol — javob saqlangan",
+    "questionOpen": "{number}-savol — javob berilmagan",
+    "finish": "Yakunlash",
+    "finishConfirm": "Testni yakunlaysizmi?",
+    "finishConfirmOpen": "{count} ta savolga javob berilmagan — ular noto'g'ri hisoblanadi. Baribir yakunlaysizmi?",
+    "finishing": "Natija hisoblanmoqda…",
+    "resultTitle": "Kunlik test tugadi",
+    "resultReward": "+{xp} XP, +{coins} coin",
+    "resultPlace": "Guruhda hozircha {place}-o'rin ({people} kishidan).",
+    "errors": {
+      "server": "Xatolik yuz berdi. Sahifani yangilab, qayta urinib ko'ring.",
+      "network": "Internet bilan aloqa yo'q. Ulanib, qayta urinib ko'ring."
     }
   }
 }

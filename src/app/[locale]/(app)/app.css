@@ -4369,6 +4369,13 @@
     justify-content: space-between;
   }
 
+  .daily-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
   .daily-result {
     display: flex;
     flex-wrap: wrap;

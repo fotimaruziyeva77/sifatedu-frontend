@@ -421,6 +421,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/daily-test/{id}/start/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Saytda boshlash yoki davom ettirish — botdagi bilan bitta urinish. */
+        post: operations["daily_test_start_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/daily-test/attempts/{id}/": {
         parameters: {
             query?: never;
@@ -432,6 +449,40 @@ export interface paths {
         get: operations["daily_test_attempts_retrieve"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/daily-test/attempts/{id}/answers/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Javob saqlanadi; to'g'ri yoki noto'g'riligi oxirida (soni), javoblar — 23:00 dan keyin. */
+        post: operations["daily_test_attempts_answers_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/daily-test/attempts/{id}/finish/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Yakun: to'g'ri va noto'g'ri soni, XP va coin, guruhdagi o'rin. */
+        post: operations["daily_test_attempts_finish_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1865,6 +1916,25 @@ export interface components {
             /** @description O'tilgan kurs darsi. */
             lesson: number;
         };
+        DailyAnswerRequest: {
+            question: number;
+            response: {
+                [key: string]: unknown;
+            };
+        };
+        /** @description Saytda ishlash: savollar (javobsiz) va berilgan javoblar (bahosiz). */
+        DailyAttempt: {
+            id: number;
+            test_id: number;
+            total: number;
+            /** Format: date-time */
+            closes_at: string;
+            /** @description Test yopilishiga (23:00) qolgan soniyalar. */
+            seconds_left: number;
+            finished: boolean;
+            questions: components["schemas"]["QuizQuestion"][];
+            answers: components["schemas"]["DailySaved"][];
+        };
         DailyAttemptBrief: {
             id: number;
             correct: number;
@@ -1904,6 +1974,17 @@ export interface components {
             bot_url: string;
             groups: components["schemas"]["DailyGroup"][];
         };
+        DailyResult: {
+            correct: number;
+            wrong: number;
+            total: number;
+            xp: number;
+            coins: number;
+            /** @description Guruhdagi o'rni (hozircha). */
+            place: number;
+            /** @description Shu paytgacha tugatganlar soni. */
+            people: number;
+        };
         DailyReview: {
             id: number;
             /** Format: date */
@@ -1919,6 +2000,13 @@ export interface components {
             correct: number;
             total: number;
             me: boolean;
+        };
+        /** @description Saqlangan javob — bahosiz (to'g'ri javoblar test yopilgach). */
+        DailySaved: {
+            question: number;
+            response: {
+                [key: string]: unknown;
+            };
         };
         /**
          * @description * `DONE` - Tugatdi
@@ -4280,6 +4368,27 @@ export interface operations {
             };
         };
     };
+    daily_test_start_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyAttempt"];
+                };
+            };
+        };
+    };
     daily_test_attempts_retrieve: {
         parameters: {
             query?: never;
@@ -4297,6 +4406,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DailyReview"];
+                };
+            };
+        };
+    };
+    daily_test_attempts_answers_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DailyAnswerRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["DailyAnswerRequest"];
+                "multipart/form-data": components["schemas"]["DailyAnswerRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailySaved"];
+                };
+            };
+        };
+    };
+    daily_test_attempts_finish_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyResult"];
                 };
             };
         };
