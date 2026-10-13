@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, Check, Loader2 } from "lucide-react";
+import { CalendarClock, Check, Loader2, Unlock } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useRef, useState, type FormEvent } from "react";
 
@@ -31,28 +31,60 @@ function firstUngraded(rows: Row[]): Selection | null {
 /**
  * O'qituvchi: o'quvchilar × topshiriqlar jadvali. Katak bosilsa — javob va baholash formasi
  * (0–100, izoh); saqlangach keyingi baholanmagan javob ochiladi. Kelolmagan o'quvchiga —
- * alohida muddat.
+ * alohida muddat; bir nechtasini belgilab — hammasiga birdan («Tanlanganlarga ochish»).
  */
 export function ExamGrading({ initial }: { initial: Detail }) {
   const t = useTranslations("TeacherExams");
   const [detail, setDetail] = useState(initial);
   const [selected, setSelected] = useState<Selection | null>(() => firstUngraded(initial.rows));
+  const [picked, setPicked] = useState<Set<number>>(() => new Set());
   const panel = useRef<HTMLDivElement>(null);
   const titles = new Map(detail.tasks.map((task) => [task.id, task]));
   const row = selected ? detail.rows.find((item) => item.student_id === selected.student) : null;
+  const everyone = detail.rows.map((item) => item.student_id);
+  const allPicked = everyone.length > 0 && everyone.every((id) => picked.has(id));
 
   function open(next: Selection) {
     setSelected(next);
     requestAnimationFrame(() => panel.current?.focus());
   }
 
+  function toggle(id: number) {
+    setPicked((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
   return (
     <>
+      <OpenForBar
+        examId={detail.id}
+        picked={[...picked]}
+        onOpened={(next) => {
+          setDetail(next);
+          setPicked(new Set());
+        }}
+      />
       <div className="exam-grid-wrap">
         <table className="exam-grid">
           <caption className="sr-only">{t("tableCaption")}</caption>
           <thead>
             <tr>
+              <th scope="col">
+                <input
+                  type="checkbox"
+                  className="exam-pick"
+                  aria-label={t("selectAll")}
+                  checked={allPicked}
+                  ref={(box) => {
+                    if (box) box.indeterminate = picked.size > 0 && !allPicked;
+                  }}
+                  onChange={() => setPicked(allPicked ? new Set() : new Set(everyone))}
+                />
+              </th>
               <th scope="col">{t("student")}</th>
               <th scope="col">{t("test")}</th>
               {detail.tasks.map((task, index) => (
@@ -67,6 +99,15 @@ export function ExamGrading({ initial }: { initial: Detail }) {
           <tbody>
             {detail.rows.map((item) => (
               <tr key={item.student_id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    className="exam-pick"
+                    aria-label={t("selectStudent", { name: item.name })}
+                    checked={picked.has(item.student_id)}
+                    onChange={() => toggle(item.student_id)}
+                  />
+                </td>
                 <th scope="row">
                   <span className="block font-medium">{item.name}</span>
                   {item.group && (
@@ -272,6 +313,86 @@ function tomorrow(): string {
   const date = new Date(Date.now() + 24 * 60 * 60 * 1000);
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   return date.toISOString().slice(0, 16);
+}
+
+/** Belgilangan o'quvchilarga imtihonni ochish: bitta muddat, botga xabar. */
+function OpenForBar({
+  examId,
+  picked,
+  onOpened,
+}: {
+  examId: number;
+  picked: number[];
+  onOpened: (detail: Detail) => void;
+}) {
+  const t = useTranslations("TeacherExams");
+  const ids = useId();
+  const [until, setUntil] = useState(tomorrow);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<{ kind: "ok" | "error"; text: string } | null>(null);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (picked.length === 0) {
+      setMessage({ kind: "error", text: t("selectSomeone") });
+      return;
+    }
+    const moment = new Date(until);
+    if (Number.isNaN(moment.getTime())) {
+      setMessage({ kind: "error", text: t("errors.date") });
+      return;
+    }
+    setBusy(true);
+    setMessage(null);
+    try {
+      const { data, error } = await api.POST("/api/v1/teacher/exams/{id}/open/", {
+        params: { path: { id: examId } },
+        body: { students: picked, until: moment.toISOString() },
+      });
+      if (data) {
+        onOpened(data);
+        setMessage({ kind: "ok", text: t("opened", { count: picked.length }) });
+      } else {
+        setMessage({ kind: "error", text: problem(error) ?? t("errors.server") });
+      }
+    } catch {
+      setMessage({ kind: "error", text: t("errors.network") });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <form className="exam-bulk" onSubmit={(event) => void submit(event)} noValidate>
+      <div className="grid gap-1">
+        <h2 className="app-section-title">{t("openTitle")}</h2>
+        <p className="text-sm text-pretty text-muted-foreground">{t("openHint")}</p>
+        <p className="exam-bulk__count text-sm">{t("selected", { count: picked.length })}</p>
+      </div>
+      <div className="hw-field">
+        <label htmlFor={`${ids}-until`}>{t("until")}</label>
+        <input
+          id={`${ids}-until`}
+          type="datetime-local"
+          value={until}
+          onChange={(event) => setUntil(event.target.value)}
+          className="rv-score exam-until"
+        />
+      </div>
+      <Button type="submit" disabled={busy} className="h-11 gap-2 rounded-full px-5">
+        {busy ? <Loader2 aria-hidden className="animate-spin" /> : <Unlock aria-hidden />}
+        {t("open")}
+      </Button>
+      {message && (
+        <p
+          role={message.kind === "error" ? "alert" : "status"}
+          className={`basis-full ${message.kind === "error" ? "hw-error" : "live-ok"}`}
+        >
+          {message.text}
+        </p>
+      )}
+    </form>
+  );
 }
 
 function ExtensionPanel({

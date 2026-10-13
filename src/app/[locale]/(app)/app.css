@@ -4739,4 +4739,119 @@
   .shop-status[data-status="CANCELED"] {
     color: var(--muted-foreground);
   }
+
+  /* O'qituvchi: o'quvchi qo'shish, dars jadvali, imtihonni belgilab ochish */
+  .roster-form {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .roster-fields {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 40rem) {
+    .roster-fields {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .roster-input {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--input);
+    border-radius: 0.8rem;
+    background: transparent;
+    font-size: 1rem;
+  }
+
+  .roster-input:focus-visible {
+    border-color: var(--caret);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--caret) 22%, transparent);
+  }
+
+  .roster-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .roster-remove {
+    margin-top: 0.35rem;
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .roster-remove:hover,
+  .roster-remove:focus-visible {
+    color: var(--caret-text);
+  }
+
+  .slot-list {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .slot-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 0.9rem;
+  }
+
+  .slot-row__day {
+    min-width: 7.5rem;
+    font-weight: 600;
+  }
+
+  .slot-row__meta {
+    flex: 1;
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slot-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .slot-form .hw-field {
+    min-width: 9rem;
+  }
+
+  .exam-pick {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--caret);
+  }
+
+  .exam-bulk {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+  }
+
+  .exam-bulk > .grid {
+    flex: 1 1 18rem;
+  }
 }

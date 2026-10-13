@@ -1308,6 +1308,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/teacher/exams/{id}/open/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Belgilangan o'quvchilarga imtihonni ochish: alohida muddat va xabar. */
+        post: operations["teacher_exams_open_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teacher/groups/": {
         parameters: {
             query?: never;
@@ -1332,7 +1349,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Guruh sahifasi: o'quvchilar ro'yxati va har birining progressi. */
+        /** @description Guruh sahifasi: o'quvchilar ro'yxati, progress, darslar va haftalik jadval. */
         get: operations["teacher_groups_retrieve"];
         put?: never;
         post?: never;
@@ -1354,6 +1371,74 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/groups/{id}/slots/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Haftalik jadvalga dars qo'shish: darslar 14 kun oldinga o'zi yaratiladi. */
+        post: operations["teacher_groups_slots_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/groups/{id}/slots/{slot_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Jadvaldan darsni olib tashlash: kelgusi belgilanmagan darslar ham o'chadi. */
+        delete: operations["teacher_groups_slots_destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/groups/{id}/students/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Guruhga o'quvchi qo'shish (telefon va ism bilan). */
+        post: operations["teacher_groups_students_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/groups/{id}/students/{user_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Guruhdan chiqarish: kursga kirish yopiladi, tarix qoladi. */
+        delete: operations["teacher_groups_students_destroy"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1510,6 +1595,21 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddStudentRequest: {
+            phone: string;
+            /** @default  */
+            first_name: string;
+            /** @default  */
+            last_name: string;
+        };
+        AddedStudent: {
+            group: components["schemas"]["TeacherGroupDetail"];
+            name: string;
+            /** @description Yangi akkaunt: o'quvchi hali botga kirmagan. */
+            created: boolean;
+            /** @description Boshqa guruhdan o'tkazildi — eski guruh nomi. */
+            moved_from: string;
+        };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
          *
@@ -2686,6 +2786,12 @@ export interface components {
         };
         /** @enum {unknown} */
         NullEnum: null;
+        OpenForRequest: {
+            /** @description O'quvchilar ID. */
+            students: number[];
+            /** Format: date-time */
+            until: string;
+        };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
          *
@@ -3273,6 +3379,21 @@ export interface components {
             readonly socials: components["schemas"]["Socials"];
             readonly sections: components["schemas"]["Sections"];
         };
+        Slot: {
+            id: number;
+            /** @description 0 — dushanba … 6 — yakshanba. */
+            weekday: number;
+            /** Format: time */
+            starts_at: string;
+            duration_min: number;
+        };
+        SlotInputRequest: {
+            weekday: number;
+            /** Format: time */
+            starts_at: string;
+            /** @default 90 */
+            duration_min: number;
+        };
         /**
          * @description * `offer` - Ommaviy oferta
          *     * `privacy` - Maxfiylik siyosati
@@ -3495,6 +3616,10 @@ export interface components {
             students: components["schemas"]["TeacherStudent"][];
             /** @description Oxirgi 5 ta o'tgan va yaqin 5 ta jonli dars (vaqt bo'yicha). */
             lessons: components["schemas"]["GroupLesson"][];
+            /** @description Haftalik dars jadvali. */
+            slots: components["schemas"]["Slot"][];
+            /** @description Bot havolasi: yangi o'quvchi shu raqam bilan kirsin. */
+            bot_url: string;
         };
         TeacherLive: {
             id: number;
@@ -5592,6 +5717,33 @@ export interface operations {
             };
         };
     };
+    teacher_exams_open_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OpenForRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["OpenForRequest"];
+                "multipart/form-data": components["schemas"]["OpenForRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeacherExamDetail"];
+                };
+            };
+        };
+    };
     teacher_groups_list: {
         parameters: {
             query?: never;
@@ -5651,6 +5803,104 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TeacherDaily"];
+                };
+            };
+        };
+    };
+    teacher_groups_slots_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlotInputRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["SlotInputRequest"];
+                "multipart/form-data": components["schemas"]["SlotInputRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeacherGroupDetail"];
+                };
+            };
+        };
+    };
+    teacher_groups_slots_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                slot_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeacherGroupDetail"];
+                };
+            };
+        };
+    };
+    teacher_groups_students_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddStudentRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["AddStudentRequest"];
+                "multipart/form-data": components["schemas"]["AddStudentRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddedStudent"];
+                };
+            };
+        };
+    };
+    teacher_groups_students_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeacherGroupDetail"];
                 };
             };
         };

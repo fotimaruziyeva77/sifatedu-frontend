@@ -5,6 +5,8 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 
 import { TeacherDailySection } from "@/features/daily-test/teacher-daily";
 import { PenaltyList } from "@/features/rewards/penalty-list";
+import { AddStudent, RemoveStudent } from "@/features/teaching/group-roster";
+import { ScheduleEditor } from "@/features/teaching/schedule-editor";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
 import { getTeacherDaily } from "@/lib/api/daily-test";
@@ -90,6 +92,9 @@ export default async function TeachingGroupPage({
         <h2 id="students" className="app-section-title">
           {t("groupStudents")}
         </h2>
+        <div className="mt-3">
+          <AddStudent groupId={pk} botUrl={group.bot_url} />
+        </div>
 
         {group.students.length === 0 ? (
           <p className="mt-3 text-muted-foreground">{t("noStudents")}</p>
@@ -147,6 +152,7 @@ export default async function TeachingGroupPage({
                               )}
                             </p>
                           )}
+                          <RemoveStudent groupId={pk} studentId={student.id} name={student.name} />
                         </div>
                       </div>
                     </th>
@@ -218,6 +224,14 @@ export default async function TeachingGroupPage({
       </section>
 
       {daily && <TeacherDailySection groupId={pk} data={daily} />}
+
+      <section aria-labelledby="schedule" className="app-card mt-6">
+        <h2 id="schedule" className="app-section-title">
+          {t("scheduleTitle")}
+        </h2>
+        <p className="mt-1 text-sm text-pretty text-muted-foreground">{t("scheduleHint")}</p>
+        <ScheduleEditor groupId={pk} slots={group.slots} />
+      </section>
 
       <section aria-labelledby="live" className="app-card mt-6">
         <h2 id="live" className="app-section-title">
