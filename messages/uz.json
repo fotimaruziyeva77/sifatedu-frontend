@@ -27,6 +27,7 @@
     "notifications": "Xabarlar",
     "loading": "Yuklanmoqda…",
     "teaching": "Guruhlarim",
+    "groups": "Guruhlar",
     "reviews": "Tekshirish",
     "adminPanel": "Boshqaruv paneli",
     "schedule": "Jadval",
@@ -576,7 +577,7 @@
     "average": "O'rtacha progress",
     "startsOn": "Boshlanishi: {date}",
     "open": "Guruhni ochish",
-    "back": "Guruhlarim",
+    "back": "Guruhlar",
     "groupStudents": "O'quvchilar",
     "noStudents": "Guruhda hali o'quvchi yo'q. «O'quvchi qo'shish» tugmasi bilan qo'shing.",
     "student": "O'quvchi",
@@ -650,7 +651,11 @@
       "server": "Xatolik yuz berdi. Sahifani yangilab, qayta urinib ko'ring.",
       "network": "Aloqa yo'q. Internetni tekshirib, qayta urinib ko'ring.",
       "time": "Soatni kiriting (masalan, 18:00)."
-    }
+    },
+    "titleAll": "Guruhlar",
+    "introAll": "Markazdagi barcha guruhlar. Guruhni ochib o'quvchi qo'shasiz, dars jadvalini kiritasiz, yo'qlama qilasiz va imtihonni baholaysiz.",
+    "emptyAll": "Hali guruh yo'q. Guruhni admin panelda oching: «O'qish» → «Guruhlar».",
+    "teacher": "O'qituvchi: {name}"
   },
   "Notifications": {
     "title": "Xabarlar",
@@ -1004,7 +1009,7 @@
   },
   "TeacherExams": {
     "eyebrow": "Oylik imtihon",
-    "back": "Guruhlarim",
+    "back": "Guruhlar",
     "listTitle": "Oylik imtihonlar",
     "listIntro": "Natijalar va amaliy javoblarni baholash. Qoralama imtihonni admin panelda tayyorlang — tayyor bo'lmasa ochilmaydi.",
     "testedCount": "Test: {tested}/{students}",
@@ -1058,7 +1063,8 @@
     "openHint": "Jadvalda o'quvchilarni belgilang. Ular shu vaqtgacha test ishlaydi va amaliy topshiriqlarni yuboradi, botga xabar boradi.",
     "open": "Ochish",
     "opened": "Imtihon {count} ta o'quvchiga ochildi.",
-    "selectSomeone": "Avval jadvalda o'quvchilarni belgilang."
+    "selectSomeone": "Avval jadvalda o'quvchilarni belgilang.",
+    "manageTitle": "Guruhlar imtihonlari"
   },
   "Certificates": {
     "title": "Sertifikatlar",

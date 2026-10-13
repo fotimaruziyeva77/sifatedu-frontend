@@ -2,8 +2,9 @@ import { ArrowRight, Trophy } from "lucide-react";
 import type { Metadata } from "next";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 
+import { TeacherExamList } from "@/features/exams/teacher-exam-list";
 import { Link } from "@/i18n/navigation";
-import { getMyExams, type ExamCard } from "@/lib/api/exams";
+import { getMyExams, getTeacherExams, type ExamCard } from "@/lib/api/exams";
 
 export async function generateMetadata({
   params,
@@ -20,15 +21,22 @@ function testLine(exam: ExamCard, t: Awaited<ReturnType<typeof getTranslations<"
   return t("card.testNotStarted");
 }
 
-/** Oylik imtihonlar: ochiqlari tepada, yopilganlarida — natija. */
+/**
+ * Oylik imtihonlar: ochiqlari tepada, yopilganlarida — natija. Imtihonni baholaydiganlarga
+ * (o'qituvchi, admin, menejer) — «Guruhlar imtihonlari»; o'zi topshirmaydigan xodimga «imtihon
+ * yo'q» o'rniga faqat shu ro'yxat.
+ */
 export default async function ExamsPage({ params }: PageProps<"/[locale]/dashboard/exams">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, format, exams] = await Promise.all([
+  const [t, e, format, exams, managed] = await Promise.all([
     getTranslations("Exams"),
+    getTranslations("TeacherExams"),
     getFormatter(),
     getMyExams(locale),
+    getTeacherExams(locale),
   ]);
+  const grading = managed && managed.length > 0 ? managed : null;
   const day = (value: string) =>
     format.dateTime(new Date(value), { day: "numeric", month: "long" });
   const lastDay = (value: string) =>
@@ -42,12 +50,14 @@ export default async function ExamsPage({ params }: PageProps<"/[locale]/dashboa
       </header>
 
       {exams.length === 0 ? (
-        <div className="app-empty mt-8">
-          <span className="grid size-12 place-items-center rounded-2xl bg-secondary text-caret">
-            <Trophy aria-hidden className="size-6" />
-          </span>
-          <p className="max-w-lg text-pretty text-muted-foreground">{t("empty")}</p>
-        </div>
+        !grading && (
+          <div className="app-empty mt-8">
+            <span className="grid size-12 place-items-center rounded-2xl bg-secondary text-caret">
+              <Trophy aria-hidden className="size-6" />
+            </span>
+            <p className="max-w-lg text-pretty text-muted-foreground">{t("empty")}</p>
+          </div>
+        )
       ) : (
         <ul className="exam-list mt-8">
           {exams.map((exam) => (
@@ -95,6 +105,16 @@ export default async function ExamsPage({ params }: PageProps<"/[locale]/dashboa
             </li>
           ))}
         </ul>
+      )}
+
+      {grading && (
+        <section aria-labelledby="teacher-exams" className={exams.length > 0 ? "mt-12" : "mt-8"}>
+          <h2 id="teacher-exams" className="app-section-title">
+            {e("manageTitle")}
+          </h2>
+          <p className="mt-2 max-w-2xl text-pretty text-muted-foreground">{e("listIntro")}</p>
+          <TeacherExamList exams={grading} />
+        </section>
       )}
     </>
   );

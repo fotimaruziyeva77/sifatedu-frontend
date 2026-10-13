@@ -1,43 +1,59 @@
-import { ArrowRight, CalendarDays, UsersRound } from "lucide-react";
+import { CalendarDays, UserRound, UsersRound } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getFormatter, getTranslations, setRequestLocale } from "next-intl/server";
 
+import { managesGroups } from "@/features/dashboard/nav";
+import { TeacherExamList } from "@/features/exams/teacher-exam-list";
 import { NamedIcon } from "@/features/landing/icons";
 import { Link } from "@/i18n/navigation";
 import { getTeacherExams } from "@/lib/api/exams";
+import { getMe } from "@/lib/api/me";
 import { getTeacherGroups, type TeacherGroup } from "@/lib/api/teacher";
 
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/dashboard/teaching">): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Teaching" });
-  return { title: t("title"), robots: { index: false } };
+  const [t, me] = await Promise.all([
+    getTranslations({ locale, namespace: "Teaching" }),
+    getMe(locale),
+  ]);
+  return {
+    title: t(managesGroups(me?.roles ?? []) ? "titleAll" : "title"),
+    robots: { index: false },
+  };
 }
 
 const statusKey = (status: TeacherGroup["status"]) => `status.${status}` as const;
 const formatKey = (value: string) => `format.${value === "ONLINE" ? "ONLINE" : "OFFLINE"}` as const;
 
-/** O'qituvchining guruhlari: holati, o'quvchilar soni va o'rtacha progress. */
+/**
+ * Guruhlar: o'qituvchiga — o'zinikilari, admin va menejerga — markazdagi hammasi (kartada
+ * o'qituvchi ismi). Holati, o'quvchilar soni va o'rtacha progress.
+ */
 export default async function TeachingPage({ params }: PageProps<"/[locale]/dashboard/teaching">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, e, format, groups, exams] = await Promise.all([
+  const [t, e, format, groups, exams, me] = await Promise.all([
     getTranslations("Teaching"),
     getTranslations("TeacherExams"),
     getFormatter(),
     getTeacherGroups(locale),
     getTeacherExams(locale),
+    getMe(locale),
   ]);
-  // O'qituvchi emas — bu bo'lim unga yo'q.
+  // O'qituvchi, admin yoki menejer emas — bu bo'lim unga yo'q.
   if (groups === null) notFound();
+  const all = managesGroups(me?.roles ?? []);
 
   return (
     <>
       <header>
-        <h1 className="app-title">{t("title")}</h1>
-        <p className="mt-3 max-w-2xl text-pretty text-muted-foreground">{t("intro")}</p>
+        <h1 className="app-title">{t(all ? "titleAll" : "title")}</h1>
+        <p className="mt-3 max-w-2xl text-pretty text-muted-foreground">
+          {t(all ? "introAll" : "intro")}
+        </p>
       </header>
 
       {groups.length === 0 ? (
@@ -45,7 +61,9 @@ export default async function TeachingPage({ params }: PageProps<"/[locale]/dash
           <span className="grid size-12 place-items-center rounded-2xl bg-secondary text-caret">
             <UsersRound aria-hidden className="size-6" />
           </span>
-          <p className="max-w-lg text-pretty text-muted-foreground">{t("empty")}</p>
+          <p className="max-w-lg text-pretty text-muted-foreground">
+            {t(all ? "emptyAll" : "empty")}
+          </p>
         </div>
       ) : (
         <ul className="teach-grid mt-8">
@@ -74,6 +92,12 @@ export default async function TeachingPage({ params }: PageProps<"/[locale]/dash
                 </ul>
 
                 <div className="teach-card__meta">
+                  {all && (
+                    <p className="flex items-center gap-2">
+                      <UserRound aria-hidden className="size-4 shrink-0" />
+                      {t("teacher", { name: group.teacher_name })}
+                    </p>
+                  )}
                   {group.schedule && (
                     <p className="flex items-center gap-2">
                       <CalendarDays aria-hidden className="size-4 shrink-0" />
@@ -119,41 +143,7 @@ export default async function TeachingPage({ params }: PageProps<"/[locale]/dash
             {e("listTitle")}
           </h2>
           <p className="mt-2 max-w-2xl text-pretty text-muted-foreground">{e("listIntro")}</p>
-          <ul className="exam-list mt-5">
-            {exams.map((exam) => (
-              <li key={exam.id}>
-                <article className="exam-card" aria-labelledby={`teacher-exam-${exam.id}`}>
-                  <div className="min-w-0">
-                    <p className="text-sm text-muted-foreground">
-                      {format.dateTime(new Date(exam.month), { month: "long", year: "numeric" })}
-                    </p>
-                    <h3 id={`teacher-exam-${exam.id}`} className="exam-card__title">
-                      <Link
-                        href={`/dashboard/teaching/exams/${exam.id}`}
-                        className="teach-card__link"
-                      >
-                        {exam.course_title}
-                      </Link>
-                    </h3>
-                    <ul className="teach-chips mt-3">
-                      <li className="exam-chip" data-state={exam.status}>
-                        {e(exam.status === "DRAFT" ? "draft" : "ready")}
-                      </li>
-                      <li className="teach-chip">
-                        {e("testedCount", { tested: exam.tested, students: exam.students })}
-                      </li>
-                      {exam.to_grade > 0 && (
-                        <li className="exam-chip" data-state="todo">
-                          {e("toGradeCount", { count: exam.to_grade })}
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                  <ArrowRight aria-hidden className="exam-card__arrow size-5" />
-                </article>
-              </li>
-            ))}
-          </ul>
+          <TeacherExamList exams={exams} />
         </section>
       )}
     </>

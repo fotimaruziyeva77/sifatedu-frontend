@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isStaff, NAV_ITEMS, navFor, unreadBadge } from "./nav";
+import { isStaff, managesGroups, NAV_ITEMS, navFor, unreadBadge } from "./nav";
 
 describe("navFor", () => {
   it("o'quvchiga odatiy menyu", () => {
@@ -38,11 +38,36 @@ describe("navFor", () => {
     );
   });
 
-  it("adminga faqat Tekshirish", () => {
-    const hrefs = navFor(["ADMIN"]).map((item) => item.href);
+  it("admin va menejerga barcha Guruhlar, adminga Tekshirish ham", () => {
+    const admin = navFor(["ADMIN"]);
 
-    expect(hrefs).toContain("/dashboard/reviews");
-    expect(hrefs).not.toContain("/dashboard/teaching");
+    expect(admin.slice(1, 3).map((item) => [item.href, item.labelKey])).toEqual([
+      ["/dashboard/teaching", "groups"],
+      ["/dashboard/reviews", "reviews"],
+    ]);
+    const manager = navFor(["MANAGER"]).map((item) => item.href);
+    expect(manager).toContain("/dashboard/teaching");
+    expect(manager).not.toContain("/dashboard/reviews");
+  });
+
+  it("o'qituvchi-admin uchun bitta Guruhlar bandi (hammasi)", () => {
+    const items = navFor(["TEACHER", "ADMIN"]).filter(
+      (item) => item.href === "/dashboard/teaching",
+    );
+
+    expect(items.map((item) => item.labelKey)).toEqual(["groups"]);
+  });
+
+  it("direktorga guruhlar kabineti yo'q", () => {
+    expect(navFor(["DIRECTOR"])).toEqual(NAV_ITEMS);
+  });
+});
+
+describe("managesGroups", () => {
+  it("admin va menejer", () => {
+    expect(managesGroups(["ADMIN"])).toBe(true);
+    expect(managesGroups(["MANAGER"])).toBe(true);
+    expect(managesGroups(["TEACHER", "DIRECTOR"])).toBe(false);
   });
 });
 

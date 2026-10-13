@@ -1332,7 +1332,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description O'qituvchining guruhlari: holati, o'quvchilar soni va o'rtacha progress. */
+        /**
+         * @description O'qituvchining guruhlari (admin va menejerga — hammasi): holati, o'quvchilar soni va
+         *     o'rtacha progress.
+         */
         get: operations["teacher_groups_list"];
         put?: never;
         post?: never;
@@ -3597,6 +3600,8 @@ export interface components {
             /** Format: date */
             starts_on: string | null;
             status: components["schemas"]["StudyGroupStatusEnum"];
+            /** @description Guruh o'qituvchisi. */
+            teacher_name: string;
             students_count: number;
             average_percent: number;
         };
@@ -3611,6 +3616,8 @@ export interface components {
             /** Format: date */
             starts_on: string | null;
             status: components["schemas"]["StudyGroupStatusEnum"];
+            /** @description Guruh o'qituvchisi. */
+            teacher_name: string;
             students_count: number;
             average_percent: number;
             students: components["schemas"]["TeacherStudent"][];

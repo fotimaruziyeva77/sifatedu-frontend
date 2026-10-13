@@ -41,6 +41,7 @@ export type NavItem = {
   labelKey:
     | "home"
     | "teaching"
+    | "groups"
     | "reviews"
     | "courses"
     | "schedule"
@@ -73,6 +74,8 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 const TEACHING: NavItem = { href: "/dashboard/teaching", icon: UsersRound, labelKey: "teaching" };
+// Admin va menejerga — o'sha sahifa, lekin markazdagi barcha guruhlar.
+const GROUPS: NavItem = { href: "/dashboard/teaching", icon: UsersRound, labelKey: "groups" };
 const REVIEWS: NavItem = { href: "/dashboard/reviews", icon: ClipboardCheck, labelKey: "reviews" };
 const SCHEDULE: NavItem = { href: "/dashboard/schedule", icon: CalendarDays, labelKey: "schedule" };
 const DAILY: NavItem = {
@@ -83,19 +86,27 @@ const DAILY: NavItem = {
 
 /** Admin panelga kiradigan rollar (backend: apps/users/roles.py). */
 const STAFF_ROLES = new Set(["TEACHER", "MANAGER", "DIRECTOR", "ADMIN"]);
+/** Kabinetda har qanday guruhni boshqaradiganlar (backend: `GROUP_MANAGER_ROLES`). */
+const GROUP_MANAGER_ROLES = new Set(["ADMIN", "MANAGER"]);
+
+/** Admin va menejer: barcha guruhlar — o'quvchilar, jadval, yo'qlama, imtihon. */
+export function managesGroups(roles: readonly string[]): boolean {
+  return roles.some((role) => GROUP_MANAGER_ROLES.has(role));
+}
 
 /**
- * Menyu rolga qarab: o'qituvchiga bosh sahifadan keyin "Guruhlarim" va "Tekshirish";
- * admin ham uy vazifalarini tekshira oladi. "Jadval" — guruhda o'qiydigan yoki guruhga dars
- * beradiganlarga (`schedule`), "Kunlik test" — guruhda o'qiydiganlarga (`daily`); ikkalasi
- * "Mening kurslarim"dan keyin.
+ * Menyu rolga qarab: o'qituvchiga bosh sahifadan keyin "Guruhlarim" va "Tekshirish"; admin va
+ * menejerga "Guruhlar" (barchasi), admin uy vazifalarini ham tekshiradi. "Jadval" — guruhda
+ * o'qiydigan yoki guruhga dars beradiganlarga (`schedule`), "Kunlik test" — guruhda
+ * o'qiydiganlarga (`daily`); ikkalasi "Mening kurslarim"dan keyin.
  */
 export function navFor(
   roles: readonly string[],
   { schedule = false, daily = false } = {},
 ): NavItem[] {
+  const groups = managesGroups(roles) ? [GROUPS] : roles.includes("TEACHER") ? [TEACHING] : [];
   const extra = [
-    ...(roles.includes("TEACHER") ? [TEACHING] : []),
+    ...groups,
     ...(roles.includes("TEACHER") || roles.includes("ADMIN") ? [REVIEWS] : []),
   ];
   const [home, ...rest] = NAV_ITEMS;

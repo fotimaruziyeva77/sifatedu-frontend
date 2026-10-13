@@ -27,6 +27,7 @@
     "notifications": "Notifications",
     "loading": "Loading…",
     "teaching": "My groups",
+    "groups": "Groups",
     "reviews": "Reviews",
     "adminPanel": "Admin panel",
     "schedule": "Schedule",
@@ -576,7 +577,7 @@
     "average": "Average progress",
     "startsOn": "Starts: {date}",
     "open": "Open group",
-    "back": "My groups",
+    "back": "Groups",
     "groupStudents": "Students",
     "noStudents": "No students in the group yet. Add them with “Add student”.",
     "student": "Student",
@@ -650,7 +651,11 @@
       "server": "Something went wrong. Refresh the page and try again.",
       "network": "No connection. Check your internet and try again.",
       "time": "Enter a time (for example, 18:00)."
-    }
+    },
+    "titleAll": "Groups",
+    "introAll": "All groups of the centre. Open a group to add students, set the schedule, take attendance and grade exams.",
+    "emptyAll": "No groups yet. Create one in the admin panel (“O'qish” → “Guruhlar”).",
+    "teacher": "Teacher: {name}"
   },
   "Notifications": {
     "title": "Notifications",
@@ -1004,7 +1009,7 @@
   },
   "TeacherExams": {
     "eyebrow": "Monthly exam",
-    "back": "My groups",
+    "back": "Groups",
     "listTitle": "Monthly exams",
     "listIntro": "Results and grading of practical answers. Prepare a draft exam in the admin panel — an exam that is not ready will not open.",
     "testedCount": "Quiz: {tested}/{students}",
@@ -1058,7 +1063,8 @@
     "openHint": "Tick students in the table. Until the chosen time they can take the quiz and submit practice tasks; they get a bot message.",
     "open": "Open",
     "opened": "The exam is open for {count} students.",
-    "selectSomeone": "Tick students in the table first."
+    "selectSomeone": "Tick students in the table first.",
+    "manageTitle": "Group exams"
   },
   "Certificates": {
     "title": "Certificates",
