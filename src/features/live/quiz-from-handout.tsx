@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useId, useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
+import { fileSize } from "@/features/homework/submission-view";
 import { uploadAnswer } from "@/features/homework/upload";
 import { useRouter } from "@/i18n/navigation";
 import { api } from "@/lib/api/client";
@@ -183,17 +184,29 @@ export function QuizFromHandout({
               />
             </label>
           )}
-          <label className="hw-field" htmlFor={`${ids}-file`}>
-            <span>{t("aiFile")}</span>
-          </label>
-          <input
-            id={`${ids}-file`}
-            type="file"
-            accept={ACCEPT}
-            className="qd__file"
-            onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            disabled={progress !== null}
-          />
+          <div className="hw-field">
+            <span id={`${ids}-file`}>{t("aiFile")}</span>
+            {/* Brauzerning «Choose File» yozuvi o'rniga — o'zbekcha tanlash maydoni. */}
+            <label className="hw-drop qd__drop">
+              <FileUp aria-hidden className="size-5 shrink-0" />
+              <span>
+                {file ? file.name : t("aiChoose")}
+                <em>
+                  {file
+                    ? t("aiChosen", { size: fileSize(file.size) })
+                    : t("aiFileHint", { mb: MAX_MB })}
+                </em>
+              </span>
+              <input
+                type="file"
+                accept={ACCEPT}
+                aria-describedby={`${ids}-file`}
+                onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+                disabled={progress !== null}
+                className="sr-only"
+              />
+            </label>
+          </div>
           {error && (
             <p role="alert" className="live-error">
               {error}

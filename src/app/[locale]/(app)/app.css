@@ -3210,27 +3210,18 @@
     box-shadow: 0 0 0 3px color-mix(in oklab, var(--caret) 22%, transparent);
   }
 
-  .qd__file {
-    max-width: 100%;
-    font-size: 0.875rem;
+  .qd__drop {
+    max-width: 28rem;
   }
 
-  .qd__file::file-selector-button {
-    margin-right: 0.75rem;
-    padding: 0.5rem 0.9rem;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--card);
-    color: var(--foreground);
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
+  .qd__drop span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
-  .qd__file:focus-visible {
-    outline: 2px solid var(--caret);
-    outline-offset: 2px;
-    border-radius: 0.5rem;
+  .qd__drop:has(input:disabled) {
+    cursor: default;
+    opacity: 0.6;
   }
 
   .qd__pending {
