@@ -7,12 +7,13 @@ import { TeacherDailySection } from "@/features/daily-test/teacher-daily";
 import { PenaltyList } from "@/features/rewards/penalty-list";
 import { AddStudent, RemoveStudent } from "@/features/teaching/group-roster";
 import { ScheduleEditor } from "@/features/teaching/schedule-editor";
+import { StudentAvatar } from "@/features/teaching/student-avatar";
+import { EditStudent } from "@/features/teaching/student-profile";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
 import { getTeacherDaily } from "@/lib/api/daily-test";
 import { getPenalties } from "@/lib/api/rewards";
 import { getTeacherGroup, type TeacherGroup } from "@/lib/api/teacher";
-import { initials } from "@/lib/format";
 
 function groupId(value: string): number | null {
   const id = Number(value);
@@ -129,11 +130,12 @@ export default async function TeachingGroupPage({
                   <tr key={student.id} role="row">
                     <th role="rowheader" scope="row">
                       <div className="flex items-center gap-3">
-                        <span aria-hidden className="teach-avatar">
-                          {initials(student.name)}
-                        </span>
+                        <StudentAvatar name={student.name} src={student.avatar} />
                         <div className="min-w-0">
                           <p className="font-medium">{student.name}</p>
+                          {student.middle_name && (
+                            <p className="text-xs text-muted-foreground">{student.middle_name}</p>
+                          )}
                           <a
                             href={`tel:${student.phone}`}
                             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
@@ -142,7 +144,7 @@ export default async function TeachingGroupPage({
                             <Phone aria-hidden className="size-3.5" />
                             {student.phone}
                           </a>
-                          {(student.inactive || !student.active) && (
+                          {(student.inactive || !student.active || !student.profile_complete) && (
                             <p className="mt-1 flex flex-wrap gap-1.5">
                               {student.inactive && (
                                 <span className="teach-flag">{t("inactive")}</span>
@@ -150,9 +152,21 @@ export default async function TeachingGroupPage({
                               {!student.active && (
                                 <span className="teach-flag">{t("accessClosed")}</span>
                               )}
+                              {!student.profile_complete && (
+                                <span className="teach-flag teach-flag--soft">
+                                  {t("profileMissing")}
+                                </span>
+                              )}
                             </p>
                           )}
-                          <RemoveStudent groupId={pk} studentId={student.id} name={student.name} />
+                          <div className="flex flex-wrap items-baseline gap-x-4">
+                            <EditStudent groupId={pk} student={student} />
+                            <RemoveStudent
+                              groupId={pk}
+                              studentId={student.id}
+                              name={student.name}
+                            />
+                          </div>
                         </div>
                       </div>
                     </th>

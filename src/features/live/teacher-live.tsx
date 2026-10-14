@@ -5,11 +5,11 @@ import { useTranslations } from "next-intl";
 import { useId, useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
+import { StudentAvatar } from "@/features/teaching/student-avatar";
 import { useRouter } from "@/i18n/navigation";
 import { api } from "@/lib/api/client";
 import { readApiError } from "@/lib/api/errors";
 import type { components } from "@/lib/api/schema";
-import { initials } from "@/lib/format";
 
 type Status = components["schemas"]["AttendanceStatusEnum"];
 type Student = components["schemas"]["RosterItem"];
@@ -105,9 +105,7 @@ export function AttendanceSheet({
       <ul className="attn-list">
         {students.map((student) => (
           <li key={student.id} className="attn-row">
-            <span aria-hidden className="teach-avatar">
-              {initials(student.name)}
-            </span>
+            <StudentAvatar name={student.name} src={student.avatar} className="attn-avatar" />
             <div className="attn-row__who">
               <p className="font-medium">{student.name}</p>
               {joined[student.id] && (

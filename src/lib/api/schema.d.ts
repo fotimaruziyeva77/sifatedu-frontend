@@ -1440,11 +1440,18 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** @description Guruhdan chiqarish: kursga kirish yopiladi, tarix qoladi. */
+        /**
+         * @description O'quvchi profilini tuzatish (ism, otasining ismi, tug'ilgan sana, rasm) va guruhdan
+         *     chiqarish (kursga kirish yopiladi, tarix qoladi).
+         */
         delete: operations["teacher_groups_students_destroy"];
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * @description O'quvchi profilini tuzatish (ism, otasining ismi, tug'ilgan sana, rasm) va guruhdan
+         *     chiqarish (kursga kirish yopiladi, tarix qoladi).
+         */
+        patch: operations["teacher_groups_students_partial_update"];
         trace?: never;
     };
     "/api/v1/teacher/live/{id}/": {
@@ -2656,6 +2663,13 @@ export interface components {
             first_name?: string;
             /** Familiya */
             last_name?: string;
+            /** Otasining ismi */
+            middle_name?: string;
+            /**
+             * Tug'ilgan sana
+             * Format: date
+             */
+            birth_date?: string | null;
             readonly full_name: string;
             locale?: components["schemas"]["LanguageEnum"];
             /** Format: uri */
@@ -2962,6 +2976,13 @@ export interface components {
             first_name?: string;
             /** Familiya */
             last_name?: string;
+            /** Otasining ismi */
+            middle_name?: string;
+            /**
+             * Tug'ilgan sana
+             * Format: date
+             */
+            birth_date?: string | null;
             locale?: components["schemas"]["LanguageEnum"];
             /** Format: binary */
             avatar?: string | null;
@@ -2974,6 +2995,23 @@ export interface components {
         };
         PatchedRewardSettingsRequest: {
             hidden?: boolean;
+        };
+        /** @description O'qituvchi o'quvchi profilini tuzatadi (multipart: rasm bilan). */
+        PatchedStudentProfileRequest: {
+            first_name?: string;
+            /** @default  */
+            last_name: string;
+            /** @default  */
+            middle_name: string;
+            /** Format: date */
+            birth_date?: string | null;
+            /**
+             * Format: binary
+             * @description Yangi rasm (JPG, PNG yoki WebP, 10 MB gacha) — kvadrat 512 px ga keltiriladi.
+             */
+            photo?: string;
+            /** @default false */
+            remove_photo: boolean;
         };
         Penalty: {
             id: number;
@@ -3565,6 +3603,17 @@ export interface components {
             lessons: number;
             students: number;
         };
+        StudentProfileResult: {
+            id: number;
+            name: string;
+            first_name: string;
+            last_name: string;
+            middle_name: string;
+            /** Format: date */
+            birth_date: string | null;
+            avatar: string;
+            profile_complete: boolean;
+        };
         /**
          * @description * `ONLINE` - Onlayn
          *     * `OFFLINE` - Offlayn
@@ -3837,6 +3886,14 @@ export interface components {
             quiz_passed: number;
             /** @description Oxirgi 30 kun davomati (%): kelgan va kechikkanlar. */
             attendance_rate: number | null;
+            first_name: string;
+            last_name: string;
+            /** @description Otasining ismi. */
+            middle_name: string;
+            /** Format: date */
+            birth_date: string | null;
+            /** @description To'liq ism tasdiqlangan (o'quvchi botda yoki xodim) va tug'ilgan sana bor. */
+            profile_complete: boolean;
         };
         TeacherTaskCell: {
             task_id: number;
@@ -6022,6 +6079,32 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TeacherGroupDetail"];
+                };
+            };
+        };
+    };
+    teacher_groups_students_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["PatchedStudentProfileRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StudentProfileResult"];
                 };
             };
         };

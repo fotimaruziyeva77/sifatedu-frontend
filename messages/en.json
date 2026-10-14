@@ -368,7 +368,10 @@
     "formatOffline": "In person",
     "hoursTotal": "{count} h",
     "lifetime": "Lifetime access",
-    "progressLabel": "Course {value}% complete"
+    "progressLabel": "Course {value}% complete",
+    "middleName": "Patronymic",
+    "middleNameHint": "As in your passport, e.g. Akmal o'g'li",
+    "birthDate": "Date of birth"
   },
   "Catalog": {
     "title": "Courses",
@@ -655,7 +658,20 @@
     "titleAll": "Groups",
     "introAll": "All groups of the centre. Open a group to add students, set the schedule, take attendance and grade exams.",
     "emptyAll": "No groups yet. Create one in the admin panel (“O'qish” → “Guruhlar”).",
-    "teacher": "Teacher: {name}"
+    "teacher": "Teacher: {name}",
+    "profileEdit": "Edit profile",
+    "profileTitle": "Student profile",
+    "profileHint": "Full name as in the passport, date of birth and a photo. Once saved, the bot stops asking the student.",
+    "profilePhotoPick": "Upload photo",
+    "profilePhotoRemove": "Remove",
+    "profilePhotoHint": "A photo with a clearly visible face — JPG, PNG or WebP, up to 10 MB.",
+    "profilePhotoTooBig": "The photo must be under {mb} MB.",
+    "profileLastName": "Surname",
+    "profileFirstName": "First name",
+    "profileMiddleName": "Patronymic",
+    "profileBirthDate": "Date of birth",
+    "profileSave": "Save",
+    "profileMissing": "Profile incomplete"
   },
   "Notifications": {
     "title": "Notifications",

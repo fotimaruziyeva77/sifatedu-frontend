@@ -1149,6 +1149,17 @@
     font-weight: 700;
   }
 
+  .teach-avatar--photo {
+    object-fit: cover;
+    box-shadow: 0 0 0 1px var(--border);
+  }
+
+  /* Davomatda yuz kattaroq: o'qituvchi sinfda o'quvchini rasmidan taniydi. */
+  .attn-avatar {
+    width: 3rem;
+    height: 3rem;
+  }
+
   /* Telefonda: har bir o'quvchi — alohida kartochka, ustun nomi yashirin sarlavhada. */
   @media (max-width: 639px) {
     .teach-table {
@@ -1195,6 +1206,12 @@
     background: color-mix(in oklab, var(--destructive) 12%, var(--card));
     font-size: 0.72rem;
     font-weight: 600;
+  }
+
+  /* Ogohlantirish emas, eslatma: profil to'ldirilmagan. */
+  .teach-flag--soft {
+    background: color-mix(in oklab, var(--live-warn) 22%, var(--card));
+    color: var(--live-warn-text);
   }
 
   /* ---------- Xabarlar ---------- */
@@ -4941,6 +4958,52 @@
     font-size: 0.8rem;
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+
+  .roster-edit {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+    margin-top: 0.35rem;
+    color: var(--foreground);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .roster-edit:hover {
+    color: var(--caret-text);
+  }
+
+  .roster-edit:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+    border-radius: 0.3rem;
+  }
+
+  /* O'quvchi profili (yon panel): rasm, familiya, ism, otasining ismi, tug'ilgan sana. */
+  .sp-form {
+    display: grid;
+    gap: 0.9rem;
+    padding: 0 1rem 1.5rem;
+  }
+
+  .sp-photo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .sp-photo__image {
+    width: 5.5rem;
+    height: 5.5rem;
+    font-size: 1.4rem;
+  }
+
+  .sp-form .roster-input {
+    width: 100%;
   }
 
   .roster-remove:hover,

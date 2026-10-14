@@ -46,6 +46,8 @@ export function ProfileForm({ me }: { me: Me }) {
   const [values, setValues] = useState({
     first_name: me.first_name ?? "",
     last_name: me.last_name ?? "",
+    middle_name: me.middle_name ?? "",
+    birth_date: me.birth_date ?? "",
     locale: me.locale ?? locale,
     audience: me.audience ?? "ADULT",
   });
@@ -92,7 +94,7 @@ export function ProfileForm({ me }: { me: Me }) {
 
   function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    void save(values, values.locale);
+    void save({ ...values, birth_date: values.birth_date || null }, values.locale);
   }
 
   function onAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -176,6 +178,33 @@ export function ProfileForm({ me }: { me: Me }) {
             value={values.last_name}
             onChange={(event) => setValues({ ...values, last_name: event.target.value })}
             className="h-12 text-base md:text-base"
+          />
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="profile-middle-name">{t("middleName")}</FieldLabel>
+          <Input
+            id="profile-middle-name"
+            value={values.middle_name}
+            onChange={(event) => setValues({ ...values, middle_name: event.target.value })}
+            className="h-12 text-base md:text-base"
+          />
+          <FieldDescription>{t("middleNameHint")}</FieldDescription>
+        </Field>
+
+        <Field data-invalid={Boolean(fieldErrors.birth_date)}>
+          <FieldLabel htmlFor="profile-birth-date">{t("birthDate")}</FieldLabel>
+          <Input
+            id="profile-birth-date"
+            type="date"
+            value={values.birth_date}
+            min="1930-01-01"
+            onChange={(event) => setValues({ ...values, birth_date: event.target.value })}
+            aria-invalid={Boolean(fieldErrors.birth_date)}
+            className="h-12 w-fit text-base md:text-base"
+          />
+          <FieldError
+            errors={[fieldErrors.birth_date ? { message: fieldErrors.birth_date } : undefined]}
           />
         </Field>
 

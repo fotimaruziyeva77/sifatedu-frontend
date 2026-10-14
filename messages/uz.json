@@ -368,7 +368,10 @@
     "formatOffline": "Offlayn",
     "hoursTotal": "{count} soat",
     "lifetime": "Umrbod kirish",
-    "progressLabel": "Kurs {value}% tugatildi"
+    "progressLabel": "Kurs {value}% tugatildi",
+    "middleName": "Otasining ismi",
+    "middleNameHint": "Pasportdagidek, masalan: Akmal o'g'li",
+    "birthDate": "Tug'ilgan sana"
   },
   "Catalog": {
     "title": "Kurslar",
@@ -655,7 +658,20 @@
     "titleAll": "Guruhlar",
     "introAll": "Markazdagi barcha guruhlar. Guruhni ochib o'quvchi qo'shasiz, dars jadvalini kiritasiz, yo'qlama qilasiz va imtihonni baholaysiz.",
     "emptyAll": "Hali guruh yo'q. Guruhni admin panelda oching: «O'qish» → «Guruhlar».",
-    "teacher": "O'qituvchi: {name}"
+    "teacher": "O'qituvchi: {name}",
+    "profileEdit": "Profilni tahrirlash",
+    "profileTitle": "O'quvchi profili",
+    "profileHint": "To'liq ism pasportdagidek, tug'ilgan sana va rasm. Saqlangach o'quvchidan botda qayta so'ralmaydi.",
+    "profilePhotoPick": "Rasm yuklash",
+    "profilePhotoRemove": "Olib tashlash",
+    "profilePhotoHint": "Yuz aniq ko'rinadigan rasm — JPG, PNG yoki WebP, 10 MB gacha.",
+    "profilePhotoTooBig": "Rasm {mb} MB dan katta bo'lmasin.",
+    "profileLastName": "Familiya",
+    "profileFirstName": "Ism",
+    "profileMiddleName": "Otasining ismi",
+    "profileBirthDate": "Tug'ilgan sana",
+    "profileSave": "Saqlash",
+    "profileMissing": "Profil to'ldirilmagan"
   },
   "Notifications": {
     "title": "Xabarlar",

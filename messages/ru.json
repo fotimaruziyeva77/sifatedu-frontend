@@ -368,7 +368,10 @@
     "formatOffline": "Офлайн",
     "hoursTotal": "{count} ч",
     "lifetime": "Доступ навсегда",
-    "progressLabel": "Курс пройден на {value}%"
+    "progressLabel": "Курс пройден на {value}%",
+    "middleName": "Отчество",
+    "middleNameHint": "Как в паспорте, например: Akmal o'g'li",
+    "birthDate": "Дата рождения"
   },
   "Catalog": {
     "title": "Курсы",
@@ -655,7 +658,20 @@
     "titleAll": "Группы",
     "introAll": "Все группы центра. Откройте группу, чтобы добавить учеников, задать расписание, отметить посещаемость и проверить экзамены.",
     "emptyAll": "Групп пока нет. Создайте группу в панели управления (раздел «O'qish» → «Guruhlar»).",
-    "teacher": "Преподаватель: {name}"
+    "teacher": "Преподаватель: {name}",
+    "profileEdit": "Изменить профиль",
+    "profileTitle": "Профиль ученика",
+    "profileHint": "Полное имя как в паспорте, дата рождения и фото. После сохранения бот больше не спрашивает их у ученика.",
+    "profilePhotoPick": "Загрузить фото",
+    "profilePhotoRemove": "Удалить",
+    "profilePhotoHint": "Фото, где хорошо видно лицо, — JPG, PNG или WebP, до 10 МБ.",
+    "profilePhotoTooBig": "Фото не должно превышать {mb} МБ.",
+    "profileLastName": "Фамилия",
+    "profileFirstName": "Имя",
+    "profileMiddleName": "Отчество",
+    "profileBirthDate": "Дата рождения",
+    "profileSave": "Сохранить",
+    "profileMissing": "Профиль не заполнен"
   },
   "Notifications": {
     "title": "Уведомления",
