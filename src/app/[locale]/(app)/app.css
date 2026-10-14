@@ -3167,6 +3167,168 @@
     height: 2.75rem;
   }
 
+  /* Qo'llanmadan test: fayl → AI qoralamasi → o'qituvchi tuzatadi → e'lon. */
+  .qd {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .qd__form,
+  .qd__review,
+  .qd__done {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+  }
+
+  .qd__form > .hw-field,
+  .qd__review > .qd__text {
+    width: 100%;
+  }
+
+  .qd__form .hw-select {
+    width: 100%;
+    max-width: 28rem;
+    height: 2.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .qd__form input[type="text"] {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid var(--input);
+    border-radius: 0.8rem;
+    background: transparent;
+    font-size: 1rem;
+    outline: none;
+  }
+
+  .qd__form input[type="text"]:focus-visible,
+  .qd__text:focus-visible {
+    border-color: var(--caret);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--caret) 22%, transparent);
+  }
+
+  .qd__file {
+    max-width: 100%;
+    font-size: 0.875rem;
+  }
+
+  .qd__file::file-selector-button {
+    margin-right: 0.75rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--foreground);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .qd__file:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  .qd__pending {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px dashed var(--border);
+    border-radius: 1rem;
+    color: var(--muted-foreground);
+    font-size: 0.9375rem;
+  }
+
+  .qd__meta {
+    font-weight: 600;
+  }
+
+  .qd__text {
+    min-height: 22rem;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--input);
+    border-radius: 0.8rem;
+    background: transparent;
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    tab-size: 2;
+    resize: vertical;
+    outline: none;
+  }
+
+  .qd__errors {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.8rem;
+    background: color-mix(in oklab, var(--caret) 10%, var(--card));
+    color: var(--caret-text);
+    font-size: 0.875rem;
+  }
+
+  .qd__errors p {
+    font-weight: 600;
+  }
+
+  .qd__errors ul {
+    margin-top: 0.3rem;
+    padding-left: 1.1rem;
+    list-style: disc;
+  }
+
+  .qd__share {
+    display: inline-flex;
+    gap: 0.55rem;
+    align-items: center;
+    font-size: 0.9375rem;
+    cursor: pointer;
+  }
+
+  .qd__share input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--caret);
+  }
+
+  .qd__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    align-items: center;
+  }
+
+  .qd__link {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .qd__link:hover {
+    color: var(--foreground);
+  }
+
+  .qd__link:focus-visible {
+    outline: 2px solid var(--caret);
+    outline-offset: 2px;
+    border-radius: 0.4rem;
+  }
+
+  .qd__note {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+
   @media (max-width: 640px) {
     .live-row {
       grid-template-columns: minmax(0, 1fr);

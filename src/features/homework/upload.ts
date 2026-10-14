@@ -6,7 +6,8 @@ import { readApiError } from "@/lib/api/errors";
  */
 
 export type UploadResult =
-  { ok: true } | { ok: false; message: string | null; fields?: Record<string, string[]> };
+  | { ok: true; data?: unknown }
+  | { ok: false; message: string | null; fields?: Record<string, string[]> };
 
 function readCookie(name: string): string | undefined {
   const entry = document.cookie.split("; ").find((cookie) => cookie.startsWith(`${name}=`));
@@ -29,7 +30,10 @@ function parseError(body: string): { message: string | null; fields?: Record<str
   }
 }
 
-/** `url` — uy vazifasi (`/api/v1/homework/{id}/submissions/`) yoki imtihon topshirig'i javobi. */
+/**
+ * `url` — uy vazifasi (`/api/v1/homework/{id}/submissions/`), imtihon topshirig'i javobi yoki
+ * qo'llanma (AI test). Muvaffaqiyatda javob tanasi `data`da (JSON bo'lsa).
+ */
 export async function uploadAnswer(
   url: string,
   form: FormData,
@@ -47,7 +51,13 @@ export async function uploadAnswer(
     };
     request.onload = () => {
       if (request.status >= 200 && request.status < 300) {
-        resolve({ ok: true });
+        let data: unknown;
+        try {
+          data = request.responseText ? JSON.parse(request.responseText) : undefined;
+        } catch {
+          data = undefined;
+        }
+        resolve({ ok: true, data });
         return;
       }
       if (request.status === 413) {

@@ -5,6 +5,7 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 
 import { JoinButton } from "@/features/live/join-button";
 import { clock, dayLabel, timeRange } from "@/features/live/labels";
+import { QuizFromHandout } from "@/features/live/quiz-from-handout";
 import { AttendanceSheet, CancelForm, CoverPanel, DetailsForm } from "@/features/live/teacher-live";
 import { relativeDay } from "@/features/live/when";
 import { notFoundMetadata } from "@/i18n/alternates";
@@ -128,6 +129,21 @@ export default async function TeacherLivePage({
                 covered={lesson.covered}
                 canUncover={lesson.can_uncover}
                 canMark={lesson.can_mark}
+              />
+            </div>
+          </section>
+
+          <section aria-labelledby="handout" className="app-card mt-6">
+            <h2 id="handout" className="app-section-title">
+              {t("aiTitle")}
+            </h2>
+            <div className="mt-3">
+              <QuizFromHandout
+                lessonId={lesson.id}
+                lessons={lesson.course_lessons}
+                topicId={lesson.topic_id}
+                initial={lesson.quiz_draft ?? null}
+                aiReady={lesson.ai_ready}
               />
             </div>
           </section>

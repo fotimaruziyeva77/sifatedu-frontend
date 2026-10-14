@@ -1523,6 +1523,23 @@ export interface paths {
         patch: operations["teacher_live_covered_partial_update"];
         trace?: never;
     };
+    "/api/v1/teacher/live/{id}/quiz-drafts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Jonli darsga qo'llanma yuklanadi — AI test tuzadi (`ai` navbati, 30–90 s). */
+        post: operations["teacher_live_quiz_drafts_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/teacher/penalties/": {
         parameters: {
             query?: never;
@@ -1550,6 +1567,39 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["teacher_penalties_cancel_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/quiz-drafts/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["teacher_quiz_drafts_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/teacher/quiz-drafts/{id}/publish/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Tekshirilgan savollar mavzu testiga qo'shiladi; mavzu guruhda «o'tildi» bo'ladi. */
+        post: operations["teacher_quiz_drafts_publish_create"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3023,6 +3073,66 @@ export interface components {
             hours?: string;
             course?: string;
         };
+        QuizDraft: {
+            id: number;
+            /**
+             * @description PENDING — AI tuzmoqda, READY — tekshirishga tayyor, FAILED — xato, PUBLISHED — e'lon qilingan.
+             *
+             *     * `PENDING` - PENDING
+             *     * `READY` - READY
+             *     * `FAILED` - FAILED
+             *     * `PUBLISHED` - PUBLISHED
+             */
+            status: components["schemas"]["QuizDraftStatusEnum"];
+            /** @description Mavzu — kurs darsi. */
+            lesson_id: number;
+            lesson_title: string;
+            file_name: string;
+            /** @description Savollar «Tez kiritish» formatida. */
+            text: string;
+            error: string;
+            /** @description E'lon qilingan savollar soni. */
+            count: number;
+            /** Format: date-time */
+            created_at: string;
+        };
+        QuizDraftCreateRequest: {
+            /**
+             * Format: binary
+             * @description Qo'llanma: PDF, Word, PowerPoint, rasm yoki matn.
+             */
+            file: string;
+            /** @description Mavzu (kurs darsi); bo'lmasa — new_title. */
+            lesson?: number | null;
+            /** @description Yangi mavzu nomi. */
+            new_title?: string;
+        };
+        QuizDraftPublishRequest: {
+            /** @description Tuzatilgan savollar matni. */
+            text: string;
+            /**
+             * @description Qo'llanma o'quvchilarga dars materiali bo'lib qo'shilsin.
+             * @default false
+             */
+            share_file: boolean;
+        };
+        QuizDraftPublished: {
+            draft: components["schemas"]["QuizDraft"];
+            /** @description Testga qo'shilgan savollar. */
+            count: number;
+            /** @description Mavzu guruhda ochiq — o'quvchilar testni hozir ishlay oladi. */
+            covered: boolean;
+            /** @description O'quvchilarga hozir «Dars ochildi · Testni boshlash» xabari ketdi. */
+            notified: boolean;
+        };
+        /**
+         * @description * `PENDING` - PENDING
+         *     * `READY` - READY
+         *     * `FAILED` - FAILED
+         *     * `PUBLISHED` - PUBLISHED
+         * @enum {string}
+         */
+        QuizDraftStatusEnum: "PENDING" | "READY" | "FAILED" | "PUBLISHED";
         QuizFinish: {
             score: number;
             stars: number;
@@ -3680,6 +3790,10 @@ export interface components {
             /** @description Dars hali boshlanmagan. */
             can_cancel: boolean;
             students: components["schemas"]["RosterItem"][];
+            /** @description Shu darsga yuklangan oxirgi qo'llanmadan AI test. */
+            quiz_draft: components["schemas"]["QuizDraft"] | null;
+            /** @description Serverda AI kaliti bor: test tuzish mumkin. */
+            ai_ready: boolean;
         };
         TeacherRow: {
             student_id: number;
@@ -6206,6 +6320,31 @@ export interface operations {
             };
         };
     };
+    teacher_live_quiz_drafts_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["QuizDraftCreateRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuizDraft"];
+                };
+            };
+        };
+    };
     teacher_penalties_list: {
         parameters: {
             query?: {
@@ -6250,6 +6389,54 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Penalty"];
+                };
+            };
+        };
+    };
+    teacher_quiz_drafts_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuizDraft"];
+                };
+            };
+        };
+    };
+    teacher_quiz_drafts_publish_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuizDraftPublishRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["QuizDraftPublishRequest"];
+                "multipart/form-data": components["schemas"]["QuizDraftPublishRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuizDraftPublished"];
                 };
             };
         };
