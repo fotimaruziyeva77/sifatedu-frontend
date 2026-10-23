@@ -2572,6 +2572,8 @@ export interface components {
             video: components["schemas"]["LessonVideo"] | null;
             progress: components["schemas"]["LessonProgress"];
             materials: components["schemas"]["LessonMaterial"][];
+            /** @description Dars slaydlari (bo'lsa). */
+            slides: components["schemas"]["LessonSlides"] | null;
             watermark: string;
             /** @description Darsning uy vazifasi (bo'lsa). */
             homework: components["schemas"]["Homework"] | null;
@@ -2591,6 +2593,13 @@ export interface components {
             /** Ko'rilgan (soniya) */
             readonly watched_sec: number;
             readonly completed: boolean;
+        };
+        LessonSlides: {
+            count: number;
+            /** @description Slaydlar: [{blocks: [...]}]; bloklar tuzilmasi — apps/catalog/slides.py. */
+            slides: unknown;
+            /** @description Ustozga eslatma (Markdown) — faqat o'qituvchi va xodimga. */
+            teacher_notes: string;
         };
         LessonVideo: {
             status: string;

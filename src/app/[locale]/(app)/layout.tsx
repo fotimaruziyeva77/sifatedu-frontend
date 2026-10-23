@@ -13,6 +13,7 @@ import { getMe, toViewer } from "@/lib/api/me";
 
 import "../(site)/landing.css";
 import "./app.css";
+import "@/features/lesson/slides/slides.css";
 
 export const dynamic = "force-dynamic";
 

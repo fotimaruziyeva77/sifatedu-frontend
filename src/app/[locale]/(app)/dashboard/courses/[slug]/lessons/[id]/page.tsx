@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { LessonList } from "@/features/dashboard/lesson-list";
 import { HomeworkPanel, type HomeworkDates } from "@/features/homework/homework-panel";
 import { LessonMaterials } from "@/features/lesson/materials";
+import { SlidesPlayer } from "@/features/lesson/slides/slides-player";
+import { slideList } from "@/features/lesson/slides/types";
 import { VideoPlayer } from "@/features/player/video-player";
 import { QuizPanel } from "@/features/quiz/quiz-panel";
 import { notFoundMetadata } from "@/i18n/alternates";
@@ -121,6 +123,13 @@ export default async function LessonPage({
       }
     : null;
   const ready = video?.status === "READY" && video.hls_url !== "";
+  const slides = slideList(lesson.slides);
+  const notes = lesson.slides?.teacher_notes ?? "";
+  // Videosiz (offlayn) darsda slaydlar video o'rnida turadi.
+  const slidesFirst = !ready && slides.length > 0;
+  const player = slides.length > 0 && (
+    <SlidesPlayer slides={slides} printHref={`/slides/${lesson.id}`} />
+  );
 
   return (
     <div className="lesson-layout">
@@ -136,7 +145,9 @@ export default async function LessonPage({
         </nav>
 
         <div id="lesson-video" className="scroll-mt-20">
-          {ready && video ? (
+          {slidesFirst ? (
+            player
+          ) : ready && video ? (
             <VideoPlayer
               lessonId={lesson.id}
               src={video.hls_url}
@@ -183,6 +194,22 @@ export default async function LessonPage({
           {lesson.summary && <p className="mt-4 text-pretty">{lesson.summary}</p>}
           {ready && <p className="mt-4 text-xs text-muted-foreground">{t("shortcuts")}</p>}
         </header>
+
+        {!slidesFirst && player && (
+          <section aria-labelledby="slides" className="mt-10">
+            <h2 id="slides" className="app-section-title mb-4">
+              {t("slides")}
+            </h2>
+            {player}
+          </section>
+        )}
+
+        {notes && (
+          <details className="teacher-notes app-card mt-6">
+            <summary>{t("teacherNotes")}</summary>
+            <div className="teacher-notes__text">{notes}</div>
+          </details>
+        )}
 
         <LessonMaterials materials={lesson.materials} />
 

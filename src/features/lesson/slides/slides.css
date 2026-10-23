@@ -1,0 +1,829 @@
+/* Dars slaydlari: slayd (1280×720, brend taqdimotlari uslubi — qora fon, kartalar, qizil va sariq
+   urg'u; sayt mavzusidan qat'i nazar), ko'rsatgich va chop etish (PDF) ko'rinishi.
+   Kod ranglari `apps/catalog/slides.py` dagi sinflar bo'yicha. O'lchamlar `--fit` bilan
+   kichrayadi (matn sig'masa). */
+
+.slide {
+  --s-bg: #0d0d0f;
+  --s-card: #1a1a1f;
+  --s-card-dark: #141418;
+  --s-line: #2e2e36;
+  --s-text: #f4f2ed;
+  --s-muted: #b4b3be;
+  --s-dim: #8f8e9a;
+  --s-red: #e5252a;
+  --s-red-text: #ff5a5a;
+  --s-amber: #f2c879;
+  --s-blue: #6cb6ff;
+  --s-green: #9be38a;
+  --s-head:
+    var(--font-rubik, "Rubik"), var(--font-rubik-cyrillic, "Rubik"), ui-sans-serif, system-ui,
+    sans-serif;
+  --s-sans:
+    var(--font-inter, "Inter"), var(--font-inter-cyrillic, "Inter"), ui-sans-serif, system-ui,
+    sans-serif;
+  --s-mono:
+    var(--font-jetbrains, "JetBrains Mono"), var(--font-jetbrains-cyrillic, "JetBrains Mono"),
+    ui-monospace, monospace;
+  --fit: 1;
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 82px 85px 104px;
+  background: var(--s-bg);
+  color: var(--s-text);
+  font-family: var(--s-sans);
+  /* `>=`, `!=` ligatura bo'lib «≥», «≠» ko'rinmasin: o'quvchi klaviaturada aynan shunday yozadi */
+  font-variant-ligatures: none;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Umumiy qoidalar `:where` bilan — klassli qoidalar har doim ustun turadi. Sahifa reset'iga
+   bog'liq emas (slayd o'zi to'liq). */
+:where(.slide) *,
+:where(.slide) ::before,
+:where(.slide) ::after {
+  box-sizing: border-box;
+}
+
+:where(.slide) :where(h1, h2, h3, h4, h5, h6, p, ul, ol, pre, table, aside, figure) {
+  margin: 0;
+}
+
+.slide__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(22px * var(--fit));
+  min-height: 0;
+  overflow: hidden;
+  font-size: calc(22px * var(--fit));
+  line-height: 1.45;
+}
+
+/* Bloklar siqilmaydi: sig'masa — `--fit` kichraytiradi (kesilib qolmaydi). */
+.slide__body > * {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.slide__kicker {
+  font-family: var(--s-mono);
+  font-size: calc(20px * var(--fit));
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--s-red-text);
+}
+
+.slide__title,
+:where(.slide) h1,
+:where(.slide) h2 {
+  font-family: var(--s-head);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--s-text);
+  text-wrap: pretty;
+}
+
+.slide__title {
+  font-size: calc(51px * var(--fit));
+}
+
+.slide__kicker + .slide__title {
+  margin-top: calc(-12px * var(--fit));
+}
+
+.slide__title + * {
+  margin-top: calc(6px * var(--fit));
+}
+
+:where(.slide) h5,
+:where(.slide) h6 {
+  font-family: var(--s-head);
+  font-size: calc(22px * var(--fit));
+  font-weight: 600;
+  color: var(--s-text);
+}
+
+:where(.slide) p {
+  color: var(--s-muted);
+}
+
+:where(.slide) strong {
+  font-weight: 700;
+  color: var(--s-text);
+}
+
+:where(.slide) a {
+  color: var(--s-amber);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+:where(.slide) :not(pre) > code {
+  font-family: var(--s-mono);
+  font-size: 0.9em;
+  color: var(--s-amber);
+}
+
+:where(.slide) ul,
+:where(.slide) ol {
+  display: grid;
+  gap: 0.3em;
+  padding-left: 1.2em;
+  color: var(--s-text);
+}
+
+:where(.slide) ul {
+  list-style: disc;
+}
+
+:where(.slide) ol {
+  list-style: decimal;
+}
+
+:where(.slide) li::marker {
+  color: var(--s-red-text);
+  font-weight: 600;
+}
+
+:where(.slide) li > ul,
+:where(.slide) li > ol {
+  margin-top: 0.25em;
+  font-size: 0.92em;
+}
+
+/* Kod va ekrandagi natija */
+.slide-code {
+  margin: 0;
+  overflow: hidden;
+  padding: calc(24px * var(--fit)) calc(28px * var(--fit));
+  border: 1px solid var(--s-line);
+  border-radius: 11px;
+  background: var(--s-card);
+  color: var(--s-text);
+  font-family: var(--s-mono);
+  font-size: calc(21px * var(--fit));
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.slide-code > code {
+  font: inherit;
+}
+
+.slide-code__line {
+  display: block;
+  min-height: 1.5em;
+}
+
+.slide-code--out {
+  background: var(--s-card-dark);
+  color: var(--s-amber);
+}
+
+.slide-code__line--error {
+  color: var(--s-red-text);
+}
+
+.tk-k,
+.tk-kc,
+.tk-nd,
+.tk-nt {
+  color: var(--s-red-text);
+}
+.tk-s {
+  color: var(--s-amber);
+}
+.tk-c {
+  color: var(--s-dim);
+}
+.tk-nf,
+.tk-nc,
+.tk-na {
+  color: var(--s-blue);
+}
+.tk-gp {
+  color: var(--s-dim);
+}
+.tk-go {
+  color: var(--s-amber);
+}
+.tk-gd {
+  color: var(--s-red-text);
+}
+.tk-gi {
+  color: var(--s-green);
+}
+
+/* Jadval: qizil sarlavha qatori; kodli jadval to'liq mono shriftda */
+.slide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: calc(19px * var(--fit));
+  line-height: 1.35;
+}
+
+.slide-table th,
+.slide-table td {
+  padding: calc(9px * var(--fit)) calc(14px * var(--fit));
+  border: 1px solid var(--s-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.slide-table th {
+  border-color: var(--s-red);
+  background: var(--s-red);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.slide-table td {
+  background: var(--s-card-dark);
+  color: var(--s-text);
+}
+
+.slide-table--mono {
+  font-family: var(--s-mono);
+}
+
+.slide-table code {
+  font-family: var(--s-mono);
+  font-size: 1em;
+  color: inherit;
+}
+
+.slide-table--mono td:last-child code {
+  color: var(--s-amber);
+}
+
+/* Eslatma (>) */
+.slide-note {
+  display: grid;
+  gap: 0.35em;
+  padding: calc(16px * var(--fit)) calc(22px * var(--fit));
+  border: 1px solid var(--s-line);
+  border-left: 4px solid var(--s-red);
+  border-radius: 11px;
+  background: var(--s-card);
+  font-size: calc(20px * var(--fit));
+}
+
+.slide-note > * {
+  margin: 0;
+}
+
+/* Kartalar to'ri va ustunlar */
+.slide-cards {
+  display: grid;
+  grid-auto-rows: 1fr;
+  gap: calc(19px * var(--fit)) calc(21px * var(--fit));
+}
+
+.slide-card {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10px * var(--fit));
+  min-width: 0;
+  padding: calc(22px * var(--fit)) calc(26px * var(--fit));
+  border: 1px solid var(--s-line);
+  border-radius: 11px;
+  background: var(--s-card);
+  font-size: calc(19px * var(--fit));
+  line-height: 1.45;
+}
+
+.slide-card > * {
+  margin: 0;
+}
+
+.slide-card__title {
+  font-family: var(--s-head);
+  font-size: calc(24px * var(--fit));
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--s-text);
+}
+
+.slide-card__label {
+  font-family: var(--s-head);
+  font-size: calc(16px * var(--fit));
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--s-muted);
+}
+
+.slide-card__num {
+  font-family: var(--s-mono);
+  font-size: calc(40px * var(--fit));
+  font-weight: 600;
+  line-height: 1;
+}
+
+.slide-card .slide-code {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-size: calc(19px * var(--fit));
+}
+
+.slide-card li::marker {
+  color: var(--s-muted);
+}
+
+.slide-result {
+  font-family: var(--s-mono);
+  font-size: calc(29px * var(--fit));
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.slide .slide-result {
+  color: var(--s-amber);
+}
+
+.slide-cols {
+  display: grid;
+  gap: calc(21px * var(--fit));
+  align-items: stretch;
+}
+
+.slide-col {
+  display: flex;
+  flex-direction: column;
+  gap: calc(19px * var(--fit));
+  min-width: 0;
+}
+
+.slide-col > :only-child {
+  flex: 1;
+}
+
+.tone-qizil {
+  color: var(--s-red-text) !important;
+}
+.tone-sariq {
+  color: var(--s-amber) !important;
+}
+.tone-yashil {
+  color: var(--s-green) !important;
+}
+.tone-kok {
+  color: var(--s-blue) !important;
+}
+
+/* Indekslar sxemasi: ```indeks``` */
+.slide-index {
+  display: grid;
+  align-items: center;
+  gap: calc(14px * var(--fit)) calc(12px * var(--fit));
+  font-family: var(--s-mono);
+  font-size: calc(22px * var(--fit));
+}
+
+.slide-index__label {
+  padding-right: calc(16px * var(--fit));
+  font-family: var(--s-sans);
+  font-size: calc(16px * var(--fit));
+  color: var(--s-muted);
+}
+
+.slide-index__name {
+  font-family: var(--s-mono);
+  font-size: calc(19px * var(--fit));
+  color: var(--s-text);
+}
+
+.slide-index__pos,
+.slide-index__neg {
+  font-weight: 600;
+  text-align: center;
+}
+
+.slide-index__pos {
+  color: var(--s-amber);
+}
+
+.slide-index__neg {
+  color: var(--s-red-text);
+}
+
+.slide-index__box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  height: calc(72px * var(--fit));
+  border: 1.5px solid #d5d4db;
+  border-radius: 9px;
+  color: var(--s-text);
+  white-space: pre;
+}
+
+/* Muqova va bo'lim: «chip»lar */
+.slide-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(14px * var(--fit));
+}
+
+.slide .slide-chip {
+  padding: calc(11px * var(--fit)) calc(20px * var(--fit));
+  border: 1px solid var(--s-line);
+  border-radius: 8px;
+  background: #1b1a1f;
+  color: var(--s-text);
+  font-family: var(--s-mono);
+  font-size: calc(20px * var(--fit));
+  line-height: 1.3;
+  white-space: pre;
+}
+
+.slide-chips__note {
+  font-size: calc(20px * var(--fit));
+  color: var(--s-muted);
+}
+
+/* Pastki qism: logotip va slayd raqami */
+.slide__foot {
+  position: absolute;
+  right: 85px;
+  bottom: 42px;
+  left: 85px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  color: var(--s-dim);
+  font: 500 16px var(--s-sans);
+}
+
+.slide__foot-logo,
+.slide__logo {
+  width: auto;
+  color: var(--s-text);
+}
+
+.slide__foot-logo {
+  height: 21px;
+}
+
+.slide__foot-logo rect,
+.slide__logo rect {
+  fill: var(--s-red);
+}
+
+/* Chap qizil chiziq: muqova, amaliyot, xulosa */
+.slide--cover::before,
+.slide--practice::before,
+.slide--summary::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 14px;
+  background: var(--s-red);
+}
+
+/* Muqova */
+.slide--cover {
+  padding-bottom: 86px;
+}
+
+.slide__logo {
+  position: absolute;
+  top: 86px;
+  left: 85px;
+  height: 39px;
+}
+
+.slide--cover .slide__body {
+  padding-top: 160px;
+}
+
+.slide--cover .slide__kicker {
+  font-size: calc(24px * var(--fit));
+}
+
+.slide--cover .slide__title {
+  font-size: calc(117px * var(--fit));
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.slide--cover .slide__kicker + .slide__title {
+  margin-top: calc(-10px * var(--fit));
+}
+
+.slide--cover .slide__body > p:not(.slide-chips) {
+  font-size: calc(31px * var(--fit));
+  line-height: 1.35;
+}
+
+.slide--cover .slide-chips,
+.slide--section .slide-chips {
+  margin-top: auto;
+}
+
+/* Bo'lim: qizil fon */
+.slide--section {
+  padding-bottom: 86px;
+  background: var(--s-red);
+  color: #ffffff;
+}
+
+.slide--section .slide__kicker,
+.slide--section .slide__title,
+.slide--section p,
+.slide--section strong {
+  color: #ffffff;
+}
+
+.slide--section .slide__title {
+  font-size: calc(88px * var(--fit));
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+}
+
+.slide--section .slide__kicker + .slide__title {
+  margin-top: calc(95px * var(--fit));
+}
+
+.slide--section .slide__body > p:not(.slide-chips) {
+  font-size: calc(27px * var(--fit));
+}
+
+.slide--section .slide-chip {
+  border-color: var(--s-bg);
+  background: var(--s-bg);
+  color: #ffffff;
+}
+
+.slide--section .slide-chips__note {
+  color: #ffffff;
+}
+
+.slide--section :not(pre) > code {
+  color: #ffffff;
+}
+
+/* Amaliyot: sariq ustki yozuv, topshiriq kartalari, qizil banner */
+.slide--practice .slide__kicker {
+  color: var(--s-amber);
+}
+
+.slide-tasks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(19px * var(--fit)) calc(21px * var(--fit));
+  padding: 0;
+  list-style: none;
+}
+
+.slide-tasks > li {
+  position: relative;
+  padding: calc(22px * var(--fit)) calc(26px * var(--fit)) calc(22px * var(--fit))
+    calc(66px * var(--fit));
+  border: 1px solid var(--s-line);
+  border-radius: 11px;
+  background: var(--s-card-dark);
+  font-size: calc(20px * var(--fit));
+  line-height: 1.45;
+}
+
+.slide-tasks > li::before {
+  content: counter(list-item);
+  position: absolute;
+  top: calc(20px * var(--fit));
+  left: calc(26px * var(--fit));
+  color: var(--s-red-text);
+  font-family: var(--s-head);
+  font-size: calc(28px * var(--fit));
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.slide--practice .slide-note {
+  border: 0;
+  background: var(--s-red);
+  color: #ffffff;
+}
+
+.slide--practice .slide-note p,
+.slide--practice .slide-note strong,
+.slide--practice .slide-note code {
+  color: #ffffff;
+}
+
+/* Viktorina: karta sarlavhalari qizil */
+.slide--quiz .slide-card__title {
+  font-size: calc(20px * var(--fit));
+  color: var(--s-red-text);
+}
+
+/* Xulosa: katta logotip va savol */
+.slide--summary .slide__foot {
+  align-items: center;
+  font-size: 20px;
+  color: var(--s-muted);
+}
+
+.slide--summary .slide__foot-logo {
+  height: 32px;
+}
+
+/* Ko'rsatgich (dars sahifasida) */
+.slides {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: #0b0b0d;
+  outline: none;
+}
+
+.slides:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--caret) 45%, transparent);
+}
+
+.slides__frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.slides__stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.slides__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3.5rem;
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid rgb(255 255 255 / 0.06);
+  color: #e5e7eb;
+}
+
+.slides__btn,
+.slides__tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.6rem;
+  border-radius: 999px;
+  color: #f3f4f6;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.slides__btn:hover:not(:disabled),
+.slides__tool:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.slides__btn:disabled {
+  opacity: 0.35;
+}
+
+.slides__btn:focus-visible,
+.slides__tool:focus-visible {
+  outline: 2px solid #f2c879;
+  outline-offset: 2px;
+}
+
+.slides__count {
+  min-width: 4.5rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: center;
+}
+
+.slides__hint {
+  flex: 1;
+  overflow: hidden;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .slides__hint {
+    visibility: hidden;
+  }
+}
+
+.slides--full {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+}
+
+.slides--full .slides__frame {
+  flex: none;
+}
+
+.slides--full .slides__bar {
+  width: 100%;
+  max-width: 1280px;
+  border-top: 0;
+}
+
+.teacher-notes summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.teacher-notes__text {
+  margin-top: 0.75rem;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Chop etish (PDF) */
+.slides-print {
+  display: grid;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px 16px 48px;
+  background: #e9eaef;
+}
+
+.slides-print__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1280px;
+  padding: 16px 20px;
+  border-radius: 16px;
+  background: #15171f;
+  color: #ffffff;
+}
+
+.slides-print__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #e5252a;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.slides-print__page {
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.15);
+}
+
+@media print {
+  @page {
+    size: 1280px 720px;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #0d0d0f !important;
+  }
+
+  .slides-print {
+    display: block;
+    padding: 0;
+    background: none;
+  }
+
+  .slides-print__bar {
+    display: none;
+  }
+
+  .slides-print__page {
+    break-after: page;
+    box-shadow: none;
+  }
+
+  .slide {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

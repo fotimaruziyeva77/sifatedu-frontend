@@ -482,7 +482,19 @@
     "lockedQuiz": "Сначала сдайте тест предыдущего урока",
     "lockedTitle": "Этот урок пока закрыт",
     "lockedBody": "Сдайте тест урока «{lesson}» — и этот урок откроется.",
-    "lockedGo": "К уроку с тестом"
+    "lockedGo": "К уроку с тестом",
+    "slides": "Слайды",
+    "slideOf": "Слайд {n} из {total}",
+    "slidePrev": "Предыдущий слайд",
+    "slideNext": "Следующий слайд",
+    "slidesKeys": "←/→ — листать, F — полный экран",
+    "teacherNotes": "Заметки для преподавателя",
+    "printButton": "Сохранить как PDF",
+    "printHint": "В окне печати выберите «Сохранить как PDF».",
+    "slidesTitle": "{title} — слайды",
+    "slidesQuestions": "Есть вопросы?",
+    "slideIndexFrom": "С начала",
+    "slideIndexEnd": "С конца"
   },
   "Payment": {
     "title": "Результат оплаты",

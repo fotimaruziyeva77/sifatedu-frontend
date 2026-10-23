@@ -482,7 +482,19 @@
     "lockedQuiz": "Pass the previous lesson's quiz first",
     "lockedTitle": "This lesson is still locked",
     "lockedBody": "Pass the quiz of «{lesson}» and this lesson will unlock.",
-    "lockedGo": "Go to the quiz lesson"
+    "lockedGo": "Go to the quiz lesson",
+    "slides": "Slides",
+    "slideOf": "Slide {n} of {total}",
+    "slidePrev": "Previous slide",
+    "slideNext": "Next slide",
+    "slidesKeys": "←/→ — navigate, F — full screen",
+    "teacherNotes": "Teacher notes",
+    "printButton": "Save as PDF",
+    "printHint": "In the print dialog, choose “Save as PDF”.",
+    "slidesTitle": "{title} — slides",
+    "slidesQuestions": "Any questions?",
+    "slideIndexFrom": "From start",
+    "slideIndexEnd": "From end"
   },
   "Payment": {
     "title": "Payment result",

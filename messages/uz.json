@@ -482,7 +482,19 @@
     "lockedQuiz": "Oldingi darsning testidan o'ting",
     "lockedTitle": "Bu dars hali yopiq",
     "lockedBody": "«{lesson}» darsining testidan o'ting — shunda bu dars ochiladi.",
-    "lockedGo": "Testli darsga o'tish"
+    "lockedGo": "Testli darsga o'tish",
+    "slides": "Slaydlar",
+    "slideOf": "{n}-slayd, jami {total}",
+    "slidePrev": "Oldingi slayd",
+    "slideNext": "Keyingi slayd",
+    "slidesKeys": "←/→ — varaqlash, F — to'liq ekran",
+    "teacherNotes": "Ustoz uchun eslatma",
+    "printButton": "PDF sifatida saqlash",
+    "printHint": "Chop etish oynasida «PDF sifatida saqlash»ni tanlang.",
+    "slidesTitle": "{title} — slaydlar",
+    "slidesQuestions": "Savollar bormi?",
+    "slideIndexFrom": "Boshidan",
+    "slideIndexEnd": "Oxiridan"
   },
   "Payment": {
     "title": "To'lov natijasi",
