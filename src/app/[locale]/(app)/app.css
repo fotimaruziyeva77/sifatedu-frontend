@@ -17,6 +17,8 @@
     flex-direction: column;
     width: var(--side);
     padding: 1rem 0.75rem;
+    /* Past ekranda pastki bandlar ham ochilsin. */
+    overflow-y: auto;
     border-right: 1px solid var(--border);
     background: var(--card);
     /* Telefonda yopiq turadi va tugma bilan chiqadi. */
