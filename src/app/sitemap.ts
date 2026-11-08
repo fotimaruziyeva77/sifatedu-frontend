@@ -4,6 +4,9 @@ import { languageAlternates } from "@/i18n/alternates";
 import { routing } from "@/i18n/routing";
 import { getAllCourseSlugs } from "@/lib/api/catalog";
 
+// Har markazning kurslari boshqa: build paytida bir marta yig'ib bo'lmaydi.
+export const dynamic = "force-dynamic";
+
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
 const STATIC_PATHS = ["", "/courses", "/offer", "/privacy", "/refund-policy"];
 

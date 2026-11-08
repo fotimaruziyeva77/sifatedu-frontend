@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
  *   E2E_BASE_URL   — sayt manzili (standart http://localhost)
  *   E2E_CHANNEL    — o'rnatilgan brauzer (masalan `chrome`); bo'sh bo'lsa Playwright'ning Chromium'i
  *
- * Oldin test ma'lumotlarini tayyorlang: `python manage.py seed_e2e` (e2e/README.md).
+ * Oldin test ma'lumotlarini tayyorlang: `python manage.py tenant_command seed_e2e --schema=sifat` (e2e/README.md).
  */
 const baseURL = process.env.E2E_BASE_URL ?? "http://localhost";
 const channel = process.env.E2E_CHANNEL || undefined;
