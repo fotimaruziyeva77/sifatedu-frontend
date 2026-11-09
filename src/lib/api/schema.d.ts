@@ -2293,7 +2293,7 @@ export interface components {
              * @description Shu o'quvchi uchun (alohida muddat bilan).
              */
             closes_at: string;
-            state: components["schemas"]["State4f9Enum"];
+            state: components["schemas"]["ExamStateEnum"];
             can_take: boolean;
             pass_percent: number;
             test_weight: number;
@@ -2313,7 +2313,7 @@ export interface components {
              * @description Shu o'quvchi uchun (alohida muddat bilan).
              */
             closes_at: string;
-            state: components["schemas"]["State4f9Enum"];
+            state: components["schemas"]["ExamStateEnum"];
             can_take: boolean;
             pass_percent: number;
             test_weight: number;
@@ -2340,6 +2340,13 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /**
+         * @description * `UPCOMING` - Ochilmagan
+         *     * `OPEN` - Ochiq
+         *     * `CLOSED` - Yopilgan
+         * @enum {string}
+         */
+        ExamStateEnum: "UPCOMING" | "OPEN" | "CLOSED";
         ExamTask: {
             id: number;
             order: number;
@@ -3641,13 +3648,6 @@ export interface components {
             /** Format: uri */
             facebook: string;
         };
-        /**
-         * @description * `UPCOMING` - Ochilmagan
-         *     * `OPEN` - Ochiq
-         *     * `CLOSED` - Yopilgan
-         * @enum {string}
-         */
-        State4f9Enum: "UPCOMING" | "OPEN" | "CLOSED";
         Stats: {
             courses: number;
             instructors: number;
