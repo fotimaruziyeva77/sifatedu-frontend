@@ -13,6 +13,7 @@ import { VideoPlayer } from "@/features/player/video-player";
 import { QuizPanel } from "@/features/quiz/quiz-panel";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
+import { getCenter } from "@/lib/api/center";
 import { getLesson, getMyCourse, type MyCourseDetail, type MyLesson } from "@/lib/api/learning";
 
 export const dynamic = "force-dynamic";
@@ -49,11 +50,12 @@ export default async function LessonPage({
   const lessonId = Number(id);
   if (!Number.isInteger(lessonId) || lessonId <= 0) notFound();
 
-  const [t, format, lesson, course] = await Promise.all([
+  const [t, format, lesson, course, center] = await Promise.all([
     getTranslations("Learn"),
     getFormatter(),
     getLesson(locale, lessonId),
     getMyCourse(locale, slug),
+    getCenter(),
   ]);
   // Huquq yo'q bo'lsa backend 403 qaytaradi va `getLesson` null beradi. Test sababli yopiq
   // darsda — nima qilish kerakligi tushuntiriladi.
@@ -156,7 +158,7 @@ export default async function LessonPage({
               watermark={lesson.watermark}
               nextAnchor={lesson.quiz ? "quiz" : undefined}
             />
-          ) : (
+          ) : !center.features.includes("video") ? null : (
             <p className="player-fallback">
               {video?.status === "PROCESSING" ? (
                 <span className="inline-flex items-center gap-2">

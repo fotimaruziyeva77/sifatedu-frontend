@@ -10,6 +10,7 @@ import { AttendanceSheet, CancelForm, CoverPanel, DetailsForm } from "@/features
 import { relativeDay } from "@/features/live/when";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
+import { getCenter } from "@/lib/api/center";
 import { getTeacherLive } from "@/lib/api/live";
 
 function lessonId(value: string): number | null {
@@ -39,10 +40,11 @@ export default async function TeacherLivePage({
   setRequestLocale(locale);
   const pk = lessonId(id);
   if (!pk) notFound();
-  const [t, format, lesson] = await Promise.all([
+  const [t, format, lesson, center] = await Promise.all([
     getTranslations("Schedule"),
     getFormatter(),
     getTeacherLive(locale, pk),
+    getCenter(),
   ]);
   if (!lesson) notFound();
 
@@ -133,20 +135,22 @@ export default async function TeacherLivePage({
             </div>
           </section>
 
-          <section aria-labelledby="handout" className="app-card mt-6">
-            <h2 id="handout" className="app-section-title">
-              {t("aiTitle")}
-            </h2>
-            <div className="mt-3">
-              <QuizFromHandout
-                lessonId={lesson.id}
-                lessons={lesson.course_lessons}
-                topicId={lesson.topic_id}
-                initial={lesson.quiz_draft ?? null}
-                aiReady={lesson.ai_ready}
-              />
-            </div>
-          </section>
+          {center.features.includes("ai") && (
+            <section aria-labelledby="handout" className="app-card mt-6">
+              <h2 id="handout" className="app-section-title">
+                {t("aiTitle")}
+              </h2>
+              <div className="mt-3">
+                <QuizFromHandout
+                  lessonId={lesson.id}
+                  lessons={lesson.course_lessons}
+                  topicId={lesson.topic_id}
+                  initial={lesson.quiz_draft ?? null}
+                  aiReady={lesson.ai_ready}
+                />
+              </div>
+            </section>
+          )}
 
           <section aria-labelledby="details" className="app-card mt-6">
             <h2 id="details" className="app-section-title">

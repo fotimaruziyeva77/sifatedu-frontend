@@ -11,6 +11,7 @@ import { StudentAvatar } from "@/features/teaching/student-avatar";
 import { EditStudent } from "@/features/teaching/student-profile";
 import { notFoundMetadata } from "@/i18n/alternates";
 import { Link } from "@/i18n/navigation";
+import { getCenter } from "@/lib/api/center";
 import { getTeacherDaily } from "@/lib/api/daily-test";
 import { getPenalties } from "@/lib/api/rewards";
 import { getTeacherGroup, type TeacherGroup } from "@/lib/api/teacher";
@@ -48,15 +49,17 @@ export default async function TeachingGroupPage({
   const query = await searchParams;
   const raw = Array.isArray(query.daily) ? query.daily[0] : query.daily;
   const dailyDay = raw && /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : undefined;
-  const [t, tRewards, format, group, penalties, daily] = await Promise.all([
+  const [t, tRewards, format, group, penalties, daily, center] = await Promise.all([
     getTranslations("Teaching"),
     getTranslations("Rewards"),
     getFormatter(),
     getTeacherGroup(locale, pk),
     getPenalties(locale, pk),
     getTeacherDaily(locale, pk, dailyDay),
+    getCenter(),
   ]);
   if (!group) notFound();
+  const lessonsOpen = center.features.includes("lessons");
 
   return (
     <>
@@ -111,12 +114,16 @@ export default async function TeachingGroupPage({
                   <th role="columnheader" scope="col">
                     {t("progress")}
                   </th>
-                  <th role="columnheader" scope="col">
-                    {t("homework")}
-                  </th>
-                  <th role="columnheader" scope="col">
-                    {t("quizzes")}
-                  </th>
+                  {lessonsOpen && (
+                    <>
+                      <th role="columnheader" scope="col">
+                        {t("homework")}
+                      </th>
+                      <th role="columnheader" scope="col">
+                        {t("quizzes")}
+                      </th>
+                    </>
+                  )}
                   <th role="columnheader" scope="col">
                     {t("attendance")}
                   </th>
@@ -181,37 +188,41 @@ export default async function TeachingGroupPage({
                         <span style={{ width: `${student.percent}%` }} />
                       </div>
                     </td>
-                    <td role="cell" className="text-sm" data-label={t("homework")}>
-                      {student.homework_accepted > 0 || student.homework_pending > 0 ? (
-                        <span className="flex flex-wrap items-center gap-1.5">
-                          {t("homeworkAccepted", { count: student.homework_accepted })}
-                          {student.homework_average !== null && (
-                            <span className="text-muted-foreground">
-                              · {t("homeworkAverage", { score: student.homework_average })}
+                    {lessonsOpen && (
+                      <>
+                        <td role="cell" className="text-sm" data-label={t("homework")}>
+                          {student.homework_accepted > 0 || student.homework_pending > 0 ? (
+                            <span className="flex flex-wrap items-center gap-1.5">
+                              {t("homeworkAccepted", { count: student.homework_accepted })}
+                              {student.homework_average !== null && (
+                                <span className="text-muted-foreground">
+                                  · {t("homeworkAverage", { score: student.homework_average })}
+                                </span>
+                              )}
+                              {student.homework_pending > 0 && (
+                                <Link href="/dashboard/reviews" className="teach-flag">
+                                  {t("homeworkPending", { count: student.homework_pending })}
+                                </Link>
+                              )}
                             </span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
                           )}
-                          {student.homework_pending > 0 && (
-                            <Link href="/dashboard/reviews" className="teach-flag">
-                              {t("homeworkPending", { count: student.homework_pending })}
-                            </Link>
+                        </td>
+                        <td role="cell" className="text-sm" data-label={t("quizzes")}>
+                          {student.quiz_average !== null ? (
+                            <span className="flex flex-wrap items-center gap-1.5">
+                              {t("quizPassed", { count: student.quiz_passed })}
+                              <span className="text-muted-foreground">
+                                · {t("quizAverage", { score: student.quiz_average })}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
                           )}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
-                    </td>
-                    <td role="cell" className="text-sm" data-label={t("quizzes")}>
-                      {student.quiz_average !== null ? (
-                        <span className="flex flex-wrap items-center gap-1.5">
-                          {t("quizPassed", { count: student.quiz_passed })}
-                          <span className="text-muted-foreground">
-                            · {t("quizAverage", { score: student.quiz_average })}
-                          </span>
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
-                    </td>
+                        </td>
+                      </>
+                    )}
                     <td role="cell" className="text-sm" data-label={t("attendance")}>
                       {student.attendance_rate !== null ? (
                         <strong className="tabular-nums">{student.attendance_rate}%</strong>
@@ -283,17 +294,19 @@ export default async function TeachingGroupPage({
         )}
       </section>
 
-      <section aria-labelledby="penalties" className="app-card mt-6">
-        <h2 id="penalties" className="app-section-title">
-          {tRewards("penaltiesTitle")}
-        </h2>
-        <p className="mt-1 text-sm text-pretty text-muted-foreground">
-          {tRewards("penaltiesHint")}
-        </p>
-        <div className="mt-4">
-          <PenaltyList initial={penalties} />
-        </div>
-      </section>
+      {center.features.includes("rewards") && (
+        <section aria-labelledby="penalties" className="app-card mt-6">
+          <h2 id="penalties" className="app-section-title">
+            {tRewards("penaltiesTitle")}
+          </h2>
+          <p className="mt-1 text-sm text-pretty text-muted-foreground">
+            {tRewards("penaltiesHint")}
+          </p>
+          <div className="mt-4">
+            <PenaltyList initial={penalties} />
+          </div>
+        </section>
+      )}
     </>
   );
 }

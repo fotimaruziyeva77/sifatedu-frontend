@@ -1390,5 +1390,11 @@
       "server": "Something went wrong. Refresh the page and try again.",
       "network": "No internet connection. Reconnect and try again."
     }
+  },
+  "Center": {
+    "blockedTitle": "Service temporarily suspended",
+    "blockedText": "The training center's site is not available right now. Your data is safe. Please contact the center's administration for details.",
+    "expiresIn": "The center's subscription {days, plural, =0 {ends today} one {ends in # day} other {ends in # days}}. Contact the platform to extend it.",
+    "expired": "The center's subscription has expired. Extend it before the service is suspended."
   }
 }

@@ -1390,5 +1390,11 @@
       "server": "Xatolik yuz berdi. Sahifani yangilab, qayta urinib ko'ring.",
       "network": "Internet bilan aloqa yo'q. Ulanib, qayta urinib ko'ring."
     }
+  },
+  "Center": {
+    "blockedTitle": "Xizmat vaqtincha to'xtatilgan",
+    "blockedText": "O'quv markazining sayti hozir ishlamayapti. Ma'lumotlaringiz saqlangan. Batafsil ma'lumot uchun markaz ma'muriyatiga murojaat qiling.",
+    "expiresIn": "Markaz obunasi {days, plural, =0 {bugun} other {# kundan keyin}} tugaydi. Uzaytirish uchun platforma bilan bog'laning.",
+    "expired": "Markaz obunasining muddati o'tgan. Xizmat to'xtatilmasidan oldin uzaytiring."
   }
 }

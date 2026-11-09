@@ -339,6 +339,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/center/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Sayt shu javobga qarab menyu va sahifalarni ko'rsatadi. */
+        get: operations["center_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/certificates/": {
         parameters: {
             query?: never;
@@ -1745,6 +1762,17 @@ export interface components {
             /** Nomi */
             readonly name: string;
         };
+        CenterInfo: {
+            state: components["schemas"]["CenterStateEnum"];
+            features: components["schemas"]["FeaturesEnum"][];
+        };
+        /**
+         * @description * `active` - Faol
+         *     * `grace` - Muhlatda
+         *     * `blocked` - To'xtatilgan
+         * @enum {string}
+         */
+        CenterStateEnum: "active" | "grace" | "blocked";
         Certificate: {
             number: string;
             full_name: string;
@@ -2265,7 +2293,7 @@ export interface components {
              * @description Shu o'quvchi uchun (alohida muddat bilan).
              */
             closes_at: string;
-            state: components["schemas"]["StateEnum"];
+            state: components["schemas"]["State4f9Enum"];
             can_take: boolean;
             pass_percent: number;
             test_weight: number;
@@ -2285,7 +2313,7 @@ export interface components {
              * @description Shu o'quvchi uchun (alohida muddat bilan).
              */
             closes_at: string;
-            state: components["schemas"]["StateEnum"];
+            state: components["schemas"]["State4f9Enum"];
             can_take: boolean;
             pass_percent: number;
             test_weight: number;
@@ -2349,6 +2377,18 @@ export interface components {
             /** Javob */
             readonly answer: string;
         };
+        /**
+         * @description * `lessons` - Dars testlari, uy vazifasi, slaydlar
+         *     * `exams` - Kunlik test, oylik imtihon, sertifikat
+         *     * `placement` - Daraja testi va kuponlar
+         *     * `rewards` - XP, reyting, do'kon
+         *     * `ai` - AI maslahatchi va AI test
+         *     * `video` - Video darslar
+         *     * `bot` - Telegram bot, xabarnomalar, SMS
+         *     * `click` - Click orqali online to'lov
+         * @enum {string}
+         */
+        FeaturesEnum: "lessons" | "exams" | "placement" | "rewards" | "ai" | "video" | "bot" | "click";
         /** @description Google Identity Services bergan ID token. */
         GoogleLoginRequest: {
             credential: string;
@@ -2705,6 +2745,8 @@ export interface components {
             readonly has_schedule: boolean;
             /** @description O'quvchi sifatida guruhda o'qiydi (menyuda «Kunlik test»). */
             readonly in_group: boolean;
+            /** @description Xodimga: markaz obunasi tugashiga necha kun (o'tgan bo'lsa — manfiy). Muddat uzoq yoki muddatsiz bo'lsa — null. */
+            readonly subscription_days_left: number | null;
         };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
@@ -3605,7 +3647,7 @@ export interface components {
          *     * `CLOSED` - Yopilgan
          * @enum {string}
          */
-        StateEnum: "UPCOMING" | "OPEN" | "CLOSED";
+        State4f9Enum: "UPCOMING" | "OPEN" | "CLOSED";
         Stats: {
             courses: number;
             instructors: number;
@@ -4526,6 +4568,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Category"][];
+                };
+            };
+        };
+    };
+    center_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterInfo"];
                 };
             };
         };

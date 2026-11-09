@@ -6,9 +6,11 @@ import { SkipLink } from "@/components/site/skip-link";
 import { UserMenu } from "@/components/site/user-menu";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { audienceOf } from "@/features/dashboard/nav";
+import { SubscriptionNotice } from "@/features/center/subscription-notice";
 import { AppShell } from "@/features/dashboard/shell";
 import { NotificationBell } from "@/features/notifications/bell";
 import { ClientMessages } from "@/i18n/client-messages";
+import { getCenter } from "@/lib/api/center";
 import { getMe, toViewer } from "@/lib/api/me";
 
 import "../(site)/landing.css";
@@ -22,7 +24,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const me = await getMe(locale);
+  const [me, center] = await Promise.all([getMe(locale), getCenter()]);
   // Sessiya yo'q yoki eskirgan: kirish sahifasiga. `next` til prefiksisiz beriladi —
   // kirgandan keyin uni next-intl router o'zi qo'shadi.
   if (!me) redirect(`/${locale}/auth/login?next=/dashboard`);
@@ -35,6 +37,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
         roles={me.roles}
         schedule={me.has_schedule}
         daily={me.in_group}
+        features={center.features}
         counts={{ notifications: me.unread_notifications, reviews: me.pending_reviews }}
         tools={
           <>
@@ -45,6 +48,9 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
           </>
         }
       >
+        {me.subscription_days_left !== null && (
+          <SubscriptionNotice days={me.subscription_days_left} />
+        )}
         {children}
       </AppShell>
     </ClientMessages>

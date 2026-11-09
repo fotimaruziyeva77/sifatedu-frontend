@@ -2,6 +2,37 @@ import { describe, expect, it } from "vitest";
 
 import { isStaff, managesGroups, NAV_ITEMS, navFor, unreadBadge } from "./nav";
 
+describe("navFor: tarif", () => {
+  const hrefs = (features: string[]) =>
+    navFor(["STUDENT", "TEACHER"], { daily: true, features }).map((item) => item.href);
+
+  it("yopiq bo'lim menyuda ko'rinmaydi, asos qoladi", () => {
+    const items = hrefs([]);
+
+    for (const closed of [
+      "/dashboard/homework",
+      "/dashboard/reviews",
+      "/dashboard/exams",
+      "/dashboard/daily-test",
+      "/dashboard/certificates",
+      "/dashboard/rewards",
+      "/dashboard/rating",
+      "/dashboard/shop",
+      "/dashboard/orders",
+    ]) {
+      expect(items).not.toContain(closed);
+    }
+    expect(items).toContain("/dashboard/courses");
+    expect(items).toContain("/dashboard/teaching");
+    expect(items).toContain("/dashboard/notifications");
+  });
+
+  it("ochiq bo'lim ko'rinadi", () => {
+    expect(hrefs(["exams"])).toContain("/dashboard/daily-test");
+    expect(hrefs(["click"])).toContain("/dashboard/orders");
+  });
+});
+
 describe("navFor", () => {
   it("o'quvchiga odatiy menyu", () => {
     expect(navFor(["STUDENT"])).toEqual(NAV_ITEMS);

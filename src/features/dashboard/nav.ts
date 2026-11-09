@@ -94,16 +94,45 @@ export function managesGroups(roles: readonly string[]): boolean {
   return roles.some((role) => GROUP_MANAGER_ROLES.has(role));
 }
 
+/** Tarifga bog'langan bandlar (backend: apps/tenancy/sections.py). */
+const SECTION_OF: Partial<Record<NavItem["labelKey"], string>> = {
+  homework: "lessons",
+  reviews: "lessons",
+  exams: "exams",
+  dailyTest: "exams",
+  certificates: "exams",
+  rewards: "rewards",
+  rating: "rewards",
+  shop: "rewards",
+  orders: "click",
+};
+
 /**
- * Menyu rolga qarab: o'qituvchiga bosh sahifadan keyin "Guruhlarim" va "Tekshirish"; admin va
- * menejerga "Guruhlar" (barchasi), admin uy vazifalarini ham tekshiradi. "Jadval" — guruhda
- * o'qiydigan yoki guruhga dars beradiganlarga (`schedule`), "Kunlik test" — guruhda
- * o'qiydiganlarga (`daily`); ikkalasi "Mening kurslarim"dan keyin.
+ * Menyu rolga va markaz tarifiga qarab. `features` berilmasa, hamma bo'lim ko'rinadi.
  */
 export function navFor(
   roles: readonly string[],
-  { schedule = false, daily = false } = {},
+  {
+    schedule = false,
+    daily = false,
+    features,
+  }: { schedule?: boolean; daily?: boolean; features?: readonly string[] } = {},
 ): NavItem[] {
+  const items = roleItems(roles, schedule, daily);
+  if (!features) return items;
+  return items.filter(({ labelKey }) => {
+    const section = SECTION_OF[labelKey];
+    return !section || features.includes(section);
+  });
+}
+
+/**
+ * O'qituvchiga bosh sahifadan keyin "Guruhlarim" va "Tekshirish"; admin va menejerga "Guruhlar"
+ * (barchasi), admin uy vazifalarini ham tekshiradi. "Jadval" — guruhda o'qiydigan yoki guruhga
+ * dars beradiganlarga (`schedule`), "Kunlik test" — guruhda o'qiydiganlarga (`daily`); ikkalasi
+ * "Mening kurslarim"dan keyin.
+ */
+function roleItems(roles: readonly string[], schedule: boolean, daily: boolean): NavItem[] {
   const groups = managesGroups(roles) ? [GROUPS] : roles.includes("TEACHER") ? [TEACHING] : [];
   const extra = [
     ...groups,

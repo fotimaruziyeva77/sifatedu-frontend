@@ -7,10 +7,12 @@ import { notFound } from "next/navigation";
 import { Interactions } from "@/components/site/interactions";
 import { THEME_COLORS, THEME_SCRIPT } from "@/components/theme/theme";
 import { Toaster } from "@/components/ui/sonner";
+import { CenterBlocked } from "@/features/center/center-blocked";
 import { fontVariables } from "@/fonts";
 import { localeAlternates } from "@/i18n/alternates";
 import { ClientMessages } from "@/i18n/client-messages";
 import { routing } from "@/i18n/routing";
+import { getCenter } from "@/lib/api/center";
 
 import "../globals.css";
 
@@ -58,6 +60,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   // CSP nonce'i `proxy.ts` da yaratiladi. Next.js o'z skriptlariga uni o'zi qo'yadi,
   // bizning inline skriptga esa qo'lda beriladi.
   const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const center = await getCenter();
 
   return (
     // Tema klassini <head>'dagi script qo'yadi, shuning uchun <html> atributlari farq qiladi.
@@ -68,7 +71,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       <body>
         <ClientMessages group="root">
           {/* Header, footer va <main> route group layout'larida: (site), (auth), (app). */}
-          {children}
+          {center.state === "blocked" ? <CenterBlocked /> : children}
           <Toaster position="bottom-center" />
           <Interactions />
         </ClientMessages>
