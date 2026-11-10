@@ -1,6 +1,7 @@
 import {
   Award,
   Bell,
+  Building2,
   CalendarCheck,
   CalendarDays,
   ClipboardCheck,
@@ -36,7 +37,8 @@ export type NavItem = {
     | "/dashboard/catalog"
     | "/dashboard/orders"
     | "/dashboard/notifications"
-    | "/dashboard/settings";
+    | "/dashboard/settings"
+    | "/dashboard/center";
   icon: LucideIcon;
   labelKey:
     | "home"
@@ -55,7 +57,8 @@ export type NavItem = {
     | "catalog"
     | "orders"
     | "notifications"
-    | "settings";
+    | "settings"
+    | "centerSettings";
 };
 
 export const NAV_ITEMS: NavItem[] = [
@@ -78,6 +81,11 @@ const TEACHING: NavItem = { href: "/dashboard/teaching", icon: UsersRound, label
 const GROUPS: NavItem = { href: "/dashboard/teaching", icon: UsersRound, labelKey: "groups" };
 const REVIEWS: NavItem = { href: "/dashboard/reviews", icon: ClipboardCheck, labelKey: "reviews" };
 const SCHEDULE: NavItem = { href: "/dashboard/schedule", icon: CalendarDays, labelKey: "schedule" };
+const CENTER: NavItem = {
+  href: "/dashboard/center",
+  icon: Building2,
+  labelKey: "centerSettings",
+};
 const DAILY: NavItem = {
   href: "/dashboard/daily-test",
   icon: CalendarCheck,
@@ -139,9 +147,9 @@ function roleItems(roles: readonly string[], schedule: boolean, daily: boolean):
     ...(roles.includes("TEACHER") || roles.includes("ADMIN") ? [REVIEWS] : []),
   ];
   const [home, ...rest] = NAV_ITEMS;
-  const items = [home, ...extra, ...rest];
+  const items = [home, ...extra, ...rest, ...(roles.includes("ADMIN") ? [CENTER] : [])];
   const group = [...(schedule ? [SCHEDULE] : []), ...(daily ? [DAILY] : [])];
-  if (group.length === 0) return extra.length === 0 ? NAV_ITEMS : items;
+  if (group.length === 0) return items;
   const courses = items.findIndex((item) => item.href === "/dashboard/courses");
   return [...items.slice(0, courses + 1), ...group, ...items.slice(courses + 1)];
 }

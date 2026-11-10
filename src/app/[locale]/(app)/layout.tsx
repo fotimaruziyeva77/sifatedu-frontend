@@ -49,7 +49,7 @@ export default async function AppLayout({ children, params }: LayoutProps<"/[loc
         }
       >
         {me.subscription_days_left !== null && (
-          <SubscriptionNotice days={me.subscription_days_left} />
+          <SubscriptionNotice days={me.subscription_days_left} trial={center.trial} />
         )}
         {children}
       </AppShell>

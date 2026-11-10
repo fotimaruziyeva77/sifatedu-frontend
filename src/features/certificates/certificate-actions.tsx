@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useBrand } from "@/features/center/brand";
 
 /**
  * Sertifikat bilan: PDF (brauzerning chop etish oynasi → "PDF sifatida saqlash"), havolani
@@ -23,6 +24,7 @@ export function CertificateActions({
   issued: string;
 }) {
   const t = useTranslations("Certificates");
+  const { name } = useBrand();
   const [copied, setCopied] = useState(false);
   // Yil va oy satrdan olinadi: `new Date` brauzer va serverda turli vaqt zonasida farq qilib,
   // oy chegarasida hydration xatosiga olib kelardi.
@@ -34,7 +36,7 @@ export function CertificateActions({
   const linkedin = `https://www.linkedin.com/profile/add?${new URLSearchParams({
     startTask: "CERTIFICATION_NAME",
     name: course,
-    organizationName: "Sifat Edu",
+    organizationName: name,
     issueYear: year,
     issueMonth: String(Number(month)),
     certUrl: url,

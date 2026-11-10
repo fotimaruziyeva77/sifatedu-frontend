@@ -17,11 +17,15 @@ import { delay, SectionHeading } from "./section";
 export async function Courses({
   courses,
   assistant = false,
+  flagship,
 }: {
   courses: readonly CourseCardData[];
   assistant?: boolean;
+  /** Kasb testi IT yo'nalishlari uchun yozilgan: faqat birinchi markazda. */
+  flagship: boolean;
 }) {
   const t = await getTranslations("Courses");
+  if (!flagship && courses.length === 0) return null;
   const quizCourses: QuizCourse[] = courses.map((course) => ({
     slug: course.slug,
     title: course.title,
@@ -38,14 +42,15 @@ export async function Courses({
           title={t("title")}
           subtitle={t("subtitle")}
         />
-        {assistant ? (
-          <div className="quiz-grid">
+        {flagship &&
+          (assistant ? (
+            <div className="quiz-grid">
+              <Quiz courses={quizCourses} />
+              <InlineChat />
+            </div>
+          ) : (
             <Quiz courses={quizCourses} />
-            <InlineChat />
-          </div>
-        ) : (
-          <Quiz courses={quizCourses} />
-        )}
+          ))}
         {courses.length > 0 ? (
           <ul className="mt-6 grid gap-5 md:grid-cols-2">
             {courses.map((course, index) => (

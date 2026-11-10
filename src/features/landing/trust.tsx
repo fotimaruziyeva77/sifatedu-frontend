@@ -16,20 +16,24 @@ import { delay, SectionHeading } from "./section";
 type Guarantee = { icon: LucideIcon; title: string; text: string; link?: string };
 
 /** E'tirozlarga javob: kafolatlar va ko'p beriladigan savollar. */
-export async function Trust({ site }: { site: SitePayload }) {
+export async function Trust({ site, flagship }: { site: SitePayload; flagship: boolean }) {
   const t = await getTranslations("Trust");
+  // Kafolatlar birinchi markaz shartlari: boshqa markazda faqat o'zi yozgan savollar.
+  if (!flagship && site.faq.length === 0) return null;
   const hasRefundPage = site.legal_pages.some((page) => page.slug === "refund-policy");
 
-  const guarantees: Guarantee[] = [
-    { icon: PhoneCall, title: t("consultTitle"), text: t("consultText") },
-    { icon: ShieldCheck, title: t("paymentTitle"), text: t("paymentText") },
-    {
-      icon: RotateCcw,
-      title: t("refundTitle"),
-      text: t("refundText"),
-      link: hasRefundPage ? t("refundLink") : undefined,
-    },
-  ];
+  const guarantees: Guarantee[] = !flagship
+    ? []
+    : [
+        { icon: PhoneCall, title: t("consultTitle"), text: t("consultText") },
+        { icon: ShieldCheck, title: t("paymentTitle"), text: t("paymentText") },
+        {
+          icon: RotateCcw,
+          title: t("refundTitle"),
+          text: t("refundText"),
+          link: hasRefundPage ? t("refundLink") : undefined,
+        },
+      ];
 
   return (
     <section id="faq" aria-labelledby="faq-title" className="relative py-24 sm:py-32">

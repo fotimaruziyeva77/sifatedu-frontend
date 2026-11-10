@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { Logo } from "@/components/brand/logo";
+import { useBrand } from "@/features/center/brand";
 import { Link, usePathname } from "@/i18n/navigation";
 
 import { isStaff, navFor, unreadBadge, type Audience } from "./nav";
@@ -39,6 +40,7 @@ export function AppShell({
   tools: ReactNode;
   children: ReactNode;
 }) {
+  const { name } = useBrand();
   const t = useTranslations("Dashboard");
   const tNav = useTranslations("Nav");
   const tNotify = useTranslations("Notifications");
@@ -73,7 +75,7 @@ export function AppShell({
 
       <nav className="app-side" aria-label={t("menu")} data-open={open || undefined}>
         <div className="app-side__top">
-          <Link href="/dashboard" aria-label="Sifat Edu" className="rounded-sm">
+          <Link href="/dashboard" aria-label={name} className="rounded-sm">
             <Logo className="h-4" />
           </Link>
           <button
@@ -138,7 +140,7 @@ export function AppShell({
           >
             <Menu aria-hidden className="size-5" />
           </button>
-          <Link href="/dashboard" aria-label="Sifat Edu" className="app-bar__logo">
+          <Link href="/dashboard" aria-label={name} className="app-bar__logo">
             <Logo className="h-4" />
           </Link>
           <div className="ml-auto flex items-center gap-1 sm:gap-2">{tools}</div>

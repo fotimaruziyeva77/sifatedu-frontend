@@ -5,13 +5,13 @@ import { notFound } from "next/navigation";
 import { CourseDetailView } from "@/features/catalog/course-detail";
 import { localeAlternates, notFoundMetadata } from "@/i18n/alternates";
 import { type CourseDetail, getCourse } from "@/lib/api/catalog";
+import { getCenter } from "@/lib/api/center";
 import { getSite } from "@/lib/api/site";
+import { siteOrigin } from "@/lib/site-origin";
 
 import "../catalog.css";
 
 export const dynamic = "force-dynamic";
-
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
 
 export async function generateMetadata({
   params,
@@ -49,15 +49,15 @@ export default async function CoursePage({ params }: PageProps<"/[locale]/course
 }
 
 async function CourseJsonLd({ course, locale }: { course: CourseDetail; locale: string }) {
-  const language = await getLocale();
+  const [language, center, origin] = await Promise.all([getLocale(), getCenter(), siteOrigin()]);
   const data = {
     "@context": "https://schema.org",
     "@type": "Course",
     name: course.title,
     description: course.short_description,
     inLanguage: language,
-    url: `${APP_URL}/${locale}/courses/${course.slug}`,
-    provider: { "@type": "EducationalOrganization", name: "Sifat Edu", url: APP_URL },
+    url: `${origin}/${locale}/courses/${course.slug}`,
+    provider: { "@type": "EducationalOrganization", name: center.name, url: origin },
     ...(course.instructors.length > 0 && {
       instructor: course.instructors.map((instructor) => ({
         "@type": "Person",

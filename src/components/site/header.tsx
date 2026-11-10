@@ -21,13 +21,19 @@ import type { ViewerSummary } from "@/lib/api/me";
 import { cn } from "@/lib/utils";
 
 import { LocaleSwitcher } from "./locale-switcher";
-import { CONTACT_SECTION, NAV_SECTIONS, type NavSection } from "./sections";
+import { CONTACT_SECTION, type NavSection } from "./sections";
 import { useActiveSection } from "./use-active-section";
 import { useLogout, UserMenu } from "./user-menu";
 
-export function SiteHeader({ viewer }: { viewer: ViewerSummary | null }) {
+export function SiteHeader({
+  viewer,
+  sections,
+}: {
+  viewer: ViewerSummary | null;
+  sections: readonly NavSection[];
+}) {
   const t = useTranslations("Nav");
-  const active = useActiveSection(NAV_SECTIONS);
+  const active = useActiveSection(sections);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -51,7 +57,7 @@ export function SiteHeader({ viewer }: { viewer: ViewerSummary | null }) {
 
         <nav aria-label={t("main")} className="hidden lg:block">
           <ul className="flex items-center gap-1">
-            {NAV_SECTIONS.map((id) => (
+            {sections.map((id) => (
               <li key={id}>
                 <SectionLink id={id} active={active === id}>
                   {t(id)}
@@ -93,7 +99,7 @@ export function SiteHeader({ viewer }: { viewer: ViewerSummary | null }) {
               <ArrowUpRight aria-hidden />
             </Link>
           </Button>
-          <MobileMenu active={active} viewer={viewer} />
+          <MobileMenu active={active} viewer={viewer} sections={sections} />
         </div>
       </div>
     </header>
@@ -133,7 +139,15 @@ function SectionLink({
   );
 }
 
-function MobileMenu({ active, viewer }: { active: string | null; viewer: ViewerSummary | null }) {
+function MobileMenu({
+  active,
+  viewer,
+  sections,
+}: {
+  active: string | null;
+  viewer: ViewerSummary | null;
+  sections: readonly NavSection[];
+}) {
   const t = useTranslations("Nav");
   const [open, setOpen] = useState(false);
   const { logout, pending } = useLogout();
@@ -154,7 +168,7 @@ function MobileMenu({ active, viewer }: { active: string | null; viewer: ViewerS
         </SheetHeader>
         <nav aria-label={t("main")} className="px-4">
           <ul className="flex flex-col gap-1">
-            {NAV_SECTIONS.map((id) => (
+            {sections.map((id) => (
               <li key={id}>
                 <SectionLink id={id} active={active === id} onNavigate={() => setOpen(false)}>
                   <span className="text-lg">{t(id)}</span>

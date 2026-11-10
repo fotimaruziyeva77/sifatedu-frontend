@@ -10,15 +10,15 @@ import { PathSection } from "@/features/landing/path";
 import { Testimonials } from "@/features/landing/testimonials";
 import { Trust } from "@/features/landing/trust";
 import { LeadSection } from "@/features/leads/lead-section";
+import { getCenter } from "@/lib/api/center";
 import { getSite, type SitePayload } from "@/lib/api/site";
+import { siteOrigin } from "@/lib/site-origin";
 
 import "./landing.css";
 import "./sections.css";
 
 // Kontent admin paneldan o'zgaradi; backend javobni Redis'da keshlaydi.
 export const dynamic = "force-dynamic";
-
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
 
 /**
  * Landing — hikoya: orzu (hero) → xavotirlar → yo'lboshchi (biz kimmiz) → reja (yo'l) →
@@ -27,7 +27,8 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
 export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const site = await getSite(locale);
+  const [site, center] = await Promise.all([getSite(locale), getCenter()]);
+  const { flagship } = center;
 
   // Har bir bo'lim <Suspense> ichida: HTML o'zgarmaydi, lekin React sahifani bitta uzun
   // vazifada emas, bo'lim-bo'lim gidratsiya qiladi va oraliqda brauzerga navbat beradi —
@@ -35,20 +36,24 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   return (
     <>
       <OrganizationJsonLd site={site} locale={locale} />
-      <Hero site={site} />
+      <Hero site={site} flagship={flagship} name={center.name} />
       {site && (
         <>
           <Suspense>
             <Concerns items={site.concerns} />
           </Suspense>
           <Suspense>
-            <About site={site} />
+            <About site={site} flagship={flagship} />
           </Suspense>
           <Suspense>
             <PathSection steps={site.steps} />
           </Suspense>
           <Suspense>
-            <Courses courses={site.featured_courses} assistant={site.settings.assistant_enabled} />
+            <Courses
+              courses={site.featured_courses}
+              assistant={site.settings.assistant_enabled}
+              flagship={flagship}
+            />
           </Suspense>
           <Suspense>
             <Benefits items={site.advantages} />
@@ -59,7 +64,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             </Suspense>
           )}
           <Suspense>
-            <Trust site={site} />
+            <Trust site={site} flagship={flagship} />
           </Suspense>
         </>
       )}
@@ -71,15 +76,21 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
 }
 
 async function OrganizationJsonLd({ site, locale }: { site: SitePayload | null; locale: string }) {
-  const t = await getTranslations({ locale, namespace: "Metadata" });
+  const [t, center, origin] = await Promise.all([
+    getTranslations({ locale, namespace: "Metadata" }),
+    getCenter(),
+    siteOrigin(),
+  ]);
   const settings = site?.settings;
+  const logo = center.flagship ? `${origin}/brand/logo.svg` : center.logo;
+  const description = center.flagship ? t("description") : settings?.hero_subtitle;
   const data = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    name: "Sifat Edu",
-    url: `${APP_URL}/${locale}`,
-    logo: `${APP_URL}/brand/logo.svg`,
-    description: t("description"),
+    name: center.name,
+    url: `${origin}/${locale}`,
+    ...(logo && { logo }),
+    ...(description && { description }),
     ...(settings?.phone && {
       contactPoint: {
         "@type": "ContactPoint",

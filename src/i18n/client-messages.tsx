@@ -28,6 +28,7 @@ export const CLIENT_NAMESPACES = {
     "Certificates",
   ],
   auth: [...SHARED, "Auth"],
+  platform: [...SHARED, "Auth", "Platform"],
   // Kabinet ichida katalog va kurs sahifasi ham bor (kartochka, filtr, sotib olish, ariza).
   app: [
     ...SHARED,
@@ -51,6 +52,7 @@ export const CLIENT_NAMESPACES = {
     "DailyTest",
     "Rewards",
     "Shop",
+    "CenterSettings",
   ],
 } as const;
 

@@ -346,7 +346,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Sayt shu javobga qarab menyu va sahifalarni ko'rsatadi. */
+        /** @description Sayt shu javobga qarab brend, menyu va sahifalarni ko'rsatadi. */
         get: operations["center_retrieve"];
         put?: never;
         post?: never;
@@ -354,6 +354,86 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/v1/center/brand/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["center_brand_partial_update"];
+        trace?: never;
+    };
+    "/api/v1/center/click/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["center_click_update"];
+        post?: never;
+        delete: operations["center_click_destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/center/eskiz/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["center_eskiz_update"];
+        post?: never;
+        delete: operations["center_eskiz_destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/center/setup/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["center_setup_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/center/telegram/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["center_telegram_update"];
+        post?: never;
+        delete: operations["center_telegram_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["center_telegram_partial_update"];
         trace?: never;
     };
     "/api/v1/certificates/": {
@@ -1048,6 +1128,116 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/platform/address/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Forma yozilayotganda: manzil bo'shmi. */
+        get: operations["platform_address_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/plans/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["platform_plans_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/signups/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description Kirish, ro'yxatdan o'tish va tiklash: foydalanuvchi hali kirmagan bo'lsa ham CSRF
+         *     tekshiriladi (DRF faqat kirgan foydalanuvchida tekshiradi).
+         */
+        post: operations["platform_signups_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/signups/{token}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description «Tayyorlanmoqda» ekrani shu holatni so'rab turadi. Token ariza egasida. */
+        get: operations["platform_signups_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/signups/{token}/resend/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description Kirish, ro'yxatdan o'tish va tiklash: foydalanuvchi hali kirmagan bo'lsa ham CSRF
+         *     tekshiriladi (DRF faqat kirgan foydalanuvchida tekshiradi).
+         */
+        post: operations["platform_signups_resend_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/platform/signups/{token}/verify/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * @description Kirish, ro'yxatdan o'tish va tiklash: foydalanuvchi hali kirmagan bo'lsa ham CSRF
+         *     tekshiriladi (DRF faqat kirgan foydalanuvchida tekshiradi).
+         */
+        post: operations["platform_signups_verify_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/quiz-attempts/{id}/answers/": {
         parameters: {
             query?: never;
@@ -1687,6 +1877,24 @@ export interface components {
             /** @description Boshqa guruhdan o'tkazildi — eski guruh nomi. */
             moved_from: string;
         };
+        AddressResult: {
+            available: boolean;
+            reason: components["schemas"]["AddressResultReasonEnum"];
+        };
+        /**
+         * @description * `free` - free
+         *     * `invalid` - invalid
+         *     * `reserved` - reserved
+         *     * `taken` - taken
+         * @enum {string}
+         */
+        AddressResultReasonEnum: "free" | "invalid" | "reserved" | "taken";
+        AdminLinks: {
+            course_add: string;
+            group_add: string;
+            site: string;
+            legal: string;
+        };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
          *
@@ -1763,8 +1971,38 @@ export interface components {
             readonly name: string;
         };
         CenterInfo: {
+            kind: components["schemas"]["CenterInfoKindEnum"];
             state: components["schemas"]["CenterStateEnum"];
             features: components["schemas"]["FeaturesEnum"][];
+            name: string;
+            flagship: boolean;
+            logo: string;
+            logo_dark: string;
+            color: string;
+            trial: boolean;
+            support_phone: string;
+            support_telegram: string;
+            base_domain: string;
+            legal_pages: string[];
+            signup_open: boolean;
+        };
+        /**
+         * @description * `center` - center
+         *     * `platform` - platform
+         * @enum {string}
+         */
+        CenterInfoKindEnum: "center" | "platform";
+        CenterSetup: {
+            name: string;
+            address: string;
+            color: string;
+            logo: string;
+            logo_dark: string;
+            steps: components["schemas"]["Steps"];
+            admin: components["schemas"]["AdminLinks"];
+            telegram: components["schemas"]["TelegramState"];
+            click: components["schemas"]["ClickState"];
+            eskiz: components["schemas"]["EskizState"];
         };
         /**
          * @description * `active` - Faol
@@ -1860,6 +2098,13 @@ export interface components {
             sign_time: string;
             sign_string: string;
         };
+        ClickRequest: {
+            service_id: string;
+            merchant_id: string;
+            merchant_user_id?: string;
+            tin?: string;
+            secret_key?: string;
+        };
         ClickResult: {
             click_trans_id: string;
             merchant_trans_id: string;
@@ -1867,6 +2112,16 @@ export interface components {
             merchant_confirm_id?: number;
             error: number;
             error_note: string;
+        };
+        ClickState: {
+            available: boolean;
+            connected: boolean;
+            service_id: string;
+            merchant_id: string;
+            merchant_user_id: string;
+            tin: string;
+            prepare_url: string;
+            complete_url: string;
         };
         /**
          * @description * `lessons` - Darslar
@@ -2262,6 +2517,18 @@ export interface components {
         };
         EnrollRequest: {
             slug: string;
+        };
+        EskizRequest: {
+            /** Format: email */
+            email: string;
+            password: string;
+            sender?: string;
+        };
+        EskizState: {
+            available: boolean;
+            connected: boolean;
+            email: string;
+            sender: string;
         };
         ExamAnswerRequest: {
             question: number;
@@ -3024,6 +3291,14 @@ export interface components {
             code: string;
             password: string;
         };
+        PatchedBrandRequest: {
+            name?: string;
+            color?: string;
+            /** Format: binary */
+            logo?: string | null;
+            /** Format: binary */
+            logo_dark?: string | null;
+        };
         PatchedLiveUpdateRequest: {
             recording_url?: string;
             notes?: string;
@@ -3071,6 +3346,11 @@ export interface components {
             /** @default false */
             remove_photo: boolean;
         };
+        PatchedTelegramOptionsRequest: {
+            leads_chat?: string;
+            reports_chat?: string;
+            login?: boolean;
+        };
         Penalty: {
             id: number;
             student_id: number;
@@ -3115,6 +3395,36 @@ export interface components {
          * @enum {string}
          */
         ProviderEnum: "CLICK";
+        /**
+         * @description Faqat javob uchun: barcha maydonlar read_only.
+         *
+         *     Shunda OpenAPI sxemasida ular majburiy bo'ladi va frontend tiplari aniqroq chiqadi.
+         */
+        PublicPlan: {
+            readonly id: number;
+            /** Nomi */
+            readonly name: string;
+            /** Oylik narx, so'm */
+            readonly price: number;
+            /** Bepul sinov, kun */
+            readonly trial_days: number;
+            readonly features: components["schemas"]["FeaturesEnum"][];
+            /**
+             * O'quvchilar
+             * @description Bo'sh — cheksiz.
+             */
+            readonly max_students: number | null;
+            /**
+             * Xodimlar
+             * @description Bo'sh — cheksiz.
+             */
+            readonly max_staff: number | null;
+            /**
+             * Disk, GB
+             * @description Bo'sh — cheksiz.
+             */
+            readonly max_disk_gb: number | null;
+        };
         Purchase: {
             id: number;
             name: string;
@@ -3139,9 +3449,10 @@ export interface components {
          * @description * `register` - Ro'yxatdan o'tish
          *     * `reset` - Parolni tiklash
          *     * `link` - Google yoki Telegram'ni bog'lash
+         *     * `signup` - Markaz ochish
          * @enum {string}
          */
-        PurposeEnum: "register" | "reset" | "link";
+        PurposeEnum: "register" | "reset" | "link" | "signup";
         /**
          * @description `response`: {"choice": id} | {"choices": [..]} | {"text": ".."} | {"order": [..]} |
          *     {"pairs": {"chap_id": o'ng_id}} — ID lar savoldagi variantlarniki.
@@ -3360,6 +3671,9 @@ export interface components {
             total: number;
             ok: boolean;
         };
+        Resend: {
+            resend_in: number;
+        };
         ReviewCard: {
             id: number;
             student_id: number;
@@ -3533,6 +3847,32 @@ export interface components {
             coins: number;
             products: components["schemas"]["Product"][];
         };
+        SignupRequest: {
+            plan: number;
+            name: string;
+            slug: string;
+            first_name: string;
+            last_name?: string;
+            phone: string;
+            password: string;
+        };
+        SignupStarted: {
+            /** Format: uuid */
+            token: string;
+            resend_in: number;
+        };
+        SignupStatus: {
+            status: components["schemas"]["SignupStatusStatusEnum"];
+            url: string;
+        };
+        /**
+         * @description * `pending` - Kod kutilmoqda
+         *     * `preparing` - Tayyorlanmoqda
+         *     * `ready` - Tayyor
+         *     * `failed` - Xato
+         * @enum {string}
+         */
+        SignupStatusStatusEnum: "pending" | "preparing" | "ready" | "failed";
         SitePayload: {
             settings: components["schemas"]["SiteSettings"];
             stats: components["schemas"]["Stats"];
@@ -3653,6 +3993,12 @@ export interface components {
             instructors: number;
             lessons: number;
             students: number;
+        };
+        Steps: {
+            brand: boolean;
+            course: boolean;
+            group: boolean;
+            legal: boolean;
         };
         StudentProfileResult: {
             id: number;
@@ -3956,6 +4302,9 @@ export interface components {
             /** @description Havola necha soniya amal qiladi. */
             expires_in: number;
         };
+        TelegramConnectRequest: {
+            token: string;
+        };
         /** @description Telegram Login Widget qaytargan maydonlar (hammasi imzoga kiradi). */
         TelegramLoginRequest: {
             id: string;
@@ -3965,6 +4314,14 @@ export interface components {
             last_name?: string;
             username?: string;
             photo_url?: string;
+        };
+        TelegramState: {
+            available: boolean;
+            connected: boolean;
+            username: string;
+            login: boolean;
+            leads_chat: string;
+            reports_chat: string;
         };
         TelegramStatus: {
             /** @description Bot sozlangan: ulash tugmasi ko'rsatiladi. */
@@ -4027,6 +4384,9 @@ export interface components {
          * @enum {string}
          */
         UserAudienceEnum: "ADULT" | "KIDS";
+        VerifyRequest: {
+            code: string;
+        };
         /**
          * @description Faqat javob uchun: barcha maydonlar read_only.
          *
@@ -4587,6 +4947,203 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CenterInfo"];
+                };
+            };
+        };
+    };
+    center_brand_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["PatchedBrandRequest"];
+                "application/json": components["schemas"]["PatchedBrandRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
+                };
+            };
+        };
+    };
+    center_click_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClickRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["ClickRequest"];
+                "multipart/form-data": components["schemas"]["ClickRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
+                };
+            };
+        };
+    };
+    center_click_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    center_eskiz_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EskizRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["EskizRequest"];
+                "multipart/form-data": components["schemas"]["EskizRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
+                };
+            };
+        };
+    };
+    center_eskiz_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    center_setup_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
+                };
+            };
+        };
+    };
+    center_telegram_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TelegramConnectRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["TelegramConnectRequest"];
+                "multipart/form-data": components["schemas"]["TelegramConnectRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
+                };
+            };
+        };
+    };
+    center_telegram_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    center_telegram_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedTelegramOptionsRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedTelegramOptionsRequest"];
+                "multipart/form-data": components["schemas"]["PatchedTelegramOptionsRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CenterSetup"];
                 };
             };
         };
@@ -5608,6 +6165,140 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ClickResult"];
+                };
+            };
+        };
+    };
+    platform_address_retrieve: {
+        parameters: {
+            query: {
+                slug: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddressResult"];
+                };
+            };
+        };
+    };
+    platform_plans_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicPlan"][];
+                };
+            };
+        };
+    };
+    platform_signups_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["SignupRequest"];
+                "multipart/form-data": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupStarted"];
+                };
+            };
+        };
+    };
+    platform_signups_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupStatus"];
+                };
+            };
+        };
+    };
+    platform_signups_resend_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Resend"];
+                };
+            };
+        };
+    };
+    platform_signups_verify_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyRequest"];
+                "application/x-www-form-urlencoded": components["schemas"]["VerifyRequest"];
+                "multipart/form-data": components["schemas"]["VerifyRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignupStatus"];
                 };
             };
         };

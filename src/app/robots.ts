@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
+import { siteOrigin } from "@/lib/site-origin";
 
-export default function robots(): MetadataRoute.Robots {
+// Har markazning o'z manzili: build paytida bir marta yozib bo'lmaydi.
+export const dynamic = "force-dynamic";
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
   return {
     rules: { userAgent: "*", allow: "/", disallow: ["/admin/", "/api/"] },
-    sitemap: `${APP_URL}/sitemap.xml`,
+    sitemap: `${await siteOrigin()}/sitemap.xml`,
   };
 }

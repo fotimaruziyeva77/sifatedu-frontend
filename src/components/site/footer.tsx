@@ -6,7 +6,7 @@ import { CARET, LETTER_PATHS, LOGO_VIEWBOX } from "@/components/brand/logo-paths
 import { Link } from "@/i18n/navigation";
 import type { SitePayload } from "@/lib/api/site";
 
-import { CONTACT_SECTION, NAV_SECTIONS } from "./sections";
+import { CONTACT_SECTION, type NavSection } from "./sections";
 
 const SOCIAL_LABELS = {
   telegram: "Telegram",
@@ -17,7 +17,15 @@ const SOCIAL_LABELS = {
 
 const LETTERS_D = Object.values(LETTER_PATHS).join(" ");
 
-export async function SiteFooter({ site }: { site: SitePayload | null }) {
+export async function SiteFooter({
+  site,
+  sections,
+  flagship,
+}: {
+  site: SitePayload | null;
+  sections: readonly NavSection[];
+  flagship: boolean;
+}) {
   const [t, tNav] = await Promise.all([getTranslations("Footer"), getTranslations("Nav")]);
   const settings = site?.settings;
   const socials = settings
@@ -34,9 +42,11 @@ export async function SiteFooter({ site }: { site: SitePayload | null }) {
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div className="max-w-xs">
             <Logo className="h-5" />
-            <p className="mt-6 font-display text-2xl leading-tight font-bold tracking-tight text-balance">
-              {t("tagline")}
-            </p>
+            {flagship && (
+              <p className="mt-6 font-display text-2xl leading-tight font-bold tracking-tight text-balance">
+                {t("tagline")}
+              </p>
+            )}
             {settings && socials.length > 0 && (
               <ul aria-label={t("socials")} className="mt-6 flex flex-wrap gap-2">
                 {socials.map((key) => (
@@ -56,7 +66,7 @@ export async function SiteFooter({ site }: { site: SitePayload | null }) {
           </div>
 
           <FooterColumn title={t("nav")}>
-            {NAV_SECTIONS.map((id) => (
+            {sections.map((id) => (
               <li key={id}>
                 <Link href={{ pathname: "/", hash: id }}>{tNav(id)}</Link>
               </li>
@@ -99,14 +109,16 @@ export async function SiteFooter({ site }: { site: SitePayload | null }) {
         </div>
 
         {/* Katta kontur logo: nuqtalardan boshlangan hikoyaning yakuni. */}
-        <svg
-          aria-hidden
-          viewBox={`${x} ${y} ${width} ${height}`}
-          className="footer-wordmark mt-20 w-full"
-        >
-          <path d={LETTERS_D} fillRule="evenodd" />
-          <rect {...CARET} className="footer-wordmark__caret" />
-        </svg>
+        {flagship && (
+          <svg
+            aria-hidden
+            viewBox={`${x} ${y} ${width} ${height}`}
+            className="footer-wordmark mt-20 w-full"
+          >
+            <path d={LETTERS_D} fillRule="evenodd" />
+            <rect {...CARET} className="footer-wordmark__caret" />
+          </svg>
+        )}
       </div>
 
       <div className="border-t border-border">

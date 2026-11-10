@@ -3,16 +3,19 @@ import { Suspense } from "react";
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
 import { NavigationProgress } from "@/components/site/navigation-progress";
+import { visibleSections } from "@/components/site/sections";
 import { SkipLink } from "@/components/site/skip-link";
 import { ChatLauncher } from "@/features/assistant/chat-launcher";
 import { ClientMessages } from "@/i18n/client-messages";
+import { getCenter } from "@/lib/api/center";
 import { getMe, toViewer } from "@/lib/api/me";
 import { getSite } from "@/lib/api/site";
 
 /** Ommaviy sahifalar: landing, huquqiy sahifalar, 404 — header va footer bilan. */
 export default async function SiteLayout({ children, params }: LayoutProps<"/[locale]">) {
   const { locale } = await params;
-  const [site, me] = await Promise.all([getSite(locale), getMe(locale)]);
+  const [site, me, center] = await Promise.all([getSite(locale), getMe(locale), getCenter()]);
+  const sections = visibleSections(site, center.flagship);
 
   return (
     <ClientMessages group="site">
@@ -20,9 +23,9 @@ export default async function SiteLayout({ children, params }: LayoutProps<"/[lo
         <NavigationProgress />
       </Suspense>
       <SkipLink />
-      <SiteHeader viewer={me ? toViewer(me) : null} />
+      <SiteHeader viewer={me ? toViewer(me) : null} sections={sections} />
       <main id="main">{children}</main>
-      <SiteFooter site={site} />
+      <SiteFooter site={site} sections={sections} flagship={center.flagship} />
       {/* AI maslahatchi: ish vaqtidan keyin ham mijoz javobsiz qolmaydi. */}
       {site?.settings.assistant_enabled && <ChatLauncher />}
     </ClientMessages>

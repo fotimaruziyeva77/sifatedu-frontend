@@ -17,11 +17,10 @@ CMD ["sh", "-c", "npm install --no-audit --no-fund && npm run dev -- --hostname 
 FROM base AS build
 # NEXT_PUBLIC_* qiymatlari build paytida kodga yoziladi, .env esa image'ga kirmaydi
 # (.dockerignore). Shuning uchun ular build argumenti sifatida beriladi.
-ARG NEXT_PUBLIC_APP_URL=http://localhost
 ARG NEXT_PUBLIC_S3_PUBLIC_URL=http://localhost:9000/sifat-public
 ARG NEXT_PUBLIC_SENTRY_DSN=
 ARG NEXT_PUBLIC_SENTRY_ENVIRONMENT=production
-ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL     NEXT_PUBLIC_S3_PUBLIC_URL=$NEXT_PUBLIC_S3_PUBLIC_URL     NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN     NEXT_PUBLIC_SENTRY_ENVIRONMENT=$NEXT_PUBLIC_SENTRY_ENVIRONMENT
+ENV NEXT_PUBLIC_S3_PUBLIC_URL=$NEXT_PUBLIC_S3_PUBLIC_URL     NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN     NEXT_PUBLIC_SENTRY_ENVIRONMENT=$NEXT_PUBLIC_SENTRY_ENVIRONMENT
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build

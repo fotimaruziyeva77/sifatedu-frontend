@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CourseTile } from "@/features/dashboard/course-tile";
 import { KidsHome } from "@/features/dashboard/kids-home";
 import { audienceOf } from "@/features/dashboard/nav";
+import { SetupReminder } from "@/features/center/settings/setup-reminder";
 import { ExamCallout, needsWork } from "@/features/exams/exam-callout";
 import { RewardsCard } from "@/features/rewards/rewards-card";
 import { NextLive } from "@/features/live/next-live";
@@ -59,6 +60,8 @@ export default async function DashboardPage({ params }: PageProps<"/[locale]/das
         <h1 className="app-title">{t("greeting", { name })}</h1>
         <p className="mt-3 max-w-xl text-pretty text-muted-foreground">{t("intro")}</p>
       </header>
+
+      {me?.roles.includes("ADMIN") && <SetupReminder locale={locale} />}
 
       {notifications && <TelegramPrompt settings={notifications} className="mt-8" />}
 

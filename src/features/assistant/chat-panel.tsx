@@ -14,6 +14,7 @@ import {
 
 import { type Priced, priceLines } from "@/features/catalog/price";
 import { NamedIcon } from "@/features/landing/icons";
+import { LegalLink } from "@/features/center/legal-link";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -241,7 +242,7 @@ export function ChatPanel({
         </form>
         <p className="chat__note">
           {t.rich("disclaimer", {
-            link: (chunks) => <Link href="/privacy">{chunks}</Link>,
+            link: (chunks) => <LegalLink page="privacy">{chunks}</LegalLink>,
           })}
         </p>
       </div>

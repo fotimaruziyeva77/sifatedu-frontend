@@ -10,13 +10,14 @@ import { SkipLink } from "@/components/site/skip-link";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { ClientMessages } from "@/i18n/client-messages";
 import { Link } from "@/i18n/navigation";
+import { getCenter } from "@/lib/api/center";
 
 import "../(site)/landing.css";
 import "./auth.css";
 
 /** Kirish sahifalari: diqqatni formaga qaratadi — menyu yo'q, faqat logo va orqaga havola. */
 export default async function AuthLayout({ children }: LayoutProps<"/[locale]">) {
-  const t = await getTranslations("Auth");
+  const [t, center] = await Promise.all([getTranslations("Auth"), getCenter()]);
 
   return (
     <ClientMessages group="auth">
@@ -28,7 +29,7 @@ export default async function AuthLayout({ children }: LayoutProps<"/[locale]">)
         <NetworkField className="-z-10 opacity-70" density={0.8} />
 
         <header className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-6 sm:px-6">
-          <Link href="/" aria-label="Sifat Edu" className="rounded-sm">
+          <Link href="/" aria-label={center.name} className="rounded-sm">
             <Logo className="h-4 sm:h-[18px]" />
           </Link>
           <div className="flex items-center gap-1 sm:gap-2">

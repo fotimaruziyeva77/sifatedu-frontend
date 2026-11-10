@@ -5,10 +5,10 @@ import { getFormatter, getTranslations, setRequestLocale } from "next-intl/serve
 import { CertificateActions } from "@/features/certificates/certificate-actions";
 import { CertificatePaper } from "@/features/certificates/certificate-paper";
 import { getCertificate } from "@/lib/api/exams";
+import { siteOrigin } from "@/lib/site-origin";
 
 import "@/features/certificates/certificate.css";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost";
 // SE-YYMM-XXXXXX: boshqa satrlar backend'ga yuborilmaydi.
 const NUMBER = /^SE-\d{4}-[A-Z0-9]{6}$/;
 
@@ -61,7 +61,7 @@ export default async function VerifyPage({ params }: PageProps<"/[locale]/verify
     );
   }
 
-  const url = `${APP_URL}/verify/${certificate.number}`;
+  const url = `${await siteOrigin()}/verify/${certificate.number}`;
   const date = (value: string) =>
     format.dateTime(new Date(value), { day: "numeric", month: "long", year: "numeric" });
 

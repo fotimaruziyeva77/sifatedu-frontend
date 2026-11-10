@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Link } from "@/i18n/navigation";
+import { LegalLink } from "@/features/center/legal-link";
 import { api } from "@/lib/api/client";
 import { formatPhoneInput, isCompletePhone } from "@/lib/phone";
 
@@ -294,9 +294,12 @@ export function LeadForm({ courses }: { courses: readonly CourseOption[] }) {
         <p className="text-xs text-pretty text-muted-foreground">
           {t.rich("consent", {
             link: (chunks) => (
-              <Link href="/privacy" className="underline underline-offset-4 hover:text-foreground">
+              <LegalLink
+                page="privacy"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
                 {chunks}
-              </Link>
+              </LegalLink>
             ),
           })}
         </p>

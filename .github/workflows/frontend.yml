@@ -39,5 +39,4 @@ jobs:
       - name: Production build
         run: npm run build
         env:
-          NEXT_PUBLIC_APP_URL: https://sifatedu.uz
           NEXT_PUBLIC_S3_PUBLIC_URL: https://storage.sifatedu.uz/sifat-public

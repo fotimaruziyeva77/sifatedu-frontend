@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { Link } from "@/i18n/navigation";
+import { LegalLink } from "@/features/center/legal-link";
 
 /** Kirish sahifalari uchun umumiy karta: sarlavha, izoh va mazmun. */
 export function AuthCard({
@@ -29,14 +29,14 @@ export async function TermsNote() {
     <p className="mt-6 text-center text-xs text-pretty text-muted-foreground">
       {t.rich("terms", {
         offer: (chunks) => (
-          <Link href="/offer" className="underline underline-offset-4 hover:text-foreground">
+          <LegalLink page="offer" className="underline underline-offset-4 hover:text-foreground">
             {chunks}
-          </Link>
+          </LegalLink>
         ),
         privacy: (chunks) => (
-          <Link href="/privacy" className="underline underline-offset-4 hover:text-foreground">
+          <LegalLink page="privacy" className="underline underline-offset-4 hover:text-foreground">
             {chunks}
-          </Link>
+          </LegalLink>
         ),
       })}
     </p>
